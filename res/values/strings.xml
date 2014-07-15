@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">gyroaccelapp</string>
+    <string name="hello">Data Stream App</string>
+    <string name="Accelerometer">Accelerometer</string>
+    <string name="X_Value1">X Value</string>
+    <string name="Y_Value1">Y Value</string>
+    <string name="Z_Value1">Z Value</string>
+    <string name="Gyroscope">Gyroscope</string>
+    <string name="X_Value2">X Value</string>
+    <string name="Y_Value2">Y Value</string>
+    <string name="Z_Value2">Z Value</string>
+    <string name="normDelay">Normal Delay</string>
+    <string name="gameDelay">Game Delay</string>
+    <string name="uiDelay">UI Delay</string>
+    <string name="fastDelay">Fastest Delay</string>
+    <string name="Chronometer">Chronometer</string>
+    <string name="cN">Normal Delay Elapsed: </string>
+    <string name="cG">Game Delay Elapsed: </string>
+    <string name="cU">UI Delay Elapsed: </string>
+    <string name="cF">Fast Delay Elapsed: </string>
+
+</resources>
