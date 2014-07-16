@@ -20,5 +20,6 @@
     <string name="cG">Game Delay Elapsed: </string>
     <string name="cU">UI Delay Elapsed: </string>
     <string name="cF">Fast Delay Elapsed: </string>
+    <string name="elapsed">Time Elapsed</string>
 
 </resources>

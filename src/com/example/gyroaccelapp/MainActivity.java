@@ -58,12 +58,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 	String delay;
 	Chronometer focus;
 	Button normD, gameD, uiD, fastD;
-	String fin;
 	TextView mText;
-	String time;
+	String minute;
 	String hour;
-	long stoppedMilliseconds;
+	String time;
+	long stoppedMilliseconds = 0;
 	TextView mon;
+	long clock;
+	long elapsedTime;
+	long timeClock;
+	TextView elapsation;
+	int clockization = (int) timeClock;
+	int aclock = (int) clock;
+	long duration;
+	int dur = (int) duration;
+	long startTime;
+	long endTime;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -101,7 +111,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 		uiD = (Button) findViewById(R.id.UD);
 		fastD = (Button) findViewById(R.id.FD);
 
+		timeClock = SystemClock.uptimeMillis();
+		clock = SystemClock.elapsedRealtime();
 		focus = (Chronometer) findViewById(R.id.chronometer1);
+
+		elapsation = (TextView) findViewById(R.id.timeElapsed);
+
+		startTime = System.nanoTime();
+
 		// long elapsedMillis = SystemClock.elapsedRealtime() - focus.getBase();
 		// focus = new Chronometer(this);
 		// relativeLayout.addView(focus);
@@ -117,8 +134,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		normD.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				endTime = System.nanoTime();
 				mDelay = mNorm;
 				allTime = nTime;
+				nTime.setText(Integer.toString(dur));
 				delay();
 			}
 		});
@@ -126,8 +146,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		gameD.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				endTime = System.nanoTime();
 				mDelay = mGame;
 				allTime = gTime;
+				gTime.setText(Integer.toString(dur));
 				delay();
 			}
 		});
@@ -135,8 +157,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		uiD.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				endTime = System.nanoTime();
 				mDelay = mUI;
 				allTime = uTime;
+				uTime.setText(Integer.toString(dur));
 				delay();
 			}
 		});
@@ -144,8 +168,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		fastD.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				endTime = System.nanoTime();
 				mDelay = mFast;
 				allTime = fTime;
+				fTime.setText(Integer.toString(dur));
 				delay();
 			}
 		});
@@ -196,24 +222,23 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mSensorManager.registerListener(this, mGyro, mDelay);
 		focus.setBase(SystemClock.elapsedRealtime());
 		focus.start();
-		fast = focus;
 		elapsed();
-		allTime.setText(delay + " Delay Elapsed: " + fin);
+		allTime.setText(delay + " Delay Elapsed: " + time);
+		// uptimeMillis.start();
+		duration = endTime - startTime;
+		elapsation.setText(Integer.toString(dur));
+		startTime = System.nanoTime();
 
-		try {
-			hour = String.valueOf(mText.getText());
-			time = String.valueOf(focus.getBase());
-			int h = java.lang.Integer.parseInt(hour) / 60;
-			int t = java.lang.Integer.parseInt(time) * 1000 / 60;
-			int mm = h * t;
-			allTime.setText(Integer.toString(mm));
-			fin = "" + mm;
-		} catch (Exception e) {
-			// display the exception here if so inclined
-		} finally {
-			Toast.makeText(this, "Elapsing " + delay + " Delay Time",
-					Toast.LENGTH_SHORT).show();
-		}
+		// try {
+		// hour = String.valueOf(mText.getText());
+		// minute = String.valueOf(stoppedMilliseconds - focus.getBase());
+		// int t = java.lang.Integer.parseInt(minute) / 1000 / 60;
+		// allTime.setText(Integer.toString(t));
+		// time = "" + t;
+		// } finally {
+		// Toast.makeText(this, "Elapsing " + delay + " Delay Time",
+		// Toast.LENGTH_SHORT).show();
+		// }
 	}
 
 	public void elapsed() {
@@ -228,17 +253,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
-	// private void showElapsedTime() {
+	// public void showElapsedTime() {
 	// elapsedMillis = SystemClock.elapsedRealtime() - focus.getBase();
 	// normalTime.makeText(
 	// "Elapsed milliseconds: "
 	// + Integer.toString((int) elapsedMillis)).show();
-	// normalTime = ((TextView)nTime);
+	// normalTime = ((TextView) nTime);
 	// }
-
-	// public void onClick(View v) {
 	//
-	// int stoppedMilliseconds = 0;
+	// public void onClick(View v) {
 	//
 	// String chronoText = focus.getText().toString();
 	// String array[] = chronoText.split(":");

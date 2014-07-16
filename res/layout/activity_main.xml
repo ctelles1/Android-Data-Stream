@@ -163,4 +163,12 @@
         android:textColor="#4169E1"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/timeElapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chronoFast"
+        android:layout_below="@+id/chronoFast"
+        android:text="@string/elapsed" />
+
 </RelativeLayout>
