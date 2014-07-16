@@ -1,174 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
+
+    <!--
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnWidth="90dp"
+    android:numColumns="auto_fit"
+    android:verticalSpacing="10dp"
+    android:horizontalSpacing="10dp"
+    android:stretchMode="columnWidth"
+    android:gravity="center" /> 
+    -->
 
     <TextView
         android:id="@+id/hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:paddingTop="20dp"
         android:text="@string/hello" />
 
     <Button
         android:id="@+id/ND"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/hello"
-        android:layout_marginTop="14dp"
         android:text="@string/normDelay" />
-
-    <TextView
-        android:id="@+id/accel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/gyro"
-        android:layout_alignTop="@+id/ND"
-        android:gravity="center"
-        android:padding="10dip"
-        android:text="@string/Accelerometer" />
-
-    <TextView
-        android:id="@+id/xbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/gyro"
-        android:layout_below="@+id/accel"
-        android:text="@string/X_Value1" />
-
-    <TextView
-        android:id="@+id/ybox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/gyro"
-        android:layout_below="@+id/xbox"
-        android:text="@string/Y_Value1" />
-
-    <TextView
-        android:id="@+id/zbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/gyro"
-        android:layout_below="@+id/ybox"
-        android:text="@string/Z_Value1" />
-
-    <TextView
-        android:id="@+id/xboxo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/gyro"
-        android:layout_marginLeft="19dp"
-        android:layout_toRightOf="@+id/FD"
-        android:text="@string/X_Value2" />
-
-    <TextView
-        android:id="@+id/zboxo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/xboxo"
-        android:layout_marginLeft="19dp"
-        android:layout_toRightOf="@+id/FD"
-        android:text="@string/Z_Value2" />
-
-    <TextView
-        android:id="@+id/yboxo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/zboxo"
-        android:layout_marginLeft="19dp"
-        android:layout_toRightOf="@+id/FD"
-        android:text="@string/Y_Value2" />
-
-    <TextView
-        android:id="@+id/chronoNormal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/yboxo"
-        android:layout_below="@+id/FD"
-        android:layout_marginTop="21dp"
-        android:text="@string/cN" />
-
-    <TextView
-        android:id="@+id/chronoUI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/yboxo"
-        android:layout_below="@+id/chronoNormal"
-        android:text="@string/cU" />
-
-    <TextView
-        android:id="@+id/chronoGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/yboxo"
-        android:layout_below="@+id/chronoUI"
-        android:text="@string/cG" />
-
-    <TextView
-        android:id="@+id/chronoFast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/yboxo"
-        android:layout_below="@+id/chronoGame"
-        android:text="@string/cF" />
 
     <Button
         android:id="@+id/UD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ND"
         android:text="@string/uiDelay" />
 
     <Button
         android:id="@+id/GD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/UD"
         android:text="@string/gameDelay" />
 
     <Button
         android:id="@+id/FD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/GD"
         android:text="@string/fastDelay" />
+
+    <TextView
+        android:id="@+id/accel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Accelerometer" />
+
+    <TextView
+        android:id="@+id/xbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/X_Value1" />
+
+    <TextView
+        android:id="@+id/ybox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Y_Value1" />
+
+    <TextView
+        android:id="@+id/zbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Z_Value1" />
 
     <TextView
         android:id="@+id/gyro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/xboxo"
-        android:layout_below="@+id/UD"
-        android:gravity="center"
-        android:padding="10dip"
         android:text="@string/Gyroscope" />
+
+    <TextView
+        android:id="@+id/xboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/X_Value2" />
+
+    <TextView
+        android:id="@+id/yboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Y_Value2" />
+
+    <TextView
+        android:id="@+id/zboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Z_Value2" />
 
     <Chronometer
         android:id="@+id/chronometer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chronoGame"
-        android:layout_alignRight="@+id/UD"
-        android:layout_marginRight="33dp"
         android:text="@string/Chronometer"
         android:textColor="#4169E1"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/timeElapsed"
+        android:id="@+id/chronoNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chronoFast"
-        android:layout_below="@+id/chronoFast"
-        android:text="@string/elapsed" />
+        android:text="@string/cN" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/chronoUI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cU" />
+
+    <TextView
+        android:id="@+id/chronoGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cG" />
+
+    <TextView
+        android:id="@+id/chronoFast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cF" />
+
+</LinearLayout>

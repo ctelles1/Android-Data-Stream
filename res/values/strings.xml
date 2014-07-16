@@ -16,10 +16,9 @@
     <string name="uiDelay">UI Delay</string>
     <string name="fastDelay">Fastest Delay</string>
     <string name="Chronometer">Chronometer</string>
-    <string name="cN">Normal Delay Elapsed: </string>
-    <string name="cG">Game Delay Elapsed: </string>
-    <string name="cU">UI Delay Elapsed: </string>
-    <string name="cF">Fast Delay Elapsed: </string>
-    <string name="elapsed">Time Elapsed</string>
+    <string name="cN">Normal</string>
+    <string name="cG">Game</string>
+    <string name="cU">UI</string>
+    <string name="cF">Fast</string>
 
 </resources>
