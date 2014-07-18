@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -22,84 +22,127 @@
         android:id="@+id/hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="100dp"
+        android:gravity="center"
         android:text="@string/hello" />
 
     <Button
         android:id="@+id/ND"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/hello"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="left"
         android:text="@string/normDelay" />
 
     <Button
         android:id="@+id/UD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@id/ND"
+        android:layout_below="@id/ND"
+        android:gravity="left"
         android:text="@string/uiDelay" />
 
     <Button
         android:id="@+id/GD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/hello"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/ND"
+        android:gravity="right"
         android:text="@string/gameDelay" />
 
     <Button
         android:id="@+id/FD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/GD"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/UD"
+        android:gravity="right"
         android:text="@string/fastDelay" />
 
     <TextView
         android:id="@+id/accel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/ND"
+        android:layout_below="@id/UD"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
         android:text="@string/Accelerometer" />
+
+    <TextView
+        android:id="@+id/gyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/FD"
+        android:layout_below="@id/FD"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:gravity="right"
+        android:text="@string/Gyroscope" />
 
     <TextView
         android:id="@+id/xbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/accel"
         android:text="@string/X_Value1" />
 
     <TextView
         android:id="@+id/ybox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/xbox"
         android:text="@string/Y_Value1" />
 
     <TextView
         android:id="@+id/zbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/ybox"
         android:text="@string/Z_Value1" />
-
-    <TextView
-        android:id="@+id/gyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Gyroscope" />
 
     <TextView
         android:id="@+id/xboxo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gyro"
+        android:layout_below="@+id/gyro"
         android:text="@string/X_Value2" />
 
     <TextView
         android:id="@+id/yboxo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/xboxo"
+        android:layout_below="@+id/xboxo"
         android:text="@string/Y_Value2" />
 
     <TextView
         android:id="@+id/zboxo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/yboxo"
+        android:layout_below="@+id/yboxo"
         android:text="@string/Z_Value2" />
 
     <Chronometer
         android:id="@+id/chronometer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/zboxo"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="15dp"
         android:text="@string/Chronometer"
         android:textColor="#4169E1"
         android:textSize="20sp" />
@@ -108,24 +151,174 @@
         android:id="@+id/chronoNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/zbox"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="45dp"
         android:text="@string/cN" />
 
     <TextView
         android:id="@+id/chronoUI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chronoNormal"
+        android:layout_marginLeft="45dp"
+        android:layout_toRightOf="@+id/chronoNormal"
         android:text="@string/cU" />
 
     <TextView
         android:id="@+id/chronoGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chronoNormal"
+        android:layout_marginLeft="45dp"
+        android:layout_toRightOf="@+id/chronoUI"
         android:text="@string/cG" />
 
     <TextView
         android:id="@+id/chronoFast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chronoNormal"
+        android:layout_marginLeft="45dp"
+        android:layout_toRightOf="@+id/chronoGame"
         android:text="@string/cF" />
 
-</LinearLayout>
+    <ToggleButton
+        android:id="@+id/powerSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="31dp"
+        android:layout_toRightOf="@+id/chronoUI"
+        android:text="@string/onSwitch" />
+
+    <TextView
+        android:id="@+id/normLast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chronoNormal"
+        android:layout_below="@+id/chronoNormal"
+        android:layout_marginTop="16dp"
+        android:text="@string/normLast" />
+
+    <TextView
+        android:id="@+id/normTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/normLast"
+        android:layout_below="@+id/normLast"
+        android:layout_marginTop="17dp"
+        android:text="@string/normTotal" />
+
+    <TextView
+        android:id="@+id/normCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/normTotal"
+        android:layout_below="@+id/normTotal"
+        android:layout_marginTop="14dp"
+        android:text="@string/normCount" />
+
+    <TextView
+        android:id="@+id/uiLast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/normLast"
+        android:layout_alignBottom="@+id/normLast"
+        android:layout_alignLeft="@+id/chronoUI"
+        android:text="@string/uiLast" />
+
+    <TextView
+        android:id="@+id/uiTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/normTotal"
+        android:layout_alignBottom="@+id/normTotal"
+        android:layout_alignLeft="@+id/uiLast"
+        android:text="@string/uiTotal" />
+
+    <TextView
+        android:id="@+id/uiCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/normCount"
+        android:layout_alignBottom="@+id/normCount"
+        android:layout_alignLeft="@+id/uiTotal"
+        android:text="@string/uiCount" />
+
+    <TextView
+        android:id="@+id/gameLast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/uiLast"
+        android:layout_alignBottom="@+id/uiLast"
+        android:layout_alignLeft="@+id/chronoGame"
+        android:text="@string/gameLast" />
+
+    <TextView
+        android:id="@+id/gameTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/uiTotal"
+        android:layout_alignLeft="@+id/gameLast"
+        android:text="@string/gameTotal" />
+
+    <TextView
+        android:id="@+id/gameCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/uiCount"
+        android:layout_alignBottom="@+id/uiCount"
+        android:layout_alignLeft="@+id/gameTotal"
+        android:text="@string/gameCount" />
+
+    <TextView
+        android:id="@+id/fastLast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/normTotal"
+        android:layout_alignLeft="@+id/chronoFast"
+        android:text="@string/fastLast" />
+
+    <TextView
+        android:id="@+id/fastTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/normCount"
+        android:layout_alignLeft="@+id/fastLast"
+        android:text="@string/fastTotal" />
+
+    <TextView
+        android:id="@+id/fastCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/uiCount"
+        android:layout_alignBottom="@+id/fastCount"
+        android:layout_alignLeft="@+id/fastLast"
+        android:text="@string/fastCount" />
+
+    <TextView
+        android:id="@+id/lastClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/normLast"
+        android:layout_alignParentLeft="true"
+        android:text="@string/lastClick" />
+
+    <TextView
+        android:id="@+id/totalTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/normTotal"
+        android:layout_alignParentLeft="true"
+        android:text="@string/totalTime" />
+
+    <TextView
+        android:id="@+id/clickCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/normCount"
+        android:layout_alignParentLeft="true"
+        android:text="@string/clickCount" />
+
+</RelativeLayout>

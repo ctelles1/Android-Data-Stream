@@ -20,5 +20,26 @@
     <string name="cG">Game</string>
     <string name="cU">UI</string>
     <string name="cF">Fast</string>
+    <string name="onSwitch">On/Off</string>
+    <string name="lastClick">Last (ms)</string>
+    <string name="totalTime">Total (s)</string>
+    <string name="clickCount">Clicks</string>
+    <string name="onStatus">Status</string>
+    <string name="normLast">-</string>
+    <string name="uiLast">-</string>
+    <string name="gameLast">-</string>
+    <string name="fastLast">-</string>
+    <string name="normTotal">-</string>
+    <string name="uiTotal">-</string>
+    <string name="gameTotal">-</string>
+    <string name="fastTotal">-</string>
+    <string name="normCount">-</string>
+    <string name="uiCount">-</string>
+    <string name="gameCount">-</string>
+    <string name="fastCount">-</string>
+    <string name="normStatus">-</string>
+    <string name="uiStatus">-</string>
+    <string name="gameStatus">-</string>
+    <string name="fastStatus">-</string>
 
 </resources>

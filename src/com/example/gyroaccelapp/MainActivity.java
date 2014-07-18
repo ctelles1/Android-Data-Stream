@@ -9,16 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.os.SystemClock;
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.Chronometer;
 
@@ -36,11 +29,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mxViewG = null;
 	TextView myViewG = null;
 	TextView mzViewG = null;
-	TextView mNormTime;
-	TextView mGameTime;
-	TextView mUITime;
-	TextView mFastTime;
-	TextView mAllTime;
+
+	TextView mNormLast;
+	TextView mUiLast;
+	TextView mGameLast;
+	TextView mFastLast;
+	TextView mNormTotal;
+	TextView mUiTotal;
+	TextView mGameTotal;
+	TextView mFastTotal;
+	TextView mNormCount;
+	TextView mUiCount;
+	TextView mGameCount;
+	TextView mFastCount;
 
 	String mTextDelay;
 
@@ -50,8 +51,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 	long duration;
 	int dur = (int) duration;
 
-	long startTime;
-	long endTime;
+	long mNormStartTime;
+	long mGameStartTime;
+	long mUIStartTime;
+	long mFastStartTime;
+	long mStartTime;
+
+	long mNormEndTime;
+	long mGameEndTime;
+	long mUIEndTime;
+	long mFastEndTime;
+	long mEndTime;
 
 	long mEndT;
 	long mEndN;
@@ -77,6 +87,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int modeF = 4;
 	int mode;
 
+	int prevModeN = 1;
+	int prevModeU = 2;
+	int prevModeG = 3;
+	int prevModeF = 4;
+	int prevMode;
+
+	int mModeChange;
+
+	int tC;
+
 	int mClickN;
 	int mClickU;
 	int mClickG;
@@ -90,11 +110,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Chronometer focus;
 
 	Button normD, gameD, uiD, fastD;
+	ToggleButton toggle;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -107,8 +130,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mFast = SensorManager.SENSOR_DELAY_FASTEST;
 
 		mDelay = mNorm;
-		mSensorManager.registerListener(this, mAccel, mDelay);
-		mSensorManager.registerListener(this, mGyro, mDelay);
 
 		mxViewA = (TextView) findViewById(R.id.xbox);
 		myViewA = (TextView) findViewById(R.id.ybox);
@@ -117,65 +138,40 @@ public class MainActivity extends Activity implements SensorEventListener {
 		myViewG = (TextView) findViewById(R.id.yboxo);
 		mzViewG = (TextView) findViewById(R.id.zboxo);
 
-		mNormTime = (TextView) findViewById(R.id.chronoNormal);
-		mGameTime = (TextView) findViewById(R.id.chronoGame);
-		mUITime = (TextView) findViewById(R.id.chronoUI);
-		mFastTime = (TextView) findViewById(R.id.chronoFast);
+		mNormLast = (TextView) findViewById(R.id.normLast);
+		mGameLast = (TextView) findViewById(R.id.gameLast);
+		mUiLast = (TextView) findViewById(R.id.uiLast);
+		mFastLast = (TextView) findViewById(R.id.fastLast);
+
+		mNormTotal = (TextView) findViewById(R.id.normTotal);
+		mGameTotal = (TextView) findViewById(R.id.gameTotal);
+		mUiTotal = (TextView) findViewById(R.id.uiTotal);
+		mFastTotal = (TextView) findViewById(R.id.fastTotal);
+
+		mNormCount = (TextView) findViewById(R.id.normCount);
+		mGameCount = (TextView) findViewById(R.id.gameCount);
+		mUiCount = (TextView) findViewById(R.id.uiCount);
+		mFastCount = (TextView) findViewById(R.id.fastCount);
 
 		normD = (Button) findViewById(R.id.ND);
 		gameD = (Button) findViewById(R.id.GD);
 		uiD = (Button) findViewById(R.id.UD);
 		fastD = (Button) findViewById(R.id.FD);
 
-		startTime = System.nanoTime();
+		toggle = (ToggleButton) findViewById(R.id.powerSwitch);
+
+		mNormStartTime = System.nanoTime();
+		mGameStartTime = System.nanoTime();
+		mUIStartTime = System.nanoTime();
+		mFastStartTime = System.nanoTime();
+
 		focus = (Chronometer) findViewById(R.id.chronometer1);
 		focus.setBase(SystemClock.elapsedRealtime());
 		focus.start();
 
-		// GridView gridview = (GridView) findViewById(R.id.gridview);
-		// gridview.setAdapter(new ImageAdapter(this));
-		//
-		// gridview.setOnItemClickListener(new OnItemClickListener() {
-		// public void onItemClick(AdapterView<?> parent, View v, int position,
-		// long id) {
-		// Toast.makeText(HelloGridView.this, "" + position,
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// });
+		toggle.setChecked(false);
 
-		// create a separate start time and end time for each delay setting
-
-		normD.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prevTime = prevNTime;
-				previousTime();
-			}
-		});
-
-		uiD.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prevTime = prevUTime;
-				previousTime();
-			}
-		});
-
-		gameD.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prevTime = prevGTime;
-				previousTime();
-			}
-		});
-
-		fastD.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prevTime = prevFTime;
-				previousTime();
-			}
-		});
+		click();
 
 	}
 
@@ -203,7 +199,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	public void onResume() {
 		super.onResume();
-
 	}
 
 	@Override
@@ -217,91 +212,181 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
 	}
 
-	public void previousTime() {
+	public void click() {
+		toggle.setOnClickListener(new OnClickListener() {
 
-		endTime = System.nanoTime();
+			@Override
+			public void onClick(View v) {
 
-		mode();// Calculates time since last button click
+				if (toggle.isChecked()) {
 
-		if (prevTime == prevNTime) {
+					tC = 1;
 
-			mClickN++; // Increases click counter
-			mClick = mClickN; // Sets displayed counter to current click counter
+					mSensorManager.registerListener(MainActivity.this, mAccel,
+							mDelay);
 
-			mDelay = mNorm; // Sensor Delay Setting
-			mAllTime = mNormTime; // TextView
-			mTextDelay = "Normal"; // String for TextView
+					mSensorManager.registerListener(MainActivity.this, mGyro,
+							mDelay);
 
-			mode = modeN;
+					normD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-			mNormTime.setText(String.valueOf(duration)); // Converts long to
-															// string
+							prevTime = prevNTime;
+							previousTime();
 
-		} else if (prevTime == prevUTime) {
+						}
+					});
 
-			mClickU++;
-			mClick = mClickU;
+					uiD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-			mDelay = mUI;
-			mAllTime = mUITime;
-			mTextDelay = "UI";
+							prevTime = prevUTime;
+							previousTime();
 
-			mode = modeU;
+						}
+					});
 
-			mUITime.setText(String.valueOf(duration));
+					gameD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-		} else if (prevTime == prevGTime) {
+							prevTime = prevGTime;
+							previousTime();
 
-			mClickG++;
-			mClick = mClickG;
+						}
+					});
 
-			mDelay = mGame;
-			mAllTime = mGameTime;
-			mTextDelay = "Game";
+					fastD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-			mode = modeG;
+							prevTime = prevFTime;
+							previousTime();
 
-			mGameTime.setText(String.valueOf(duration));
+						}
+					});
 
-		} else if (prevTime == prevFTime) {
+				} else {
+					mSensorManager.unregisterListener(MainActivity.this);
 
-			mClickF++;
-			mClick = mClickF;
+					toggle.setChecked(false);
 
-			mDelay = mFast;
-			mAllTime = mFastTime;
-			mTextDelay = "Fast";
+					tC = 0;
+				}
+			}
+		});
 
-			mode = modeF;
+		if (tC == 1) { // Redundant listener unregister and toggle unchecking
 
-			mFastTime.setText(String.valueOf(duration));
+			return;
+
+		} else {
+
+			mSensorManager.unregisterListener(MainActivity.this);
+			toggle.setChecked(false);
 
 		}
-
-		delay(); // Starts function which registers listener and sets text
-
 	}
 
-	public void delay() {
-		mSensorManager.unregisterListener(this);
-		mSensorManager.registerListener(this, mAccel, mDelay);
-		mSensorManager.registerListener(this, mGyro, mDelay);
-		endTime = System.nanoTime();
-		startTime = System.nanoTime();
-		mAllTime.setText(mTextDelay + " in milli: " + duration
-				+ " | total secs:" + mEndT + " | clicks: " + mClick);
+	public void previousTime() {
+		if (tC == 1) {
 
+			mModeChange = 0;
+
+			if (prevTime == prevNTime) {
+
+				mNormEndTime = System.nanoTime();
+
+				mEndTime = mNormEndTime;
+				mStartTime = mNormStartTime;
+
+				mode();// Calculates time since last button click
+
+				mClickN++; // Increases click counter
+				mClick = mClickN; // Sets displayed counter to current click
+									// counter
+
+				mDelay = mNorm; // Sensor Delay Setting
+				mTextDelay = "Normal"; // String for TextView
+
+				mode = modeN;
+
+			} else if (prevTime == prevUTime) {
+
+				mUIEndTime = System.nanoTime();
+
+				mEndTime = mUIEndTime;
+				mStartTime = mUIStartTime;
+
+				mode();
+
+				mClickU++;
+				mClick = mClickU;
+
+				mDelay = mUI;
+				mTextDelay = "UI";
+
+				mode = modeU;
+
+			} else if (prevTime == prevGTime) {
+
+				mGameEndTime = System.nanoTime();
+
+				mEndTime = mGameEndTime;
+				mStartTime = mGameStartTime;
+
+				mode();
+
+				mClickG++;
+				mClick = mClickG;
+
+				mDelay = mGame;
+				mTextDelay = "Game";
+
+				mode = modeG;
+
+			} else if (prevTime == prevFTime) {
+
+				mFastEndTime = System.nanoTime();
+
+				mEndTime = mFastEndTime;
+				mStartTime = mFastStartTime;
+
+				mode();
+
+				mClickF++;
+				mClick = mClickF;
+
+				mDelay = mFast;
+				mTextDelay = "Fast";
+
+				mode = modeF;
+			}
+
+			delay();
+
+		} else {
+
+			return;
+
+		}
 	}
 
 	public void mode() {
 
-		duration = (endTime - startTime) / 1000000; // Gets last click time and
-													// converts to milliseconds
+		// if (mModeChange == 0) {
+
+		duration = (mEndTime - mStartTime) / 1000000; // Gets last click
+														// time and converts
+														// to milliseconds
 
 		if (mode == modeN) {
 
-			mEndN = mEndN + duration; // Adds time since last to total time of
-										// button being clicked
+			mEndN = mEndN + duration; // Adds time since last to total time
+										// of button being clicked
+
 			mEndT = mEndN / 1000;// Converts milliseconds to seconds
 
 		} else if (mode == modeU) {
@@ -320,6 +405,107 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mEndT = mEndF / 1000;
 
 		}
+		// } else if (mModeChange == 1) {
+		//
+		// duration = (mEndTime - mStartTime) / 1000000;
+		//
+		// if (prevMode == prevModeN) {
+		//
+		// mEndN = mEndN + duration;
+		//
+		// mEndT = mEndN / 1000;
+		//
+		// mModeChange = 1;
+		//
+		// } else if (prevMode == prevModeU) {
+		//
+		// mEndU = mEndU + duration;
+		// mEndT = mEndU / 1000;
+		//
+		// mModeChange = 1;
+		//
+		// } else if (prevMode == prevModeG) {
+		//
+		// mEndG = mEndG + duration;
+		// mEndT = mEndG / 1000;
+		//
+		// mModeChange = 1;
+		//
+		// } else if (prevMode == prevModeF) {
+		//
+		// mEndF = mEndF + duration;
+		// mEndT = mEndF / 1000;
+		//
+		// mModeChange = 1;
+		//
+		// }
+		//
+		//
+		// }
+	}
+
+	public void delay() {
+
+		mSensorManager.unregisterListener(this);
+		mSensorManager.registerListener(this, mAccel, mDelay);
+		mSensorManager.registerListener(this, mGyro, mDelay);
+
+		mNormEndTime = System.nanoTime();
+		mGameEndTime = System.nanoTime();
+		mUIEndTime = System.nanoTime();
+		mFastEndTime = System.nanoTime();
+
+		mNormStartTime = System.nanoTime();
+		mGameStartTime = System.nanoTime();
+		mUIStartTime = System.nanoTime();
+		mFastStartTime = System.nanoTime();
+
+		text();
+
+	}
+
+	public void text() {
+
+		if (prevTime == prevNTime) {
+
+			mNormLast.setText(String.valueOf(duration)); // Converts long to
+															// string
+			mNormTotal.setText(String.valueOf(mEndT));
+
+			mNormLast.setText("" + duration);
+			mNormTotal.setText("" + mEndT);
+			mNormCount.setText("" + mClick);
+
+		} else if (prevTime == prevUTime) {
+
+			mUiLast.setText(String.valueOf(duration));
+			mUiTotal.setText(String.valueOf(mEndT));
+
+			mUiLast.setText("" + duration);
+			mUiTotal.setText("" + mEndT);
+			mUiCount.setText("" + mClick);
+
+		} else if (prevTime == prevGTime) {
+
+			mGameLast.setText(String.valueOf(duration));
+			mGameTotal.setText(String.valueOf(mEndT));
+
+			mGameLast.setText("" + duration);
+			mGameTotal.setText("" + mEndT);
+			mGameCount.setText("" + mClick);
+
+		} else if (prevTime == prevFTime) {
+
+			mFastLast.setText(String.valueOf(duration));
+			mFastTotal.setText(String.valueOf(mEndT));
+
+			mFastLast.setText("" + duration);
+			mFastTotal.setText("" + mEndT);
+			mFastCount.setText("" + mClick);
+
+		}
+
+		click();
 
 	}
 
