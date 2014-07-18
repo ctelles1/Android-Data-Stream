@@ -17,39 +17,39 @@ import android.widget.Chronometer;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
-	// Defines variables and sensors before the class they are used in
+	// Defines variables and sensors
 
 	final String tag = "GAP";
 
 	SensorManager mSensorManager = null;
 
-	TextView mxViewA = null;
-	TextView myViewA = null;
-	TextView mzViewA = null;
-	TextView mxViewG = null;
-	TextView myViewG = null;
-	TextView mzViewG = null;
+	TextView mXaxisAccel = null;
+	TextView mYaxisAccel = null;
+	TextView mZaxisAccel = null;
+	TextView mXaxisGyro = null;
+	TextView mYaxisGyro = null;
+	TextView mZaxisGyro = null;
 
-	TextView mNormLast;
-	TextView mUiLast;
-	TextView mGameLast;
-	TextView mFastLast;
-	TextView mNormTotal;
-	TextView mUiTotal;
-	TextView mGameTotal;
-	TextView mFastTotal;
-	TextView mNormCount;
-	TextView mUiCount;
-	TextView mGameCount;
-	TextView mFastCount;
+	TextView mNormLastClick;
+	TextView mUiLastClick;
+	TextView mGameLastClick;
+	TextView mFastLastClick;
+	TextView mNormTotalTime;
+	TextView mUiTotalTime;
+	TextView mGameTotalTime;
+	TextView mFastTotalTime;
+	TextView mNormClickCount;
+	TextView mUiClickCount;
+	TextView mGameClickCount;
+	TextView mFastClickCount;
 
-	String mTextDelay;
+	String mdelaySelectionTextView;
 
-	Sensor mAccel;
-	Sensor mGyro;
+	Sensor mSensorTypeAccel;
+	Sensor mSensorTypeGyro;
 
-	long duration;
-	int dur = (int) duration;
+	long durationSinceLastClick;
+	int dur = (int) durationSinceLastClick;
 
 	long mNormStartTime;
 	long mGameStartTime;
@@ -64,53 +64,59 @@ public class MainActivity extends Activity implements SensorEventListener {
 	long mEndTime;
 
 	long mEndT;
-	long mEndN;
-	long mEndG;
-	long mEndU;
-	long mEndF;
+	long mEndTimeNorm;
+	long mEndTimeGame;
+	long mEndTimeUI;
+	long mEndTimeFast;
 
-	int mNorm;
-	int mGame;
-	int mUI;
-	int mFast;
-	int mDelay;
+	int mSensorDelayNormal;
+	int mSensorDelayGame;
+	int mSensorDelayUI;
+	int mSensorDelayFastest;
+	int mSensorDelaySwitch;
 
-	int currentNTime = 1;
-	int currentUTime = 2;
-	int currentGTime = 3;
-	int currentFTime = 4;
-	int currentTime;
+	int currentlyNormalSelected = 1;
+	int currentlyUiSelected = 2;
+	int currentlyGameSelected = 3;
+	int currentlyFastSelected = 4;
+	int currentDelaySelection;
 
-	int modeN = 1;
-	int modeU = 2;
-	int modeG = 3;
-	int modeF = 4;
-	int mode;
+	int delayModeNorm = 1;
+	int delayModeUI = 2;
+	int delayModeGame = 3;
+	int delayModeGast = 4;
+	int delayMode;
 
-	int prevModeN = 1;
-	int prevModeU = 2;
-	int prevModeG = 3;
-	int prevModeF = 4;
-	int prevMode;
+	int previouslyNormalSelected = 1;
+	int previouslyUiSelected = 2;
+	int previouslyGameSelected = 3;
+	int previouslyFastSelected = 4;
+	int previousSelectedDelay;
 
-	int tC;
-
-	int mClickN;
-	int mClickU;
+	int toggleButtonCounter;
+	int mClickCounterNorm;
+	int mClickCounterUI;
 	int mClickG;
 	int mClickF;
-	int mClick;
+	int mClickCounter;
 
 	float mAxisX;
 	float mAxisY;
 	float mAxisZ;
 
-	Chronometer focus;
+	Chronometer chronometerClock;
 
-	Button normD, gameD, uiD, fastD;
-	ToggleButton toggle;
+	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
+	ToggleButton toggleButton;
+
+	/******************************************************************************/
 
 	/** Called when the activity is first created. */
+	/*
+	 * Public: Sets up variables to specified sensors, time readings, TextViews
+	 * Buttons, chronometer, and starts onClickListener for Sensor Delay
+	 * Buttons.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -119,123 +125,163 @@ public class MainActivity extends Activity implements SensorEventListener {
 		setContentView(R.layout.activity_main);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mGyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+		mSensorTypeAccel = mSensorManager
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mSensorTypeGyro = mSensorManager
+				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-		mNorm = SensorManager.SENSOR_DELAY_NORMAL;
-		mGame = SensorManager.SENSOR_DELAY_GAME;
-		mUI = SensorManager.SENSOR_DELAY_UI;
-		mFast = SensorManager.SENSOR_DELAY_FASTEST;
+		mSensorDelayNormal = SensorManager.SENSOR_DELAY_NORMAL;
+		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
+		mSensorDelayUI = SensorManager.SENSOR_DELAY_UI;
+		mSensorDelayFastest = SensorManager.SENSOR_DELAY_FASTEST;
 
-		mDelay = mNorm;
+		mSensorDelaySwitch = mSensorDelayNormal;
 
-		mxViewA = (TextView) findViewById(R.id.xbox);
-		myViewA = (TextView) findViewById(R.id.ybox);
-		mzViewA = (TextView) findViewById(R.id.zbox);
-		mxViewG = (TextView) findViewById(R.id.xboxo);
-		myViewG = (TextView) findViewById(R.id.yboxo);
-		mzViewG = (TextView) findViewById(R.id.zboxo);
+		mXaxisAccel = (TextView) findViewById(R.id.xbox);
+		mYaxisAccel = (TextView) findViewById(R.id.ybox);
+		mZaxisAccel = (TextView) findViewById(R.id.zbox);
+		mXaxisGyro = (TextView) findViewById(R.id.xboxo);
+		mYaxisGyro = (TextView) findViewById(R.id.yboxo);
+		mZaxisGyro = (TextView) findViewById(R.id.zboxo);
 
-		mNormLast = (TextView) findViewById(R.id.normLast);
-		mGameLast = (TextView) findViewById(R.id.gameLast);
-		mUiLast = (TextView) findViewById(R.id.uiLast);
-		mFastLast = (TextView) findViewById(R.id.fastLast);
+		mNormLastClick = (TextView) findViewById(R.id.normLast);
+		mGameLastClick = (TextView) findViewById(R.id.gameLast);
+		mUiLastClick = (TextView) findViewById(R.id.uiLast);
+		mFastLastClick = (TextView) findViewById(R.id.fastLast);
 
-		mNormTotal = (TextView) findViewById(R.id.normTotal);
-		mGameTotal = (TextView) findViewById(R.id.gameTotal);
-		mUiTotal = (TextView) findViewById(R.id.uiTotal);
-		mFastTotal = (TextView) findViewById(R.id.fastTotal);
+		mNormTotalTime = (TextView) findViewById(R.id.normTotal);
+		mGameTotalTime = (TextView) findViewById(R.id.gameTotal);
+		mUiTotalTime = (TextView) findViewById(R.id.uiTotal);
+		mFastTotalTime = (TextView) findViewById(R.id.fastTotal);
 
-		mNormCount = (TextView) findViewById(R.id.normCount);
-		mGameCount = (TextView) findViewById(R.id.gameCount);
-		mUiCount = (TextView) findViewById(R.id.uiCount);
-		mFastCount = (TextView) findViewById(R.id.fastCount);
+		mNormClickCount = (TextView) findViewById(R.id.normCount);
+		mGameClickCount = (TextView) findViewById(R.id.gameCount);
+		mUiClickCount = (TextView) findViewById(R.id.uiCount);
+		mFastClickCount = (TextView) findViewById(R.id.fastCount);
 
-		normD = (Button) findViewById(R.id.ND);
-		gameD = (Button) findViewById(R.id.GD);
-		uiD = (Button) findViewById(R.id.UD);
-		fastD = (Button) findViewById(R.id.FD);
-
-		toggle = (ToggleButton) findViewById(R.id.powerSwitch);
+		normDelayButton = (Button) findViewById(R.id.ND);
+		gameDelayButton = (Button) findViewById(R.id.GD);
+		uiDelayButton = (Button) findViewById(R.id.UD);
+		fastDelayButton = (Button) findViewById(R.id.FD);
 
 		mNormStartTime = System.nanoTime();
 		mGameStartTime = System.nanoTime();
 		mUIStartTime = System.nanoTime();
 		mFastStartTime = System.nanoTime();
 
-		focus = (Chronometer) findViewById(R.id.chronometer1);
-		focus.setBase(SystemClock.elapsedRealtime());
-		focus.start();
+		chronometerClock = (Chronometer) findViewById(R.id.chronometer1);
+		chronometerClock.setBase(SystemClock.elapsedRealtime());
+		chronometerClock.start();
 
-		toggle.setChecked(false);
+		toggleButton = (ToggleButton) findViewById(R.id.powerSwitch);
 
-		toggle.setOnClickListener(new OnClickListener() {
+		toggleButton.setChecked(false);
+
+		/**
+		 * Button Click listeners for On/Off Switch and Sensor Delay choice.
+		 * Starts keeping time and registers listeners for Accelerometer and
+		 * Gyroscope sensors after button click. Leads to function which starts
+		 * the Click Statistics calculation and display loop.
+		 */
+		/*
+		 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
+		 * 
+		 * onClickListener for On/Off Toggle Button - toggleButton
+		 * 
+		 * onClickListener for Sensor Delay Buttons (4) - *DelayButton
+		 * 
+		 * registerListener for Sensor Delay Types (mSensorType[Accel/Gyro],
+		 * mSensorDelaySwitch)
+		 * 
+		 * @@@@ FUNCTIONS CALLED @@@@
+		 * 
+		 * currentTime
+		 * 
+		 * setStartAndEndTime
+		 * 
+		 * @@@@@ VARIABLES @@@@@
+		 * 
+		 * toggleButtonCounter - On/Off Toggle Button redundancy check
+		 * 
+		 * currentDelaySelection - variable to make sure the methods currentTime
+		 * and clickStatisticsUpdateSetText are updating the values for the
+		 * right Delay Setting
+		 * 
+		 *
+		 * previousSelectedDelay - variable to make sure the method previousMode
+		 * is updating the values for the right Delay Setting
+		 */
+		toggleButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				if (toggle.isChecked()) {
+				if (toggleButton.isChecked()) {
 
-					onoff();
+					setStartAndEndTime();
 
-					tC = 1;
+					toggleButtonCounter = 1;
 
-					mSensorManager.registerListener(MainActivity.this, mAccel,
-							mDelay);
+					mSensorManager.registerListener(MainActivity.this,
+							mSensorTypeAccel, mSensorDelaySwitch);
 
-					mSensorManager.registerListener(MainActivity.this, mGyro,
-							mDelay);
+					mSensorManager.registerListener(MainActivity.this,
+							mSensorTypeGyro, mSensorDelaySwitch);
 
-					normD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+					normDelayButton
+							.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
 
-							currentTime = currentNTime;
-							currentTime();
-							prevMode = prevModeN;
+									currentDelaySelection = currentlyNormalSelected;
+									currentTime();
+									previousSelectedDelay = previouslyNormalSelected;
 
-						}
-					});
+								}
+							});
 
-					uiD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+					uiDelayButton
+							.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
 
-							currentTime = currentUTime;
-							currentTime();
-							prevMode = prevModeU;
+									currentDelaySelection = currentlyUiSelected;
+									currentTime();
+									previousSelectedDelay = previouslyUiSelected;
 
-						}
-					});
+								}
+							});
 
-					gameD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+					gameDelayButton
+							.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
 
-							currentTime = currentGTime;
-							currentTime();
-							prevMode = prevModeG;
+									currentDelaySelection = currentlyGameSelected;
+									currentTime();
+									previousSelectedDelay = previouslyGameSelected;
 
-						}
-					});
+								}
+							});
 
-					fastD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+					fastDelayButton
+							.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
 
-							currentTime = currentFTime;
-							currentTime();
-							prevMode = prevModeF;
+									currentDelaySelection = currentlyFastSelected;
+									currentTime();
+									previousSelectedDelay = previouslyFastSelected;
 
-						}
-					});
+								}
+							});
 
 				} else {
 					mSensorManager.unregisterListener(MainActivity.this);
 
-					toggle.setChecked(false);
+					toggleButton.setChecked(false);
 
-					tC = 0;
+					toggleButtonCounter = 0;
 
 				}
 			}
@@ -243,6 +289,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
 	public void onSensorChanged(SensorEvent event) {
 		Log.d(tag, "onSensorChanged: " + event.sensor + ", x: "
 				+ event.values[0] + ", y: " + event.values[1] + ", z: "
@@ -253,14 +312,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mAxisZ = event.values[2];
 
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-			mxViewG.setText("Gyro X: " + mAxisX);
-			myViewG.setText("Gyro Y: " + mAxisY);
-			mzViewG.setText("Gyro Z: " + mAxisZ);
+			mXaxisGyro.setText("Gyro X: " + mAxisX);
+			mYaxisGyro.setText("Gyro Y: " + mAxisY);
+			mZaxisGyro.setText("Gyro Z: " + mAxisZ);
 		}
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			mxViewA.setText("Accel X: " + mAxisX);
-			myViewA.setText("Accel Y: " + mAxisY);
-			mzViewA.setText("Accel Z: " + mAxisZ);
+			mXaxisAccel.setText("Accel X: " + mAxisX);
+			mYaxisAccel.setText("Accel Y: " + mAxisY);
+			mZaxisAccel.setText("Accel Z: " + mAxisZ);
 		}
 
 	}
@@ -280,76 +339,90 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
 	}
 
+	/** Called on button click from onCreate method. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
 	public void currentTime() {
-		if (tC == 1) {
+		if (toggleButtonCounter == 1) {
 
-			if (currentTime == currentNTime) {
+			if (currentDelaySelection == currentlyNormalSelected) {
 
 				mNormEndTime = System.nanoTime();
 
 				mEndTime = mNormEndTime;
 				mStartTime = mNormStartTime;
 
-				mode();// Calculates time since last button click
+				timeSinceLastClick();// Calculates time since last button click
 
-				mClickN++; // Increases click counter
-				mClick = mClickN; // Sets displayed counter to current click
-									// counter
+				mClickCounterNorm++; // Increases click counter
+				mClickCounter = mClickCounterNorm; // Sets displayed counter to
+													// current click
+				// counter
 
-				mDelay = mNorm; // Sensor Delay Setting
-				mTextDelay = "Normal"; // String for TextView
-				text();
+				mSensorDelaySwitch = mSensorDelayNormal; // Sensor Delay Setting
+				mdelaySelectionTextView = "Normal"; // String for TextView
+				clickStatisticsUpdateSetText();
 
-			} else if (currentTime == currentUTime) {
+			} else if (currentDelaySelection == currentlyUiSelected) {
 
 				mUIEndTime = System.nanoTime();
 
 				mEndTime = mUIEndTime;
 				mStartTime = mUIStartTime;
 
-				mode();
+				timeSinceLastClick();
 
-				mClickU++;
-				mClick = mClickU;
+				mClickCounterUI++;
+				mClickCounter = mClickCounterUI;
 
-				mDelay = mUI;
-				mTextDelay = "UI";
-				text();
+				mSensorDelaySwitch = mSensorDelayUI;
+				mdelaySelectionTextView = "UI";
+				clickStatisticsUpdateSetText();
 
-			} else if (currentTime == currentGTime) {
+			} else if (currentDelaySelection == currentlyGameSelected) {
 
 				mGameEndTime = System.nanoTime();
 
 				mEndTime = mGameEndTime;
 				mStartTime = mGameStartTime;
 
-				mode();
+				timeSinceLastClick();
 
 				mClickG++;
-				mClick = mClickG;
+				mClickCounter = mClickG;
 
-				mDelay = mGame;
-				mTextDelay = "Game";
-				text();
+				mSensorDelaySwitch = mSensorDelayGame;
+				mdelaySelectionTextView = "Game";
+				clickStatisticsUpdateSetText();
 
-			} else if (currentTime == currentFTime) {
+			} else if (currentDelaySelection == currentlyFastSelected) {
 
 				mFastEndTime = System.nanoTime();
 
 				mEndTime = mFastEndTime;
 				mStartTime = mFastStartTime;
 
-				mode();
+				timeSinceLastClick();
 
 				mClickF++;
-				mClick = mClickF;
+				mClickCounter = mClickF;
 
-				mDelay = mFast;
-				mTextDelay = "Fast";
-				text();
+				mSensorDelaySwitch = mSensorDelayFastest;
+				mdelaySelectionTextView = "Fast";
+				clickStatisticsUpdateSetText();
 			}
 
-			delay();
+			listenerOffOnSwitch();
 
 		} else {
 
@@ -358,100 +431,169 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
-	public void mode() {
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
+	public void timeSinceLastClick() {
 
-		duration = (mEndTime - mStartTime) / 1000000; // Gets last click
-														// time and converts
-														// to milliseconds
+		durationSinceLastClick = (mEndTime - mStartTime) / 1000000; // Gets last
+																	// click
+																	// time and
+																	// converts
+																	// to
+																	// milliseconds
 
-		if (mode == modeN) {
+		if (delayMode == delayModeNorm) {
 
-			mEndN = mEndN + duration; // Adds time since last to total time
-										// of button being clicked
+			mEndTimeNorm = mEndTimeNorm + durationSinceLastClick; // Adds time
+																	// since
+																	// last to
+																	// total
+																	// time of
+																	// button
+																	// being
+																	// clicked
 
-			mEndT = mEndN / 1000;// Converts milliseconds to seconds
+			mEndT = mEndTimeNorm / 1000;// Converts milliseconds to seconds
 
-		} else if (mode == modeU) {
+		} else if (delayMode == delayModeUI) {
 
-			mEndU = mEndU + duration;
-			mEndT = mEndU / 1000;
+			mEndTimeUI = mEndTimeUI + durationSinceLastClick;
+			mEndT = mEndTimeUI / 1000;
 
-		} else if (mode == modeG) {
+		} else if (delayMode == delayModeGame) {
 
-			mEndG = mEndG + duration;
-			mEndT = mEndG / 1000;
+			mEndTimeGame = mEndTimeGame + durationSinceLastClick;
+			mEndT = mEndTimeGame / 1000;
 
-		} else if (mode == modeF) {
+		} else if (delayMode == delayModeGast) {
 
-			mEndF = mEndF + duration;
-			mEndT = mEndF / 1000;
+			mEndTimeFast = mEndTimeFast + durationSinceLastClick;
+			mEndT = mEndTimeFast / 1000;
 
 		}
 
 	}
 
-	public void delay() {
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
+	public void listenerOffOnSwitch() {
 
 		mSensorManager.unregisterListener(this);
-		mSensorManager.registerListener(this, mAccel, mDelay);
-		mSensorManager.registerListener(this, mGyro, mDelay);
+		mSensorManager.registerListener(this, mSensorTypeAccel,
+				mSensorDelaySwitch);
+		mSensorManager.registerListener(this, mSensorTypeGyro,
+				mSensorDelaySwitch);
 
-		onoff();
+		setStartAndEndTime();
 
 	}
 
-	public void text() {
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
+	public void clickStatisticsUpdateSetText() {
 
-		if (currentTime == currentNTime) {
+		if (currentDelaySelection == currentlyNormalSelected) {
 
-			mNormLast.setText(String.valueOf(duration)); // Converts long to
-															// string
+			mNormLastClick.setText(String.valueOf(durationSinceLastClick)); // Converts
+																			// long
+																			// to
+																			// string
 
-			mNormLast.setText("" + duration);
-
-			previousMode();
-
-			mNormCount.setText("" + mClick);
-			mode = modeN;
-
-		} else if (currentTime == currentUTime) {
-
-			mUiLast.setText(String.valueOf(duration));
-
-			mUiLast.setText("" + duration);
-
-			previousMode();
-
-			mUiCount.setText("" + mClick);
-			mode = modeU;
-
-		} else if (currentTime == currentGTime) {
-
-			mGameLast.setText(String.valueOf(duration));
-
-			mGameLast.setText("" + duration);
+			mNormLastClick.setText("" + durationSinceLastClick);
 
 			previousMode();
 
-			mGameCount.setText("" + mClick);
-			mode = modeG;
+			mNormClickCount.setText("" + mClickCounter);
+			delayMode = delayModeNorm;
 
-		} else if (currentTime == currentFTime) {
+		} else if (currentDelaySelection == currentlyUiSelected) {
 
-			mFastLast.setText(String.valueOf(duration));
+			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
 
-			mFastLast.setText("" + duration);
+			mUiLastClick.setText("" + durationSinceLastClick);
 
 			previousMode();
 
-			mFastCount.setText("" + mClick);
-			mode = modeF;
+			mUiClickCount.setText("" + mClickCounter);
+			delayMode = delayModeUI;
+
+		} else if (currentDelaySelection == currentlyGameSelected) {
+
+			mGameLastClick.setText(String.valueOf(durationSinceLastClick));
+
+			mGameLastClick.setText("" + durationSinceLastClick);
+
+			previousMode();
+
+			mGameClickCount.setText("" + mClickCounter);
+			delayMode = delayModeGame;
+
+		} else if (currentDelaySelection == currentlyFastSelected) {
+
+			mFastLastClick.setText(String.valueOf(durationSinceLastClick));
+
+			mFastLastClick.setText("" + durationSinceLastClick);
+
+			previousMode();
+
+			mFastClickCount.setText("" + mClickCounter);
+			delayMode = delayModeGast;
 
 		}
 
 	}
 
-	public void onoff() {
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * 
+	 * - Sets time keeping counter
+	 * 
+	 * 
+	 * Returns the duplicated String.
+	 */
+	public void setStartAndEndTime() {
 
 		mNormEndTime = System.nanoTime();
 		mGameEndTime = System.nanoTime();
@@ -465,30 +607,43 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
+	/** Called when the sensors pick up new readings. */
+	/*
+	 * Public: Duplicate some text an arbitrary number of times.
+	 * 
+	 * text - the String to be duplicated. count - The Integer number of times
+	 * to duplicate the text.
+	 * 
+	 * Examples
+	 * 
+	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * 
+	 * Returns the duplicated String.
+	 */
 	public void previousMode() {
-		if (prevMode == prevModeN) {
+		if (previousSelectedDelay == previouslyNormalSelected) {
 
-			mNormTotal.setText(String.valueOf(mEndT));
+			mNormTotalTime.setText(String.valueOf(mEndT));
 
-			mNormTotal.setText("" + mEndT);
+			mNormTotalTime.setText("" + mEndT);
 
-		} else if (prevMode == prevModeU) {
+		} else if (previousSelectedDelay == previouslyUiSelected) {
 
-			mUiTotal.setText(String.valueOf(mEndT));
+			mUiTotalTime.setText(String.valueOf(mEndT));
 
-			mUiTotal.setText("" + mEndT);
+			mUiTotalTime.setText("" + mEndT);
 
-		} else if (prevMode == prevModeG) {
+		} else if (previousSelectedDelay == previouslyGameSelected) {
 
-			mGameTotal.setText(String.valueOf(mEndT));
+			mGameTotalTime.setText(String.valueOf(mEndT));
 
-			mGameTotal.setText("" + mEndT);
+			mGameTotalTime.setText("" + mEndT);
 
-		} else if (prevMode == prevModeF) {
+		} else if (previousSelectedDelay == previouslyFastSelected) {
 
-			mFastTotal.setText(String.valueOf(mEndT));
+			mFastTotalTime.setText(String.valueOf(mEndT));
 
-			mFastTotal.setText("" + mEndT);
+			mFastTotalTime.setText("" + mEndT);
 
 		}
 	}
