@@ -75,11 +75,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int mFast;
 	int mDelay;
 
-	int prevNTime = 1;
-	int prevUTime = 2;
-	int prevGTime = 3;
-	int prevFTime = 4;
-	int prevTime;
+	int currentNTime = 1;
+	int currentUTime = 2;
+	int currentGTime = 3;
+	int currentFTime = 4;
+	int currentTime;
 
 	int modeN = 1;
 	int modeU = 2;
@@ -92,8 +92,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int prevModeG = 3;
 	int prevModeF = 4;
 	int prevMode;
-
-	int mModeChange;
 
 	int tC;
 
@@ -171,7 +169,77 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		toggle.setChecked(false);
 
-		click();
+		toggle.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (toggle.isChecked()) {
+
+					onoff();
+
+					tC = 1;
+
+					mSensorManager.registerListener(MainActivity.this, mAccel,
+							mDelay);
+
+					mSensorManager.registerListener(MainActivity.this, mGyro,
+							mDelay);
+
+					normD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+							currentTime = currentNTime;
+							currentTime();
+							prevMode = prevModeN;
+
+						}
+					});
+
+					uiD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+							currentTime = currentUTime;
+							currentTime();
+							prevMode = prevModeU;
+
+						}
+					});
+
+					gameD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+							currentTime = currentGTime;
+							currentTime();
+							prevMode = prevModeG;
+
+						}
+					});
+
+					fastD.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+							currentTime = currentFTime;
+							currentTime();
+							prevMode = prevModeF;
+
+						}
+					});
+
+				} else {
+					mSensorManager.unregisterListener(MainActivity.this);
+
+					toggle.setChecked(false);
+
+					tC = 0;
+
+				}
+			}
+		});
 
 	}
 
@@ -212,93 +280,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
 	}
 
-	public void click() {
-		toggle.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (toggle.isChecked()) {
-
-					onoff();
-
-					tC = 1;
-
-					mSensorManager.registerListener(MainActivity.this, mAccel,
-							mDelay);
-
-					mSensorManager.registerListener(MainActivity.this, mGyro,
-							mDelay);
-
-					normD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							prevTime = prevNTime;
-							previousTime();
-
-						}
-					});
-
-					uiD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							prevTime = prevUTime;
-							previousTime();
-
-						}
-					});
-
-					gameD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							prevTime = prevGTime;
-							previousTime();
-
-						}
-					});
-
-					fastD.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							prevTime = prevFTime;
-							previousTime();
-
-						}
-					});
-
-				} else {
-					mSensorManager.unregisterListener(MainActivity.this);
-
-					toggle.setChecked(false);
-
-					tC = 0;
-
-				}
-			}
-		});
-
-		if (tC == 1) { // Redundant listener unregister and toggle unchecking
-
-			return;
-
-		} else {
-
-			mSensorManager.unregisterListener(MainActivity.this);
-			toggle.setChecked(false);
-
-		}
-	}
-
-	public void previousTime() {
+	public void currentTime() {
 		if (tC == 1) {
 
-			mModeChange = 0;
-
-			if (prevTime == prevNTime) {
+			if (currentTime == currentNTime) {
 
 				mNormEndTime = System.nanoTime();
 
@@ -313,12 +298,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mDelay = mNorm; // Sensor Delay Setting
 				mTextDelay = "Normal"; // String for TextView
-
 				text();
 
-				mode = modeN;
-
-			} else if (prevTime == prevUTime) {
+			} else if (currentTime == currentUTime) {
 
 				mUIEndTime = System.nanoTime();
 
@@ -332,12 +314,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mDelay = mUI;
 				mTextDelay = "UI";
-
 				text();
 
-				mode = modeU;
-
-			} else if (prevTime == prevGTime) {
+			} else if (currentTime == currentGTime) {
 
 				mGameEndTime = System.nanoTime();
 
@@ -351,12 +330,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mDelay = mGame;
 				mTextDelay = "Game";
-
 				text();
 
-				mode = modeG;
-
-			} else if (prevTime == prevFTime) {
+			} else if (currentTime == currentFTime) {
 
 				mFastEndTime = System.nanoTime();
 
@@ -370,10 +346,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mDelay = mFast;
 				mTextDelay = "Fast";
-
 				text();
-
-				mode = modeF;
 			}
 
 			delay();
@@ -386,8 +359,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	public void mode() {
-
-		// if (mModeChange == 0) {
 
 		duration = (mEndTime - mStartTime) / 1000000; // Gets last click
 														// time and converts
@@ -416,43 +387,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mEndT = mEndF / 1000;
 
 		}
-		// } else if (mModeChange == 1) {
-		//
-		// duration = (mEndTime - mStartTime) / 1000000;
-		//
-		// if (prevMode == prevModeN) {
-		//
-		// mEndN = mEndN + duration;
-		//
-		// mEndT = mEndN / 1000;
-		//
-		// mModeChange = 1;
-		//
-		// } else if (prevMode == prevModeU) {
-		//
-		// mEndU = mEndU + duration;
-		// mEndT = mEndU / 1000;
-		//
-		// mModeChange = 1;
-		//
-		// } else if (prevMode == prevModeG) {
-		//
-		// mEndG = mEndG + duration;
-		// mEndT = mEndG / 1000;
-		//
-		// mModeChange = 1;
-		//
-		// } else if (prevMode == prevModeF) {
-		//
-		// mEndF = mEndF + duration;
-		// mEndT = mEndF / 1000;
-		//
-		// mModeChange = 1;
-		//
-		// }
-		//
-		//
-		// }
+
 	}
 
 	public void delay() {
@@ -467,46 +402,52 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	public void text() {
 
-		if (mode == modeN) {
+		if (currentTime == currentNTime) {
 
 			mNormLast.setText(String.valueOf(duration)); // Converts long to
 															// string
-			mNormTotal.setText(String.valueOf(mEndT));
 
 			mNormLast.setText("" + duration);
-			mNormTotal.setText("" + mEndT);
-			mNormCount.setText("" + mClick);
 
-		} else if (mode == modeU) {
+			previousMode();
+
+			mNormCount.setText("" + mClick);
+			mode = modeN;
+
+		} else if (currentTime == currentUTime) {
 
 			mUiLast.setText(String.valueOf(duration));
-			mUiTotal.setText(String.valueOf(mEndT));
 
 			mUiLast.setText("" + duration);
-			mUiTotal.setText("" + mEndT);
-			mUiCount.setText("" + mClick);
 
-		} else if (mode == modeG) {
+			previousMode();
+
+			mUiCount.setText("" + mClick);
+			mode = modeU;
+
+		} else if (currentTime == currentGTime) {
 
 			mGameLast.setText(String.valueOf(duration));
-			mGameTotal.setText(String.valueOf(mEndT));
 
 			mGameLast.setText("" + duration);
-			mGameTotal.setText("" + mEndT);
-			mGameCount.setText("" + mClick);
 
-		} else if (mode == modeF) {
+			previousMode();
+
+			mGameCount.setText("" + mClick);
+			mode = modeG;
+
+		} else if (currentTime == currentFTime) {
 
 			mFastLast.setText(String.valueOf(duration));
-			mFastTotal.setText(String.valueOf(mEndT));
 
 			mFastLast.setText("" + duration);
-			mFastTotal.setText("" + mEndT);
+
+			previousMode();
+
 			mFastCount.setText("" + mClick);
+			mode = modeF;
 
 		}
-
-		click();
 
 	}
 
@@ -524,4 +465,31 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
+	public void previousMode() {
+		if (prevMode == prevModeN) {
+
+			mNormTotal.setText(String.valueOf(mEndT));
+
+			mNormTotal.setText("" + mEndT);
+
+		} else if (prevMode == prevModeU) {
+
+			mUiTotal.setText(String.valueOf(mEndT));
+
+			mUiTotal.setText("" + mEndT);
+
+		} else if (prevMode == prevModeG) {
+
+			mGameTotal.setText(String.valueOf(mEndT));
+
+			mGameTotal.setText("" + mEndT);
+
+		} else if (prevMode == prevModeF) {
+
+			mFastTotal.setText(String.valueOf(mEndT));
+
+			mFastTotal.setText("" + mEndT);
+
+		}
+	}
 }
