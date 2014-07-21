@@ -43,52 +43,25 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
 
 	long durationSinceLastClick;
-	int dur = (int) durationSinceLastClick;
 
-	long mNormStartTime;
-	long mGameStartTime;
-	long mUIStartTime;
-	long mFastStartTime;
 	long mStartTime;
 
-	long mNormEndTime;
-	long mGameEndTime;
-	long mUIEndTime;
-	long mFastEndTime;
 	long mEndTime;
 
 	long mTotalTime;
-	long mTotalTimeNorm;
-	long mEndTimeGame;
-	long mEndTimeUI;
-	long mEndTimeFast;
+	long mTotalTimeNorm, mTotalTimeGame, mTotalTimeUI, mTotalTimeFast;
 
-	int mSensorDelayNormal;
-	int mSensorDelayGame;
-	int mSensorDelayUI;
-	int mSensorDelayFastest;
+	int mSensorDelayNormal, mSensorDelayGame, mSensorDelayUI,
+			mSensorDelayFastest;
 	int mSensorDelaySwitch;
 
-	int currentDelaySelection;
-
-	int delayModeNorm = 1;
-	int delayModeUI = 2;
-	int delayModeGame = 3;
-	int delayModeFast = 4;
-	int delayMode;
-
-	int previousSelectedDelay;
+	int previousSelectedDelay = -1;
 
 	int toggleButtonCounter;
-	int mClickCounterNorm;
-	int mClickCounterUI;
-	int mClickG;
-	int mClickF;
-	int mClickCounter;
 
-	float mAxisX;
-	float mAxisY;
-	float mAxisZ;
+	int mClickCounterNorm, mClickCounterUI, mClickCounterGame,
+			mClickCounterFast;
+	int mClickCounter;
 
 	Chronometer chronometerClock;
 
@@ -111,6 +84,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		setContentView(R.layout.activity_main);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+		// Validate whether an accelerometer or gyroscope is present or not
 		mSensorTypeAccel = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorTypeGyro = mSensorManager
@@ -156,11 +130,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		gameDelayButton = (Button) findViewById(R.id.GD);
 		uiDelayButton = (Button) findViewById(R.id.UD);
 		fastDelayButton = (Button) findViewById(R.id.FD);
-
-		mNormStartTime = System.nanoTime();
-		mGameStartTime = System.nanoTime();
-		mUIStartTime = System.nanoTime();
-		mFastStartTime = System.nanoTime();
 
 		chronometerClock = (Chronometer) findViewById(R.id.chronometer1);
 		chronometerClock.setBase(SystemClock.elapsedRealtime());
@@ -211,40 +180,50 @@ public class MainActivity extends Activity implements SensorEventListener {
 		toggleGyro.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				togglebutton();
+				if (toggleGyro.isChecked()) {
+
+					mSensorType = mSensorTypeGyro;
+					mainButtonFunction();
+
+				} else {
+
+					mSensorManager.unregisterListener(MainActivity.this,
+							mSensorTypeGyro);
+
+					setCheckedFalse();
+
+				}
 			}
 		});
 		toggleAccel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				togglebutton();
+				if (toggleAccel.isChecked()) {
+
+					mSensorType = mSensorTypeAccel;
+					mainButtonFunction();
+
+				} else {
+
+					mSensorManager.unregisterListener(MainActivity.this,
+							mSensorTypeAccel);
+
+					setCheckedFalse();
+
+				}
 			}
 		});
 
 	}
 
-	public void togglebutton() {
+	public void setCheckedFalse() {
 
-		if (toggleGyro.isChecked()) {
+		toggleAccel.setChecked(false);
 
-			mSensorType = mSensorTypeGyro;
-			mainButtonFunction();
+		toggleGyro.setChecked(false);
 
-		}
-		if (toggleAccel.isChecked()) {
+		toggleButtonCounter = 0;
 
-			mSensorType = mSensorTypeAccel;
-			mainButtonFunction();
-
-		} else {
-
-			mSensorManager.unregisterListener(MainActivity.this);
-
-			toggleGyro.setChecked(false);
-
-			toggleButtonCounter = 0;
-
-		}
 	}
 
 	public void mainButtonFunction() {
@@ -255,14 +234,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mSensorManager.registerListener(MainActivity.this, mSensorType,
 				mSensorDelaySwitch);
 
-		mSensorManager.registerListener(MainActivity.this, mSensorType,
-				mSensorDelaySwitch);
-
 		normDelayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = mSensorDelayNormal;
+				mSensorDelaySwitch = mSensorDelayNormal;
 				currentTime();
 				previousSelectedDelay = mSensorDelayNormal;
 
@@ -273,7 +249,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = mSensorDelayUI;
+				mSensorDelaySwitch = mSensorDelayUI;
 				currentTime();
 				previousSelectedDelay = mSensorDelayUI;
 
@@ -284,7 +260,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = mSensorDelayGame;
+				mSensorDelaySwitch = mSensorDelayGame;
 				currentTime();
 				previousSelectedDelay = mSensorDelayGame;
 
@@ -295,7 +271,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = mSensorDelayFastest;
+				mSensorDelaySwitch = mSensorDelayFastest;
 				currentTime();
 				previousSelectedDelay = mSensorDelayFastest;
 
@@ -322,19 +298,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 				+ event.values[0] + ", y: " + event.values[1] + ", z: "
 				+ event.values[2]);
 
-		mAxisX = event.values[0];
-		mAxisY = event.values[1];
-		mAxisZ = event.values[2];
+		float AxisX = event.values[0];
+		float AxisY = event.values[1];
+		float AxisZ = event.values[2];
 
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-			mXaxisGyro.setText("Gyro X: " + mAxisX);
-			mYaxisGyro.setText("Gyro Y: " + mAxisY);
-			mZaxisGyro.setText("Gyro Z: " + mAxisZ);
+			mXaxisGyro.setText("Gyro X: " + AxisX);
+			mYaxisGyro.setText("Gyro Y: " + AxisY);
+			mZaxisGyro.setText("Gyro Z: " + AxisZ);
 		}
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			mXaxisAccel.setText("Accel X: " + mAxisX);
-			mYaxisAccel.setText("Accel Y: " + mAxisY);
-			mZaxisAccel.setText("Accel Z: " + mAxisZ);
+			mXaxisAccel.setText("Accel X: " + AxisX);
+			mYaxisAccel.setText("Accel Y: " + AxisY);
+			mZaxisAccel.setText("Accel Z: " + AxisZ);
 		}
 
 	}
@@ -400,12 +376,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void currentTime() {
 		if (toggleButtonCounter == 1) {
 
-			if (currentDelaySelection == mSensorDelayNormal) {
+			if (mSensorDelaySwitch == mSensorDelayNormal) {
 
-				mNormEndTime = System.nanoTime(); // put this as EndTime earlier
+				mEndTime = System.nanoTime(); // put this as EndTime earlier
 
-				mEndTime = mNormEndTime;
-				mStartTime = mNormStartTime;
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();// Calculates time since last button click
 
@@ -415,12 +389,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mSensorDelaySwitch = mSensorDelayNormal;
 				mDelaySelectionTextView = "Normal";
 
-			} else if (currentDelaySelection == mSensorDelayUI) {
+			} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
-				mUIEndTime = System.nanoTime();
+				mEndTime = System.nanoTime();
 
-				mEndTime = mUIEndTime;
-				mStartTime = mUIStartTime;
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
@@ -430,32 +402,28 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mSensorDelaySwitch = mSensorDelayUI;
 				mDelaySelectionTextView = "UI";
 
-			} else if (currentDelaySelection == mSensorDelayGame) {
+			} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
-				mGameEndTime = System.nanoTime();
+				mEndTime = System.nanoTime();
 
-				mEndTime = mGameEndTime;
-				mStartTime = mGameStartTime;
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
-				mClickG++;
-				mClickCounter = mClickG;
+				mClickCounterGame++;
+				mClickCounter = mClickCounterGame;
 
 				mSensorDelaySwitch = mSensorDelayGame;
 				mDelaySelectionTextView = "Game";
 
-			} else if (currentDelaySelection == mSensorDelayFastest) {
+			} else if (mSensorDelaySwitch == mSensorDelayFastest) {
 
-				mFastEndTime = System.nanoTime();
+				mEndTime = System.nanoTime();
 
-				mEndTime = mFastEndTime;
-				mStartTime = mFastStartTime;
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
-				mClickF++;
-				mClickCounter = mClickF;
+				mClickCounterFast++;
+				mClickCounter = mClickCounterFast;
 
 				mSensorDelaySwitch = mSensorDelayFastest;
 				mDelaySelectionTextView = "Fast";
@@ -504,26 +472,26 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void timeSinceLastClick() {
 
-		if (delayMode == delayModeNorm) {
+		if (mSensorDelaySwitch == mSensorDelayNormal) {
 
 			mTotalTimeNorm = mTotalTimeNorm + durationSinceLastClick;
 
 			mTotalTime = mTotalTimeNorm / 1000;
 
-		} else if (delayMode == delayModeUI) {
+		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
-			mEndTimeUI = mEndTimeUI + durationSinceLastClick;
-			mTotalTime = mEndTimeUI / 1000;
+			mTotalTimeUI = mTotalTimeUI + durationSinceLastClick;
+			mTotalTime = mTotalTimeUI / 1000;
 
-		} else if (delayMode == delayModeGame) {
+		} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
-			mEndTimeGame = mEndTimeGame + durationSinceLastClick;
-			mTotalTime = mEndTimeGame / 1000;
+			mTotalTimeGame = mTotalTimeGame + durationSinceLastClick;
+			mTotalTime = mTotalTimeGame / 1000;
 
-		} else if (delayMode == delayModeFast) {
+		} else if (mSensorDelaySwitch == mSensorDelayFastest) {
 
-			mEndTimeFast = mEndTimeFast + durationSinceLastClick;
-			mTotalTime = mEndTimeFast / 1000;
+			mTotalTimeFast = mTotalTimeFast + durationSinceLastClick;
+			mTotalTime = mTotalTimeFast / 1000;
 
 		}
 
@@ -606,7 +574,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void clickStatisticsText() {
 
-		if (currentDelaySelection == mSensorDelayNormal) {
+		if (mSensorDelaySwitch == mSensorDelayNormal) {
 
 			mNormLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -618,9 +586,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayColorChange();
 
-			delayMode = delayModeNorm;
-
-		} else if (currentDelaySelection == mSensorDelayUI) {
+		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
 			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -632,9 +598,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayColorChange();
 
-			delayMode = delayModeUI;
-
-		} else if (currentDelaySelection == mSensorDelayGame) {
+		} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
 			mGameLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -646,9 +610,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayColorChange();
 
-			delayMode = delayModeGame;
-
-		} else if (currentDelaySelection == mSensorDelayFastest) {
+		} else if (mSensorDelaySwitch == mSensorDelayFastest) {
 
 			mFastLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -659,8 +621,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mFastClickCount.setText("" + mClickCounter);
 
 			delayColorChange();
-
-			delayMode = delayModeFast;
 
 		}
 
@@ -686,15 +646,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void setStartAndEndTime() {
 
-		mNormEndTime = System.nanoTime();
-		mGameEndTime = System.nanoTime();
-		mUIEndTime = System.nanoTime();
-		mFastEndTime = System.nanoTime();
+		mEndTime = System.nanoTime();
 
-		mNormStartTime = System.nanoTime();
-		mGameStartTime = System.nanoTime();
-		mUIStartTime = System.nanoTime();
-		mFastStartTime = System.nanoTime();
+		mStartTime = System.nanoTime();
 
 	}
 
@@ -759,6 +713,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			mFastTotalTime.setText("" + mTotalTime);
 
+		} else {
+			previousSelectedDelay = mSensorDelaySwitch;
+			previousMode();
 		}
 
 		mSelection.setText("Current Delay Selection: "
@@ -791,28 +748,28 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * its background color and indicate its use
 	 */
 	public void delayColorChange() {
-		if (currentDelaySelection == mSensorDelayNormal) {
+		if (mSensorDelaySwitch == mSensorDelayNormal) {
 
 			mchronoNormalText.setBackgroundColor(0x55000000);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
 			mchronoGameText.setBackgroundColor(0x55FFFFFF);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == mSensorDelayUI) {
+		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55000000);
 			mchronoGameText.setBackgroundColor(0x55FFFFFF);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == mSensorDelayGame) {
+		} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
 			mchronoGameText.setBackgroundColor(0x55000000);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == mSensorDelayFastest) {
+		} else if (mSensorDelaySwitch == mSensorDelayFastest) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
