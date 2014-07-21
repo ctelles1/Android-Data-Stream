@@ -5,19 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <!--
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gridview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnWidth="90dp"
-    android:numColumns="auto_fit"
-    android:verticalSpacing="10dp"
-    android:horizontalSpacing="10dp"
-    android:stretchMode="columnWidth"
-    android:gravity="center" /> 
-    -->
-
     <TextView
         android:id="@+id/hello"
         android:layout_width="wrap_content"
@@ -151,7 +138,7 @@
         android:id="@+id/chronoNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/zbox"
+        android:layout_below="@id/zbox"
         android:layout_marginLeft="65dp"
         android:layout_marginTop="45dp"
         android:text="@string/cN" />
@@ -182,15 +169,6 @@
         android:layout_marginLeft="45dp"
         android:layout_toRightOf="@+id/chronoGame"
         android:text="@string/cF" />
-
-    <ToggleButton
-        android:id="@+id/powerSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="31dp"
-        android:layout_toRightOf="@+id/chronoUI"
-        android:text="@string/onSwitch" />
 
     <TextView
         android:id="@+id/normLast"
@@ -320,5 +298,51 @@
         android:layout_alignBottom="@+id/normCount"
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
+
+    <TextView
+        android:id="@+id/selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/clickCount"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="@string/selection" />
+
+    <ToggleButton
+        android:id="@+id/powerAccel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/selection"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="@string/onAccel" />
+
+    <ToggleButton
+        android:id="@+id/powerGyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:layout_toRightOf="@+id/selection"
+        android:text="@string/onGyro" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/powerAccel"
+        android:layout_alignRight="@+id/powerAccel"
+        android:layout_marginBottom="9dp"
+        android:text="@string/TextAccel" />
+
+    <TextView
+        android:id="@+id/textGyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignRight="@+id/powerGyro"
+        android:text="@string/TextGyro" />
 
 </RelativeLayout>

@@ -30,23 +30,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
 
-	TextView mNormLastClick;
-	TextView mUiLastClick;
-	TextView mGameLastClick;
-	TextView mFastLastClick;
-	TextView mNormTotalTime;
-	TextView mUiTotalTime;
-	TextView mGameTotalTime;
-	TextView mFastTotalTime;
-	TextView mNormClickCount;
-	TextView mUiClickCount;
-	TextView mGameClickCount;
-	TextView mFastClickCount;
+	TextView mNormLastClick, mUiLastClick, mGameLastClick, mFastLastClick;
+	TextView mNormTotalTime, mUiTotalTime, mGameTotalTime, mFastTotalTime;
+	TextView mNormClickCount, mUiClickCount, mGameClickCount, mFastClickCount;
+	TextView mchronoNormalText, mchronoGameText, mchronoUiText,
+			mchronoFastText;
 
-	String mdelaySelectionTextView;
+	TextView mSelection;
 
-	Sensor mSensorTypeAccel;
-	Sensor mSensorTypeGyro;
+	String mDelaySelectionTextView;
+
+	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
 
 	long durationSinceLastClick;
 	int dur = (int) durationSinceLastClick;
@@ -63,8 +57,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	long mFastEndTime;
 	long mEndTime;
 
-	long mEndT;
-	long mEndTimeNorm;
+	long mTotalTime;
+	long mTotalTimeNorm;
 	long mEndTimeGame;
 	long mEndTimeUI;
 	long mEndTimeFast;
@@ -84,7 +78,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int delayModeNorm = 1;
 	int delayModeUI = 2;
 	int delayModeGame = 3;
-	int delayModeGast = 4;
+	int delayModeFast = 4;
 	int delayMode;
 
 	int previouslyNormalSelected = 1;
@@ -107,7 +101,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Chronometer chronometerClock;
 
 	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
-	ToggleButton toggleButton;
+	ToggleButton toggleGyro, toggleAccel;
 
 	/******************************************************************************/
 
@@ -159,6 +153,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mUiClickCount = (TextView) findViewById(R.id.uiCount);
 		mFastClickCount = (TextView) findViewById(R.id.fastCount);
 
+		mSelection = (TextView) findViewById(R.id.selection);
+
+		mchronoNormalText = (TextView) findViewById(R.id.chronoNormal);
+		mchronoUiText = (TextView) findViewById(R.id.chronoUI);
+		mchronoGameText = (TextView) findViewById(R.id.chronoGame);
+		mchronoFastText = (TextView) findViewById(R.id.chronoFast);
+
 		normDelayButton = (Button) findViewById(R.id.ND);
 		gameDelayButton = (Button) findViewById(R.id.GD);
 		uiDelayButton = (Button) findViewById(R.id.UD);
@@ -173,9 +174,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		chronometerClock.setBase(SystemClock.elapsedRealtime());
 		chronometerClock.start();
 
-		toggleButton = (ToggleButton) findViewById(R.id.powerSwitch);
+		toggleGyro = (ToggleButton) findViewById(R.id.powerGyro);
+		toggleAccel = (ToggleButton) findViewById(R.id.powerAccel);
 
-		toggleButton.setChecked(false);
+		toggleGyro.setChecked(false);
+		toggleAccel.setChecked(false);
 
 		/**
 		 * Button Click listeners for On/Off Switch and Sensor Delay choice.
@@ -193,114 +196,134 @@ public class MainActivity extends Activity implements SensorEventListener {
 		 * registerListener for Sensor Delay Types (mSensorType[Accel/Gyro],
 		 * mSensorDelaySwitch)
 		 * 
-		 * @@@@ FUNCTIONS CALLED @@@@
+		 * @@@@ METHODS & FUNCTIONS CALLED @@@@
 		 * 
 		 * currentTime
 		 * 
 		 * setStartAndEndTime
+		 * 
+		 * listenerOffSwitch
 		 * 
 		 * @@@@@ VARIABLES @@@@@
 		 * 
 		 * toggleButtonCounter - On/Off Toggle Button redundancy check
 		 * 
 		 * currentDelaySelection - variable to make sure the methods currentTime
-		 * and clickStatisticsUpdateSetText are updating the values for the
-		 * right Delay Setting
+		 * and clickStatisticsText are updating the values for the right Delay
+		 * Setting
 		 * 
-		 *
+		 * 
 		 * previousSelectedDelay - variable to make sure the method previousMode
 		 * is updating the values for the right Delay Setting
 		 */
-		toggleButton.setOnClickListener(new OnClickListener() {
-
+		toggleGyro.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				if (toggleButton.isChecked()) {
-
-					setStartAndEndTime();
-
-					toggleButtonCounter = 1;
-
-					mSensorManager.registerListener(MainActivity.this,
-							mSensorTypeAccel, mSensorDelaySwitch);
-
-					mSensorManager.registerListener(MainActivity.this,
-							mSensorTypeGyro, mSensorDelaySwitch);
-
-					normDelayButton
-							.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-
-									currentDelaySelection = currentlyNormalSelected;
-									currentTime();
-									previousSelectedDelay = previouslyNormalSelected;
-
-								}
-							});
-
-					uiDelayButton
-							.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-
-									currentDelaySelection = currentlyUiSelected;
-									currentTime();
-									previousSelectedDelay = previouslyUiSelected;
-
-								}
-							});
-
-					gameDelayButton
-							.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-
-									currentDelaySelection = currentlyGameSelected;
-									currentTime();
-									previousSelectedDelay = previouslyGameSelected;
-
-								}
-							});
-
-					fastDelayButton
-							.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-
-									currentDelaySelection = currentlyFastSelected;
-									currentTime();
-									previousSelectedDelay = previouslyFastSelected;
-
-								}
-							});
-
-				} else {
-					mSensorManager.unregisterListener(MainActivity.this);
-
-					toggleButton.setChecked(false);
-
-					toggleButtonCounter = 0;
-
-				}
+				togglebutton();
+			}
+		});
+		toggleAccel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				togglebutton();
 			}
 		});
 
 	}
 
-	/** Called when the sensors pick up new readings. */
+	public void togglebutton() {
+
+		if (toggleGyro.isChecked()) {
+
+			mSensorType = mSensorTypeGyro;
+			mainButtonFunction();
+
+		}
+		if (toggleAccel.isChecked()) {
+
+			mSensorType = mSensorTypeAccel;
+			mainButtonFunction();
+
+		} else {
+
+			mSensorManager.unregisterListener(MainActivity.this);
+
+			toggleGyro.setChecked(false);
+
+			toggleButtonCounter = 0;
+
+		}
+	}
+
+	public void mainButtonFunction() {
+		setStartAndEndTime();
+
+		toggleButtonCounter = 1;
+
+		mSensorManager.registerListener(MainActivity.this, mSensorType,
+				mSensorDelaySwitch);
+
+		mSensorManager.registerListener(MainActivity.this, mSensorType,
+				mSensorDelaySwitch);
+
+		normDelayButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				currentDelaySelection = currentlyNormalSelected;
+				currentTime();
+				previousSelectedDelay = previouslyNormalSelected;
+
+			}
+		});
+
+		uiDelayButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				currentDelaySelection = currentlyUiSelected;
+				currentTime();
+				previousSelectedDelay = previouslyUiSelected;
+
+			}
+		});
+
+		gameDelayButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				currentDelaySelection = currentlyGameSelected;
+				currentTime();
+				previousSelectedDelay = previouslyGameSelected;
+
+			}
+		});
+
+		fastDelayButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				currentDelaySelection = currentlyFastSelected;
+				currentTime();
+				previousSelectedDelay = previouslyFastSelected;
+
+			}
+		});
+	}
+
+	/**
+	 * Called when the sensors pick up new readings. Changes values of X, Y, and
+	 * Z variables on Sensor Events on either Gyroscope or Accelerometer.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * event.sensor.getType for Gyroscope and Accelerometer
 	 * 
-	 * Examples
+	 * @@@@@ VARIABLES @@@@@
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
-	 * 
-	 * Returns the duplicated String.
+	 * mAxisX/Y/Z - event.values determined by Event Sensor readings, and set on
+	 * UI by If Statements of event.sensor
 	 */
 	public void onSensorChanged(SensorEvent event) {
 		Log.d(tag, "onSensorChanged: " + event.sensor + ", x: "
@@ -339,39 +362,66 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
 	}
 
-	/** Called on button click from onCreate method. */
+	/**
+	 * Called on button click from onCreate method. Button Click listeners for
+	 * On/Off Switch and Sensor Delay choice. Starts keeping time and registers
+	 * listeners for Accelerometer and Gyroscope sensors after button click.
+	 * Leads to function which starts the Click Statistics calculation and
+	 * display loop.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * toggleButtonCounter - On/Off button redundancy check
 	 * 
-	 * Examples
+	 * currentDelaySelection - chooses Sensor Delay data instruction loop based
+	 * on Sensor Delay choice in onCreate onClickListener.
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * System.nanoTime - gets current system time up to nanoseconds
 	 * 
-	 * Returns the duplicated String.
+	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
+	 * 
+	 * timeSincLastClick
+	 * 
+	 * clickStatisticsText
+	 * 
+	 * @@@@@ VARIABLES @@@@@
+	 * 
+	 * m(Norm/Game/UI/Fast)EndTime - sets variable to current system time
+	 * 
+	 * mEndTime - sets "End Time" for calculation of time difference between
+	 * clicks
+	 * 
+	 * mStartTime - sets "Start Time" for calculation of time difference between
+	 * clicks
+	 * 
+	 * mClickCounter(Norm/Game/UI/Fast) - Increases counter by one every time
+	 * button is clicked
+	 * 
+	 * mClickCounter - sets number to be displayed on screen to the currently
+	 * handled click counter
+	 * 
+	 * mSensorDelaySwitch - sets current Sensor Delay to chosen setting
+	 * 
+	 * mDelaySelectionTextView - sets Current Delay text for display
 	 */
 	public void currentTime() {
 		if (toggleButtonCounter == 1) {
 
 			if (currentDelaySelection == currentlyNormalSelected) {
 
-				mNormEndTime = System.nanoTime();
+				mNormEndTime = System.nanoTime(); // put this as EndTime earlier
 
 				mEndTime = mNormEndTime;
 				mStartTime = mNormStartTime;
-
+				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();// Calculates time since last button click
 
-				mClickCounterNorm++; // Increases click counter
-				mClickCounter = mClickCounterNorm; // Sets displayed counter to
-													// current click
-				// counter
+				mClickCounterNorm++;
+				mClickCounter = mClickCounterNorm;
 
-				mSensorDelaySwitch = mSensorDelayNormal; // Sensor Delay Setting
-				mdelaySelectionTextView = "Normal"; // String for TextView
-				clickStatisticsUpdateSetText();
+				mSensorDelaySwitch = mSensorDelayNormal;
+				mDelaySelectionTextView = "Normal";
 
 			} else if (currentDelaySelection == currentlyUiSelected) {
 
@@ -379,15 +429,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mEndTime = mUIEndTime;
 				mStartTime = mUIStartTime;
-
+				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
 				mClickCounterUI++;
 				mClickCounter = mClickCounterUI;
 
 				mSensorDelaySwitch = mSensorDelayUI;
-				mdelaySelectionTextView = "UI";
-				clickStatisticsUpdateSetText();
+				mDelaySelectionTextView = "UI";
 
 			} else if (currentDelaySelection == currentlyGameSelected) {
 
@@ -395,15 +444,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mEndTime = mGameEndTime;
 				mStartTime = mGameStartTime;
-
+				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
 				mClickG++;
 				mClickCounter = mClickG;
 
 				mSensorDelaySwitch = mSensorDelayGame;
-				mdelaySelectionTextView = "Game";
-				clickStatisticsUpdateSetText();
+				mDelaySelectionTextView = "Game";
 
 			} else if (currentDelaySelection == currentlyFastSelected) {
 
@@ -411,18 +459,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 				mEndTime = mFastEndTime;
 				mStartTime = mFastStartTime;
-
+				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
 				timeSinceLastClick();
 
 				mClickF++;
 				mClickCounter = mClickF;
 
 				mSensorDelaySwitch = mSensorDelayFastest;
-				mdelaySelectionTextView = "Fast";
-				clickStatisticsUpdateSetText();
+				mDelaySelectionTextView = "Fast";
+
 			}
 
-			listenerOffOnSwitch();
+			clickStatisticsText(); // Sets text on display
+
+			listenerOffOnSwitch(); // Unregisters current Delay setting
+									// listeners and Registers them in new Delay
+									// settings
 
 		} else {
 
@@ -431,112 +483,149 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
-	/** Called when the sensors pick up new readings. */
+	/**
+	 * Called in currentTime(), after Sensor Delay choice and "End Time" is
+	 * gathered. Calculates time since last button click in milliseconds, adds
+	 * current time since last click to total Sensor Delay usage time, and
+	 * converts current time of usage to seconds.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * delayMode - Sensor Delay Switch set in currentTime()
 	 * 
-	 * Examples
+	 * @@@@@ VARIABLES @@@@@
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * durationSinceLastClick - time between last mStartTime and last mEndTime
+	 * register
 	 * 
-	 * Returns the duplicated String.
+	 * mEndTime - time gathered at button click
+	 * 
+	 * mStartTime - time gathered at end of Sensor Delay listener registration
+	 * function
+	 * 
+	 * mEndTime(Norm/UI/Game/Fast) - sets "End Time" to currently chosen Delay
+	 * total time elapsed plus time since last button click
+	 * 
+	 * mEndT - converts current "End Time" from milliseconds to seconds for
+	 * display
 	 */
 	public void timeSinceLastClick() {
 
-		durationSinceLastClick = (mEndTime - mStartTime) / 1000000; // Gets last
-																	// click
-																	// time and
-																	// converts
-																	// to
-																	// milliseconds
-
 		if (delayMode == delayModeNorm) {
 
-			mEndTimeNorm = mEndTimeNorm + durationSinceLastClick; // Adds time
-																	// since
-																	// last to
-																	// total
-																	// time of
-																	// button
-																	// being
-																	// clicked
+			mTotalTimeNorm = mTotalTimeNorm + durationSinceLastClick;
 
-			mEndT = mEndTimeNorm / 1000;// Converts milliseconds to seconds
+			mTotalTime = mTotalTimeNorm / 1000;
 
 		} else if (delayMode == delayModeUI) {
 
 			mEndTimeUI = mEndTimeUI + durationSinceLastClick;
-			mEndT = mEndTimeUI / 1000;
+			mTotalTime = mEndTimeUI / 1000;
 
 		} else if (delayMode == delayModeGame) {
 
 			mEndTimeGame = mEndTimeGame + durationSinceLastClick;
-			mEndT = mEndTimeGame / 1000;
+			mTotalTime = mEndTimeGame / 1000;
 
-		} else if (delayMode == delayModeGast) {
+		} else if (delayMode == delayModeFast) {
 
 			mEndTimeFast = mEndTimeFast + durationSinceLastClick;
-			mEndT = mEndTimeFast / 1000;
+			mTotalTime = mEndTimeFast / 1000;
 
 		}
 
 	}
 
-	/** Called when the sensors pick up new readings. */
+	/**
+	 * Called in currentTime() after if statements of button clicks are done.
+	 * Unregisters all listeners, then registers them again in the newly chosen
+	 * delay settings.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * unregisterListener - unregisters any sensors currently on
 	 * 
-	 * Examples
+	 * registerListener - registers a listenerfor Sensor Delay Types
+	 * (mSensorType[Accel/Gyro], mSensorDelaySwitch(Norm/UI/Game/Fast))
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * @@@@ FUNCTIONS CALLED @@@@
 	 * 
-	 * Returns the duplicated String.
+	 * setStartAndEndTime
 	 */
 	public void listenerOffOnSwitch() {
 
 		mSensorManager.unregisterListener(this);
-		mSensorManager.registerListener(this, mSensorTypeAccel,
-				mSensorDelaySwitch);
-		mSensorManager.registerListener(this, mSensorTypeGyro,
-				mSensorDelaySwitch);
 
-		setStartAndEndTime();
+		if (toggleGyro.isChecked()) {
+
+			mSensorManager.registerListener(this, mSensorTypeGyro,
+					mSensorDelaySwitch);
+
+		}
+		if (toggleAccel.isChecked()) {
+
+			mSensorManager.registerListener(this, mSensorTypeAccel,
+					mSensorDelaySwitch);
+
+		}
+
+		setStartAndEndTime(); // Gets values for start and end time calculations
 
 	}
 
-	/** Called when the sensors pick up new readings. */
-	/*
-	 * Public: Duplicate some text an arbitrary number of times.
-	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
-	 * 
-	 * Examples
-	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
-	 * 
-	 * Returns the duplicated String.
+	/**
+	 * Called in currentTime() after all calculations are made and TextViews are
+	 * changed. After checking for the current Delay selection, converts long
+	 * durationSinceLastClick to string and displays it, calls previousMode(),
+	 * displays click counter, calls delayColorChange(), and sets delayMode to
+	 * specified delay for use in timeSinceLastClick().
 	 */
-	public void clickStatisticsUpdateSetText() {
+	/*
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
+	 * 
+	 * currentDelaySelection - checks for current button selected as set in
+	 * onClick
+	 * 
+	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
+	 * 
+	 * previousMode()
+	 * 
+	 * delayColorChange()
+	 * 
+	 * .setText - sets the text inside the parentheses to the displayed id
+	 * 
+	 * @@@@@ VARIABLES @@@@@
+	 * 
+	 * m(Norm/UI/Game/Fast)LastClick - TextView displaying current time since
+	 * last click
+	 * 
+	 * durationSinceLastClick - time since last click
+	 * 
+	 * m(Norm/UI/Game/Fast)ClickCount - TextView displaying click counter
+	 * 
+	 * mClickCounter - total number of clicks for specified sensor delay
+	 * 
+	 * delayMode - sets post-calculation and text display sensor delay mode for
+	 * use in timeSinceLastClick()
+	 * 
+	 * delayMode(Norm/UI/Game/Fast) - sets delayMode to specified sensor delay
+	 */
+	public void clickStatisticsText() {
 
 		if (currentDelaySelection == currentlyNormalSelected) {
 
-			mNormLastClick.setText(String.valueOf(durationSinceLastClick)); // Converts
-																			// long
-																			// to
-																			// string
+			mNormLastClick.setText(String.valueOf(durationSinceLastClick));
 
 			mNormLastClick.setText("" + durationSinceLastClick);
 
 			previousMode();
 
 			mNormClickCount.setText("" + mClickCounter);
+
+			delayColorChange();
+
 			delayMode = delayModeNorm;
 
 		} else if (currentDelaySelection == currentlyUiSelected) {
@@ -548,6 +637,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			previousMode();
 
 			mUiClickCount.setText("" + mClickCounter);
+
+			delayColorChange();
+
 			delayMode = delayModeUI;
 
 		} else if (currentDelaySelection == currentlyGameSelected) {
@@ -559,6 +651,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			previousMode();
 
 			mGameClickCount.setText("" + mClickCounter);
+
+			delayColorChange();
+
 			delayMode = delayModeGame;
 
 		} else if (currentDelaySelection == currentlyFastSelected) {
@@ -570,28 +665,32 @@ public class MainActivity extends Activity implements SensorEventListener {
 			previousMode();
 
 			mFastClickCount.setText("" + mClickCounter);
-			delayMode = delayModeGast;
+
+			delayColorChange();
+
+			delayMode = delayModeFast;
 
 		}
 
 	}
 
-	/** Called when the sensors pick up new readings. */
+	/**
+	 * Called in onCreate and listenerOffOnSwitch. Sets "End Time" and
+	 * "Start Time" for each sensor delay so as to be used for next button
+	 * click's "duration" (endTime - startTime) calculation.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * System.nanoTime() - gets current system time and sets it to the variable
 	 * 
-	 * Examples
+	 * @@@@@ VARIABLES @@@@@
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * m(Norm/UI/Game/Fast)EndTime - sets current system time for EndTime
+	 * variables
 	 * 
-	 * 
-	 * - Sets time keeping counter
-	 * 
-	 * 
-	 * Returns the duplicated String.
+	 * m(Norm/UI/Game/Fast)StartTime - sets current system time for StartTime
+	 * variables
 	 */
 	public void setStartAndEndTime() {
 
@@ -607,44 +706,128 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
-	/** Called when the sensors pick up new readings. */
+	/**
+	 * Called in clickStatisticsText. Checks for the previously selected delay
+	 * setting so as to then set the current time elapsed since the last click
+	 * to the total amount of time elapsed under the specific previous setting.
+	 * It does this by converting the long mEndT to string and using .setText to
+	 * display it on variable m(Norm/UI/Game/Fast)TotalTime, and then sets the
+	 * TextView for the current selected Delay setting.
+	 */
 	/*
-	 * Public: Duplicate some text an arbitrary number of times.
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
 	 * 
-	 * text - the String to be duplicated. count - The Integer number of times
-	 * to duplicate the text.
+	 * previousSelectedDelay - checks for delay setting used previous to current
+	 * one
 	 * 
-	 * Examples
+	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
 	 * 
-	 * multiplex('Tom', 4) # => 'TomTomTomTom'
+	 * .setText
 	 * 
-	 * Returns the duplicated String.
+	 * @@@@@ VARIABLES @@@@@
+	 * 
+	 * previousSelectedDelay - variable to make sure the method previousMode is
+	 * updating the values for the right Delay Setting
+	 * 
+	 * previously(Normal/UI/Game/Fast)Selected - variable set in onClick after
+	 * all changes to display due to button click have been made
+	 * 
+	 * m(Norm/UI/Game/Fast)TotalTime - TextView displaying total time elapsed in
+	 * specified delay setting
+	 * 
+	 * mEndTime - current delay settings' total time elapsed
+	 * 
+	 * mSelection - TextView displaying name of current delay setting being used
+	 * 
+	 * mDelaySelectionTextView - current sensor delay setting text set in
+	 * currentTime()
 	 */
 	public void previousMode() {
 		if (previousSelectedDelay == previouslyNormalSelected) {
 
-			mNormTotalTime.setText(String.valueOf(mEndT));
+			mNormTotalTime.setText(String.valueOf(mTotalTime));
 
-			mNormTotalTime.setText("" + mEndT);
+			mNormTotalTime.setText("" + mTotalTime);
 
 		} else if (previousSelectedDelay == previouslyUiSelected) {
 
-			mUiTotalTime.setText(String.valueOf(mEndT));
+			mUiTotalTime.setText(String.valueOf(mTotalTime));
 
-			mUiTotalTime.setText("" + mEndT);
+			mUiTotalTime.setText("" + mTotalTime);
 
 		} else if (previousSelectedDelay == previouslyGameSelected) {
 
-			mGameTotalTime.setText(String.valueOf(mEndT));
+			mGameTotalTime.setText(String.valueOf(mTotalTime));
 
-			mGameTotalTime.setText("" + mEndT);
+			mGameTotalTime.setText("" + mTotalTime);
 
 		} else if (previousSelectedDelay == previouslyFastSelected) {
 
-			mFastTotalTime.setText(String.valueOf(mEndT));
+			mFastTotalTime.setText(String.valueOf(mTotalTime));
 
-			mFastTotalTime.setText("" + mEndT);
+			mFastTotalTime.setText("" + mTotalTime);
 
 		}
+
+		mSelection.setText("Current Delay Selection: "
+				+ mDelaySelectionTextView);
+
+	}
+
+	/**
+	 * Called in clickStatisticsText. Sets background of TextView box for sensor
+	 * delay setting name in display to dark gray, so as to signalize its
+	 * current use. It does this by chekcing for the current delay selection and
+	 * setting its TextView box to grey and the others to white, which clears
+	 * them.
+	 */
+	/*
+	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
+	 * 
+	 * currentDelaySelection - checks for current sensor delay setting
+	 * 
+	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
+	 * 
+	 * .setBackgroundColor - sets specified TextView box's color to (0xColor)
+	 * 
+	 * @@@@@ VARIABLES @@@@@
+	 * 
+	 * currentDelaySelection/currently(Normal/UI/Game/Fast)Selected - checking
+	 * for current sensor delay setting
+	 * 
+	 * mchrono(Normal/UI/Game/Fast)Text - calls specified TextView box to change
+	 * its background color and indicate its use
+	 */
+	public void delayColorChange() {
+		if (currentDelaySelection == currentlyNormalSelected) {
+
+			mchronoNormalText.setBackgroundColor(0x55000000);
+			mchronoUiText.setBackgroundColor(0x55FFFFFF);
+			mchronoGameText.setBackgroundColor(0x55FFFFFF);
+			mchronoFastText.setBackgroundColor(0x55FFFFFF);
+
+		} else if (currentDelaySelection == currentlyUiSelected) {
+
+			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
+			mchronoUiText.setBackgroundColor(0x55000000);
+			mchronoGameText.setBackgroundColor(0x55FFFFFF);
+			mchronoFastText.setBackgroundColor(0x55FFFFFF);
+
+		} else if (currentDelaySelection == currentlyGameSelected) {
+
+			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
+			mchronoUiText.setBackgroundColor(0x55FFFFFF);
+			mchronoGameText.setBackgroundColor(0x55000000);
+			mchronoFastText.setBackgroundColor(0x55FFFFFF);
+
+		} else if (currentDelaySelection == currentlyFastSelected) {
+
+			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
+			mchronoUiText.setBackgroundColor(0x55FFFFFF);
+			mchronoGameText.setBackgroundColor(0x55FFFFFF);
+			mchronoFastText.setBackgroundColor(0x55000000);
+
+		}
+
 	}
 }

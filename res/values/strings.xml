@@ -20,7 +20,8 @@
     <string name="cG">Game</string>
     <string name="cU">UI</string>
     <string name="cF">Fast</string>
-    <string name="onSwitch">On/Off</string>
+    <string name="onGyro">On/Off</string>
+    <string name="onAccel">On/Off</string>
     <string name="lastClick">Last (ms)</string>
     <string name="totalTime">Total (s)</string>
     <string name="clickCount">Clicks</string>
@@ -41,5 +42,8 @@
     <string name="uiStatus">-</string>
     <string name="gameStatus">-</string>
     <string name="fastStatus">-</string>
+    <string name="selection">Current Delay Selection: </string>
+    <string name="TextGyro">Gyroscope </string>
+    <string name="TextAccel">Accelerometer </string>
 
 </resources>
