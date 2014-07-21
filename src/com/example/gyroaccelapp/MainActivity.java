@@ -69,10 +69,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int mSensorDelayFastest;
 	int mSensorDelaySwitch;
 
-	int currentlyNormalSelected = 1;
-	int currentlyUiSelected = 2;
-	int currentlyGameSelected = 3;
-	int currentlyFastSelected = 4;
 	int currentDelaySelection;
 
 	int delayModeNorm = 1;
@@ -81,10 +77,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int delayModeFast = 4;
 	int delayMode;
 
-	int previouslyNormalSelected = 1;
-	int previouslyUiSelected = 2;
-	int previouslyGameSelected = 3;
-	int previouslyFastSelected = 4;
 	int previousSelectedDelay;
 
 	int toggleButtonCounter;
@@ -270,9 +262,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = currentlyNormalSelected;
+				currentDelaySelection = mSensorDelayNormal;
 				currentTime();
-				previousSelectedDelay = previouslyNormalSelected;
+				previousSelectedDelay = mSensorDelayNormal;
 
 			}
 		});
@@ -281,9 +273,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = currentlyUiSelected;
+				currentDelaySelection = mSensorDelayUI;
 				currentTime();
-				previousSelectedDelay = previouslyUiSelected;
+				previousSelectedDelay = mSensorDelayUI;
 
 			}
 		});
@@ -292,9 +284,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = currentlyGameSelected;
+				currentDelaySelection = mSensorDelayGame;
 				currentTime();
-				previousSelectedDelay = previouslyGameSelected;
+				previousSelectedDelay = mSensorDelayGame;
 
 			}
 		});
@@ -303,9 +295,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				currentDelaySelection = currentlyFastSelected;
+				currentDelaySelection = mSensorDelayFastest;
 				currentTime();
-				previousSelectedDelay = previouslyFastSelected;
+				previousSelectedDelay = mSensorDelayFastest;
 
 			}
 		});
@@ -408,7 +400,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void currentTime() {
 		if (toggleButtonCounter == 1) {
 
-			if (currentDelaySelection == currentlyNormalSelected) {
+			if (currentDelaySelection == mSensorDelayNormal) {
 
 				mNormEndTime = System.nanoTime(); // put this as EndTime earlier
 
@@ -423,7 +415,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mSensorDelaySwitch = mSensorDelayNormal;
 				mDelaySelectionTextView = "Normal";
 
-			} else if (currentDelaySelection == currentlyUiSelected) {
+			} else if (currentDelaySelection == mSensorDelayUI) {
 
 				mUIEndTime = System.nanoTime();
 
@@ -438,7 +430,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mSensorDelaySwitch = mSensorDelayUI;
 				mDelaySelectionTextView = "UI";
 
-			} else if (currentDelaySelection == currentlyGameSelected) {
+			} else if (currentDelaySelection == mSensorDelayGame) {
 
 				mGameEndTime = System.nanoTime();
 
@@ -453,7 +445,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mSensorDelaySwitch = mSensorDelayGame;
 				mDelaySelectionTextView = "Game";
 
-			} else if (currentDelaySelection == currentlyFastSelected) {
+			} else if (currentDelaySelection == mSensorDelayFastest) {
 
 				mFastEndTime = System.nanoTime();
 
@@ -614,7 +606,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void clickStatisticsText() {
 
-		if (currentDelaySelection == currentlyNormalSelected) {
+		if (currentDelaySelection == mSensorDelayNormal) {
 
 			mNormLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -628,7 +620,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayMode = delayModeNorm;
 
-		} else if (currentDelaySelection == currentlyUiSelected) {
+		} else if (currentDelaySelection == mSensorDelayUI) {
 
 			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -642,7 +634,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayMode = delayModeUI;
 
-		} else if (currentDelaySelection == currentlyGameSelected) {
+		} else if (currentDelaySelection == mSensorDelayGame) {
 
 			mGameLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -656,7 +648,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			delayMode = delayModeGame;
 
-		} else if (currentDelaySelection == currentlyFastSelected) {
+		} else if (currentDelaySelection == mSensorDelayFastest) {
 
 			mFastLastClick.setText(String.valueOf(durationSinceLastClick));
 
@@ -743,25 +735,25 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * currentTime()
 	 */
 	public void previousMode() {
-		if (previousSelectedDelay == previouslyNormalSelected) {
+		if (previousSelectedDelay == mSensorDelayNormal) {
 
 			mNormTotalTime.setText(String.valueOf(mTotalTime));
 
 			mNormTotalTime.setText("" + mTotalTime);
 
-		} else if (previousSelectedDelay == previouslyUiSelected) {
+		} else if (previousSelectedDelay == mSensorDelayUI) {
 
 			mUiTotalTime.setText(String.valueOf(mTotalTime));
 
 			mUiTotalTime.setText("" + mTotalTime);
 
-		} else if (previousSelectedDelay == previouslyGameSelected) {
+		} else if (previousSelectedDelay == mSensorDelayGame) {
 
 			mGameTotalTime.setText(String.valueOf(mTotalTime));
 
 			mGameTotalTime.setText("" + mTotalTime);
 
-		} else if (previousSelectedDelay == previouslyFastSelected) {
+		} else if (previousSelectedDelay == mSensorDelayFastest) {
 
 			mFastTotalTime.setText(String.valueOf(mTotalTime));
 
@@ -799,28 +791,28 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * its background color and indicate its use
 	 */
 	public void delayColorChange() {
-		if (currentDelaySelection == currentlyNormalSelected) {
+		if (currentDelaySelection == mSensorDelayNormal) {
 
 			mchronoNormalText.setBackgroundColor(0x55000000);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
 			mchronoGameText.setBackgroundColor(0x55FFFFFF);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == currentlyUiSelected) {
+		} else if (currentDelaySelection == mSensorDelayUI) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55000000);
 			mchronoGameText.setBackgroundColor(0x55FFFFFF);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == currentlyGameSelected) {
+		} else if (currentDelaySelection == mSensorDelayGame) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
 			mchronoGameText.setBackgroundColor(0x55000000);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-		} else if (currentDelaySelection == currentlyFastSelected) {
+		} else if (currentDelaySelection == mSensorDelayFastest) {
 
 			mchronoNormalText.setBackgroundColor(0x55FFFFFF);
 			mchronoUiText.setBackgroundColor(0x55FFFFFF);
