@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 
 public class MainActivity extends Activity implements SensorEventListener {
-
+ 
 	// Defines variables and sensors
 
 	final String tag = "GAP";
