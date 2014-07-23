@@ -45,5 +45,6 @@
     <string name="selection">Current Delay Selection: </string>
     <string name="TextGyro">Gyroscope </string>
     <string name="TextAccel">Accelerometer </string>
+    <string name="space"></string>
 
 </resources>

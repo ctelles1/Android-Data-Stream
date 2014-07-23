@@ -5,62 +5,74 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/hello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="100dp"
-        android:gravity="center"
-        android:text="@string/hello" />
-
     <Button
         android:id="@+id/ND"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/hello"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="left"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/normDelay" />
 
     <Button
         android:id="@+id/UD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/ND"
         android:layout_alignRight="@id/ND"
         android:layout_below="@id/ND"
-        android:gravity="left"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
         android:text="@string/uiDelay" />
-
-    <Button
-        android:id="@+id/GD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/hello"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="20dp"
-        android:layout_toRightOf="@id/ND"
-        android:gravity="right"
-        android:text="@string/gameDelay" />
 
     <Button
         android:id="@+id/FD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/GD"
+        android:layout_alignBottom="@id/UD"
+        android:layout_below="@id/ND"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/UD"
-        android:gravity="right"
+        android:gravity="center"
         android:text="@string/fastDelay" />
+
+    <Button
+        android:id="@+id/GD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/FD"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ND"
+        android:gravity="center"
+        android:text="@string/gameDelay" />
+
+    <ToggleButton
+        android:id="@+id/powerAccel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/UD"
+        android:layout_alignRight="@id/UD"
+        android:layout_below="@id/UD"
+        android:text="@string/onAccel" />
+
+    <ToggleButton
+        android:id="@+id/powerGyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/FD"
+        android:layout_alignRight="@id/FD"
+        android:layout_below="@id/FD"
+        android:text="@string/onGyro" />
 
     <TextView
         android:id="@+id/accel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/ND"
-        android:layout_below="@id/UD"
-        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@id/powerAccel"
+        android:layout_below="@id/powerAccel"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/Accelerometer" />
 
@@ -69,9 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/FD"
-        android:layout_below="@id/FD"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/powerGyro"
+        android:layout_marginTop="5dp"
         android:gravity="right"
         android:text="@string/Gyroscope" />
 
@@ -123,32 +134,31 @@
         android:layout_below="@+id/yboxo"
         android:text="@string/Z_Value2" />
 
-    <Chronometer
-        android:id="@+id/chronometer1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/zboxo"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/Chronometer"
-        android:textColor="#4169E1"
-        android:textSize="20sp" />
-
     <TextView
         android:id="@+id/chronoNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/zbox"
-        android:layout_marginLeft="65dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="25dp"
         android:text="@string/cN" />
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/chronoNormal"
+        android:layout_below="@id/zboxo"
+        android:text="@string/Chronometer"
+        android:textColor="#4169E1"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/chronoUI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/chronoNormal"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="35dp"
         android:layout_toRightOf="@+id/chronoNormal"
         android:text="@string/cU" />
 
@@ -157,7 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/chronoNormal"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="35dp"
         android:layout_toRightOf="@+id/chronoUI"
         android:text="@string/cG" />
 
@@ -166,7 +176,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/chronoNormal"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="35dp"
         android:layout_toRightOf="@+id/chronoGame"
         android:text="@string/cF" />
 
@@ -271,15 +281,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/uiCount"
-        android:layout_alignBottom="@+id/fastCount"
-        android:layout_alignLeft="@+id/fastLast"
+        android:layout_alignBottom="@id/fastCount"
+        android:layout_alignLeft="@id/fastLast"
         android:text="@string/fastCount" />
 
     <TextView
         android:id="@+id/lastClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/normLast"
+        android:layout_alignBottom="@id/normLast"
         android:layout_alignParentLeft="true"
         android:text="@string/lastClick" />
 
@@ -287,7 +297,7 @@
         android:id="@+id/totalTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/normTotal"
+        android:layout_alignBottom="@id/normTotal"
         android:layout_alignParentLeft="true"
         android:text="@string/totalTime" />
 
@@ -295,54 +305,8 @@
         android:id="@+id/clickCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/normCount"
+        android:layout_alignBottom="@id/normCount"
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
-
-    <TextView
-        android:id="@+id/selection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/clickCount"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:text="@string/selection" />
-
-    <ToggleButton
-        android:id="@+id/powerAccel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/selection"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:text="@string/onAccel" />
-
-    <ToggleButton
-        android:id="@+id/powerGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
-        android:layout_toRightOf="@+id/selection"
-        android:text="@string/onGyro" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/powerAccel"
-        android:layout_alignRight="@+id/powerAccel"
-        android:layout_marginBottom="9dp"
-        android:text="@string/TextAccel" />
-
-    <TextView
-        android:id="@+id/textGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignRight="@+id/powerGyro"
-        android:text="@string/TextGyro" />
 
 </RelativeLayout>
