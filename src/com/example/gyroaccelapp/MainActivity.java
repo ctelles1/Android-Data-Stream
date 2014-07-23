@@ -251,6 +251,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		setStartAndEndTime(); // Gets values for start and end time calculations
 
+		register();
+
 		normDelayButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -429,6 +431,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 									// listeners and Registers them in new Delay
 									// settings
 
+			register();
+
 		} else if (toggleButtonCounterAccel == 0
 				&& toggleButtonCounterGyro == 0) {
 
@@ -468,25 +472,25 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void timeSinceLastClick() {
 
-		if (mSensorDelaySwitch == mSensorDelayNorm) {
+		if (mPreviousSelectedDelay == mSensorDelayNorm) {
 
 			mTotalTimeNorm = mTotalTimeNorm + durationSinceLastClick;
 
 			mTotalTime = mTotalTimeNorm / 1000;
 
-		} else if (mSensorDelaySwitch == mSensorDelayUI) {
+		} else if (mPreviousSelectedDelay == mSensorDelayUI) {
 
 			mTotalTimeUI = mTotalTimeUI + durationSinceLastClick;
 
 			mTotalTime = mTotalTimeUI / 1000;
 
-		} else if (mSensorDelaySwitch == mSensorDelayGame) {
+		} else if (mPreviousSelectedDelay == mSensorDelayGame) {
 
 			mTotalTimeGame = mTotalTimeGame + durationSinceLastClick;
 
 			mTotalTime = mTotalTimeGame / 1000;
 
-		} else if (mSensorDelaySwitch == mSensorDelayFast) {
+		} else if (mPreviousSelectedDelay == mSensorDelayFast) {
 
 			mTotalTimeFast = mTotalTimeFast + durationSinceLastClick;
 
@@ -627,6 +631,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		mStartTime = System.nanoTime();
 
+	}
+ 
+	public void register() {
 		mSensorManager.unregisterListener(this);
 
 		if (toggleGyro.isChecked()) {
@@ -685,19 +692,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			return;
 
-		} else if (mSensorDelaySwitch == mSensorDelayNorm) {
+		} else if (mPreviousSelectedDelay == mSensorDelayNorm) {
 
 			mTotal = mNormTotalTime;
 
-		} else if (mSensorDelaySwitch == mSensorDelayUI) {
+		} else if (mPreviousSelectedDelay == mSensorDelayUI) {
 
 			mTotal = mUiTotalTime;
 
-		} else if (mSensorDelaySwitch == mSensorDelayGame) {
+		} else if (mPreviousSelectedDelay == mSensorDelayGame) {
 
 			mTotal = mGameTotalTime;
 
-		} else if (mSensorDelaySwitch == mSensorDelayFast) {
+		} else if (mPreviousSelectedDelay == mSensorDelayFast) {
 
 			mTotal = mFastTotalTime;
 

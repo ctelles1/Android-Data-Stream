@@ -36,7 +36,7 @@
         android:layout_toRightOf="@id/UD"
         android:gravity="center"
         android:text="@string/fastDelay" />
-
+ 
     <Button
         android:id="@+id/GD"
         android:layout_width="wrap_content"

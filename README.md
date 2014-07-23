@@ -8,6 +8,8 @@ Features:
 	- Game Delay
 	- Fastest Delay
 
+- On/Off switches which start and stop either accelerometer or gyroscope sensors, and if both are off, all other functions of the app.
+
 - 3-Dimensional Sensor Readings (x, y, z)
 	- Gyroscope
 	- Accelerometer
@@ -19,4 +21,3 @@ Features:
 	- Total time elapsed in current Delay Setting (in seconds)
 	- Total amount of clicks on current Delay Setting Button
 
-- On/Off switch which starts and stops all functions of the app
