@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+ 
     <string name="app_name">gyroaccelapp</string>
     <string name="hello">Data Stream App</string>
     <string name="Accelerometer">Accelerometer</string>
@@ -47,4 +47,4 @@
     <string name="TextAccel">Accelerometer </string>
     <string name="space"></string>
 
-</resources> 
+</resources>  

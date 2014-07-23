@@ -20,4 +20,4 @@ Features:
 	- Time since last click (in milliseconds)
 	- Total time elapsed in current Delay Setting (in seconds)
 	- Total amount of clicks on current Delay Setting Button
-
+  

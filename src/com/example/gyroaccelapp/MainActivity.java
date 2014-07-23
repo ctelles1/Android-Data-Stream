@@ -554,7 +554,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mNormClickCount.setText("" + mClickCounter);
 
 			delayColorChange();
-
+ 
 		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
 			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
@@ -632,7 +632,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mStartTime = System.nanoTime();
 
 	}
- 
+  
 	public void register() {
 		mSensorManager.unregisterListener(this);
 
