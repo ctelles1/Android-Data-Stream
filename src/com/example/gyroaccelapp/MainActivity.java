@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.os.SystemClock;
 import android.widget.Button;
@@ -94,6 +95,21 @@ public class MainActivity extends Activity implements SensorEventListener {
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorTypeGyro = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+		if (mSensorTypeAccel != null) {
+			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
+					.show();
+		} else if (mSensorTypeAccel == null) {
+			Toast.makeText(this, "No Accelerometer Found.", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		if (mSensorTypeGyro != null) {
+			Toast.makeText(this, "Gyroscope Found.", Toast.LENGTH_SHORT).show();
+		} else if (mSensorTypeGyro == null) {
+			Toast.makeText(this, "No Gyroscope Found.", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 		mSensorDelayNorm = SensorManager.SENSOR_DELAY_NORMAL;
 		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
@@ -554,7 +570,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mNormClickCount.setText("" + mClickCounter);
 
 			delayColorChange();
- 
+
 		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
 			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
@@ -632,7 +648,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mStartTime = System.nanoTime();
 
 	}
-  
+
 	public void register() {
 		mSensorManager.unregisterListener(this);
 
