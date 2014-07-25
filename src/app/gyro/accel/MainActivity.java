@@ -1,6 +1,7 @@
 package app.gyro.accel;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mchronoNormText, mchronoGameText, mchronoUiText, mchronoFastText;
 	TextView mTotal;
 	String mDelaySelectionTextView;
+	long timeElapsed;
 	long durationSinceLastClick;
 	long mStartTime;
 	long mEndTime;
@@ -53,6 +55,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Chronometer chronometerClock;
 	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
 	ToggleButton toggleGyro, toggleAccel;
+	Intent intent;
+
+	Button next;
 
 	/******************************************************************************/
 
@@ -67,7 +72,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main);
+
+		// next = (Button) findViewById(R.id.activity_button);
+		// next.setOnClickListener(new View.OnClickListener() {
+		// public void onClick(View view) {
+		// Toast.makeText(getApplicationContext(), "text",
+		// Toast.LENGTH_SHORT).show();
+		// Intent myIntent = new Intent(view.getContext(),
+		// DrawerActivity.class);
+		// startActivityForResult(myIntent, 0);
+		// }
+		// });
+
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		// Validate whether an accelerometer or gyroscope is present or not
@@ -76,7 +93,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mSensorTypeGyro = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-	
+		if (mSensorTypeAccel != null) {
+			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
+					.show();
+		} else if (mSensorTypeAccel == null) {
+			Toast.makeText(this, "No Accelerometer Found.", Toast.LENGTH_SHORT)
+					.show();
+		}
+		if (mSensorTypeGyro != null) {
+			Toast.makeText(this, "Gyroscope Found.", Toast.LENGTH_SHORT).show();
+		} else if (mSensorTypeGyro == null) {
+			Toast.makeText(this, "No Gyroscope Found.", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 		mSensorDelayNorm = SensorManager.SENSOR_DELAY_NORMAL;
 		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
@@ -132,6 +161,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		toggleGyro.setChecked(false);
 		toggleAccel.setChecked(false);
 
+		timeElapsed = SystemClock.elapsedRealtime()
+				- chronometerClock.getBase();
+
 		toggleGyro.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -176,6 +208,27 @@ public class MainActivity extends Activity implements SensorEventListener {
 					toggleAccel.setChecked(false);
 
 				}
+			}
+		});
+
+		Button supervised = (Button) findViewById(R.id.toSupervised);
+		supervised.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(), ActivityB.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				getIntent().putExtra("START_TIME", timeElapsed);
+				startActivity(intent);
+			}
+		});
+		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
+		unsupervised.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(), ActivityC.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				getIntent().putExtra("START_TIME", timeElapsed);
+				startActivity(intent);
 			}
 		});
 
@@ -583,6 +636,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	public void onResume() {
 		super.onResume();
+
+		register();
+
 	}
 
 	@Override

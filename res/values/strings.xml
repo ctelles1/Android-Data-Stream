@@ -46,6 +46,8 @@
     <string name="TextGyro">Gyroscope </string>
     <string name="TextAccel">Accelerometer </string>
     <string name="space"></string>
+    <string name="toSupervised">Supervised</string>
+    <string name="toUnsupervised">Unsupervised</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>
@@ -62,5 +64,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="button">Click</string>
+    <string name="textButtons">Clicking below will take you to Learning Activities. Clicking the back key will take you back to the home screen of your android device.</string>
 
 </resources>
