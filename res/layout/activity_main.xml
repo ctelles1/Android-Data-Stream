@@ -1,42 +1,20 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--
+  Copyright 2012 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="app.applicationswitcher.java.ActivityA" >
-
-    <Chronometer
-        android:id="@+id/chronometer1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/unsuperClickBack"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="165dp"
-        android:text="Chronometer" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignLeft="@+id/textSupervised"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/chronometer1"
-        android:layout_marginBottom="64dp"
-        android:text="asdf" />
-
-    <TextView
-        android:id="@+id/textSupervised"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
-        android:layout_alignLeft="@+id/unsuperClickBack"
-        android:text="Clicking this will take you to activity 2. Clicking the back key will take you back to the home screen of your android device." />
-
-    <Button
-        android:id="@+id/supervisedToMain"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/textSupervised"
-        android:layout_toRightOf="@+id/button1"
-        android:text="fjkdsl" />
-
-</RelativeLayout>
+    android:layout_height="match_parent" />
