@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/supervised"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <ToggleButton
+        android:id="@+id/powerAccel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="120dp"
+        android:text="@string/onAccel" />
+
+    <ToggleButton
+        android:id="@+id/powerGyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/powerAccel"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@id/powerAccel"
+        android:text="@string/onGyro" />
+
+    <TextView
+        android:id="@+id/accel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/powerAccel"
+        android:layout_below="@id/powerAccel"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/Accelerometer" />
+
+    <TextView
+        android:id="@+id/gyro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/powerGyro"
+        android:layout_below="@id/powerGyro"
+        android:layout_marginTop="5dp"
+        android:gravity="right"
+        android:text="@string/Gyroscope" />
+
+    <TextView
+        android:id="@+id/xbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/accel"
+        android:text="@string/X_Value1" />
+
+    <TextView
+        android:id="@+id/ybox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/xbox"
+        android:text="@string/Y_Value1" />
+
+    <TextView
+        android:id="@+id/zbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accel"
+        android:layout_below="@+id/ybox"
+        android:text="@string/Z_Value1" />
+
+    <TextView
+        android:id="@+id/xboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gyro"
+        android:layout_below="@+id/gyro"
+        android:text="@string/X_Value2" />
+
+    <TextView
+        android:id="@+id/yboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/xboxo"
+        android:layout_below="@+id/xboxo"
+        android:text="@string/Y_Value2" />
+
+    <TextView
+        android:id="@+id/zboxo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/yboxo"
+        android:layout_below="@+id/yboxo"
+        android:text="@string/Z_Value2" />
+
+</RelativeLayout>
