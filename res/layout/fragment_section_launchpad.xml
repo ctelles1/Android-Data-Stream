@@ -44,4 +44,4 @@
 
 </FrameLayout>//			((Button) rootView.findViewById(R.id.demo_collection_button))
 //					.setBackgroundColor(getResources().getColor(
-//							R.color.RithmioGreen));
+//							R.color.RithmioGreen)); 

@@ -309,7 +309,7 @@ public class MainFragmentActivity extends FragmentActivity implements
 					});
 
 			return rootView;
-		}
+		} 
 	}
 
 	/**
