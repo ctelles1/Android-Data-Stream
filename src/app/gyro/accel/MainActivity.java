@@ -230,7 +230,7 @@ public class MainActivity extends FragmentActivity implements
 
 					mButtonOnClickListener();
 
-				} else {
+				} else { 
 
 					mSensorManager.unregisterListener(MainActivity.this,
 							mSensorTypeAccel);
