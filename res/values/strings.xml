@@ -70,6 +70,7 @@
     <string name="dummy_section_text">Section %1d is just another activity section.</string>
     <string name="demo_external_activity">External Activity Example</string>
     <string name="demo_collection">Learned Activity Collection</string>
-    <string name="unsuperActivity">Learn Unsupervised Activities</string>
+    <string name="learnActivity">Click to Learn an Activity</string>
+    <string name="changeName">Change Acitivity Name Here</string>
 
 </resources>

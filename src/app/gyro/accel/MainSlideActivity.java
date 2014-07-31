@@ -1,8 +1,10 @@
 package app.gyro.accel;
 
+import android.animation.Animator;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +22,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.os.SystemClock;
@@ -343,7 +348,7 @@ public class MainSlideActivity extends FragmentActivity implements
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the primary sections of the app.
 	 */
-	public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+	public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public AppSectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -353,11 +358,11 @@ public class MainSlideActivity extends FragmentActivity implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case 0:
-				// The first section of the app is the most interesting -- it
-				// offers
-				// a launchpad into the other demonstrations in this example
-				// application.
 				return new LaunchpadSectionFragment();
+				// case 1:
+				// return new RithmioLogoAnimation();
+				// case 2:
+				// case 3:
 
 			default:
 				// The other sections of the app are dummy placeholders.
@@ -371,7 +376,7 @@ public class MainSlideActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return 4; // changes amount of sections
+			return 3; // changes amount of sections
 		}
 
 		@Override
@@ -383,13 +388,17 @@ public class MainSlideActivity extends FragmentActivity implements
 	/**
 	 * A fragment that launches other parts of the demo application.
 	 */
-	public static class LaunchpadSectionFragment extends Fragment {
+	public class LaunchpadSectionFragment extends Fragment {
+		// Resources res = getResources();
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
 					R.layout.fragment_section_launchpad, container, false);
+
+			// ((Button) rootView.findViewById(R.id.demo_collection_button))
+			// .setBackgroundColor(GREEN);
 
 			// Demonstration of a collection-browsing activity.
 			rootView.findViewById(R.id.demo_collection_button)
@@ -432,7 +441,7 @@ public class MainSlideActivity extends FragmentActivity implements
 	 * displays dummy text.
 	 */
 	public static class DummySectionFragment extends Fragment {
-		int activityCount = 0;
+		Resources res = getResources();
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -441,32 +450,23 @@ public class MainSlideActivity extends FragmentActivity implements
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_section_dummy,
 					container, false);
+
 			Bundle args = getArguments();
 			((TextView) rootView.findViewById(android.R.id.text1))
 					.setText(getString(R.string.dummy_section_text,
 							args.getInt(ARG_SECTION_NUMBER)));
-			((Button) rootView.findViewById(R.id.unsuperButton))
-					.setBackgroundColor(Color.GREEN);
-			Button button = (Button) rootView.findViewById(R.id.unsuperButton);
-			button.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					activityCount++;
-				}
-			});
-
+//			((Button) rootView.findViewById(R.id.learnButton))
+//					.setBackgroundColor(res.getColor(R.color.RithmioGreen));
+			// Button button = (Button) rootView.findViewById(R.id.learnButton);
+			// button.setOnClickListener(new View.OnClickListener() {
+			// @Override
+			// public void onClick(View v) {
+			// // Toast.makeText(getActivity(), activityCount, 0).show();
+			// }
+			// });
 			return rootView;
 		}
 	}
-
-	/******************************************************************************/
-
-	/** Called when the activity is first created. */
-	/*
-	 * Public: Sets up variables to specified sensors, time readings, TextViews
-	 * Buttons, chronometer, and starts onClickListener for Sensor Delay
-	 * Buttons.
-	 */
 
 	// public void setCheckedFalse() {
 	//
