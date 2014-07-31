@@ -1,6 +1,5 @@
-package app.gyro.accel;
+package app.gyroscope.accelerometer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -9,12 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -62,8 +58,7 @@ public class MainActivity extends FragmentActivity implements
 	ToggleButton toggleGyro, toggleAccel;
 	Intent intent;
 	Button next;
-	private String[] drawerListViewItems;
-	private ListView drawerListView;
+	
 
 	/******************************************************************************/
 
@@ -243,26 +238,26 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 
-		Button supervised = (Button) findViewById(R.id.toSupervised);
-		supervised.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(), ActivityB.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				getIntent().putExtra("START_TIME", timeElapsed);
-				startActivity(intent);
-			}
-		});
-		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
-		unsupervised.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(), ActivityC.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				getIntent().putExtra("START_TIME", timeElapsed);
-				startActivity(intent);
-			}
-		});
+//		Button supervised = (Button) findViewById(R.id.toSupervised);
+//		supervised.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent intent = new Intent(getBaseContext(), ActivityB.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				getIntent().putExtra("START_TIME", timeElapsed);
+//				startActivity(intent);
+//			}
+//		});
+//		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
+//		unsupervised.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent intent = new Intent(getBaseContext(), ActivityC.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				getIntent().putExtra("START_TIME", timeElapsed);
+//				startActivity(intent);
+//			}
+//		});
 
 	}
 

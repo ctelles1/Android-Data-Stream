@@ -309,29 +309,15 @@
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
 
-    <Button
-        android:id="@+id/toSupervised"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="11dp"
-        android:layout_toLeftOf="@+id/chronoGame"
-        android:text="@string/toSupervised" />
+    <Button android:id="@+id/toSupervised" />
+    <Button android:id="@+id/toUnsupervised" />
+    <!-- <set android:interpolator="@android:anim/accelerate_interpolator" > -->
 
-    <Button
-        android:id="@+id/toUnsupervised"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/toSupervised"
-        android:layout_toRightOf="@+id/powerAccel"
-        android:text="@string/toUnsupervised" />
 
-<!--     <set android:interpolator="@android:anim/accelerate_interpolator" > -->
-
-<!--         <translate -->
-<!--             android:duration="1500" -->
-<!--             android:fromXDelta="-100%p" -->
-<!--             android:toXDelta="0" /> -->
-<!--     </set> -->
+    <!-- <translate -->
+    <!-- android:duration="1500" -->
+    <!-- android:fromXDelta="-100%p" -->
+    <!-- android:toXDelta="0" /> -->
+    <!-- </set> -->
 
 </RelativeLayout>

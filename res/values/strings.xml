@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">appversion3</string>
+    <string name="app_name">appversion5</string>
     <string name="hello">Data Stream App</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
@@ -69,8 +69,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="dummy_section_text">Section %1d is just another activity section.</string>
     <string name="demo_external_activity">External Activity Example</string>
-    <string name="demo_collection">Learned Activity Collection</string>
+    <string name="demo_collection">Click to see your learned Activity collection</string>
     <string name="learnActivity">Click to Learn an Activity</string>
-    <string name="changeName">Change Acitivity Name Here</string>
+    <string name="changeName">Create Name</string>
 
 </resources>

@@ -1,6 +1,5 @@
-package app.gyro.accel;
+package app.gyroscope.accelerometer;
 
-import android.animation.Animator;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -15,19 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.os.SystemClock;
 import android.widget.Button;
 import android.widget.Chronometer;
 
@@ -187,6 +180,9 @@ public class MainSlideActivity extends FragmentActivity implements
 		mchronoGameText = (TextView) findViewById(R.id.chronoGame);
 		mchronoFastText = (TextView) findViewById(R.id.chronoFast);
 
+		((Button) findViewById(R.id.demo_collection_button))
+				.setBackgroundColor(getResources().getColor(
+						R.color.RithmioGreen));
 		// normDelayButton = (Button) findViewById(R.id.ND);
 		// gameDelayButton = (Button) findViewById(R.id.GD);
 		// uiDelayButton = (Button) findViewById(R.id.UD);
@@ -390,15 +386,14 @@ public class MainSlideActivity extends FragmentActivity implements
 	 */
 	public class LaunchpadSectionFragment extends Fragment {
 		// Resources res = getResources();
-
+		 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
 					R.layout.fragment_section_launchpad, container, false);
 
-			// ((Button) rootView.findViewById(R.id.demo_collection_button))
-			// .setBackgroundColor(GREEN);
+			
 
 			// Demonstration of a collection-browsing activity.
 			rootView.findViewById(R.id.demo_collection_button)
@@ -408,27 +403,6 @@ public class MainSlideActivity extends FragmentActivity implements
 							Intent intent = new Intent(getActivity(),
 									CollectionDemoActivity.class);
 							startActivity(intent);
-						}
-					});
-
-			// Demonstration of navigating to external activities.
-			rootView.findViewById(R.id.demo_external_activity)
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							// Create an intent that asks the user to pick a
-							// photo, but using
-							// FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, ensures that
-							// relaunching
-							// the application from the device home screen does
-							// not return
-							// to the external activity.
-							Intent externalActivityIntent = new Intent(
-									Intent.ACTION_PICK);
-							externalActivityIntent.setType("image/*");
-							externalActivityIntent
-									.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-							startActivity(externalActivityIntent);
 						}
 					});
 
@@ -455,8 +429,8 @@ public class MainSlideActivity extends FragmentActivity implements
 			((TextView) rootView.findViewById(android.R.id.text1))
 					.setText(getString(R.string.dummy_section_text,
 							args.getInt(ARG_SECTION_NUMBER)));
-//			((Button) rootView.findViewById(R.id.learnButton))
-//					.setBackgroundColor(res.getColor(R.color.RithmioGreen));
+			// ((Button) rootView.findViewById(R.id.learnButton))
+			// .setBackgroundColor(res.getColor(R.color.RithmioGreen));
 			// Button button = (Button) rootView.findViewById(R.id.learnButton);
 			// button.setOnClickListener(new View.OnClickListener() {
 			// @Override

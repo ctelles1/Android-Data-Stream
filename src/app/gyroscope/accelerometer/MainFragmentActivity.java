@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package app.gyro.accel;
+package app.gyroscope.accelerometer;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;

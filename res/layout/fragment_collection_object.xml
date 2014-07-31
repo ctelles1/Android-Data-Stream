@@ -1,28 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="2" >
-
-    <EditText
-        android:id="@+id/inputTitleName	"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="@string/changeName"
-        android:imeActionLabel="Enter Name"
-        android:inputType="text" >
- 
-        <requestFocus />
-    </EditText>
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/activityName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         android:gravity="center"
-        android:padding="32dp"
-        android:textSize="128sp" />
+        android:padding="20dp"
+        android:text="@string/changeName"
+        android:textSize="45sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/inputTitleName	"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/changeName"
+            android:imeActionLabel="Enter"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/nameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="displayEditText"
+            android:text="Enter" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="%lt"
+        android:textSize="125sp" />
 
 </LinearLayout>

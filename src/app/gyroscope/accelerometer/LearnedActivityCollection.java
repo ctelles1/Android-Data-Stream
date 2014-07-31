@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package app.gyro.accel;
+package app.gyroscope.accelerometer;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.DocumentsContract.Root;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -28,15 +26,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 public class LearnedActivityCollection extends FragmentActivity {
 
@@ -55,7 +49,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
 	 */
-	ViewPager mViewPager; 
+	ViewPager mViewPager;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,7 +88,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 			// activity and
 			// use NavUtils in the Support Package to ensure proper handling of
 			// Up.
-			Intent upIntent = new Intent(this, MainActivity.class);
+			Intent upIntent = new Intent(this, MainFragmentActivity.class);
 			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 				// This activity is not part of the application's task, so
 				// create a new task
@@ -117,8 +111,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
 	 */
-	public static class DemoCollectionPagerAdapter extends
-			FragmentStatePagerAdapter {
+	public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
 
 		public DemoCollectionPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -152,30 +145,89 @@ public class LearnedActivityCollection extends FragmentActivity {
 	 * A dummy fragment representing a section of the app, but that simply
 	 * displays dummy text.
 	 */
-	public static class DemoObjectFragment extends Fragment {
+	public class DemoObjectFragment extends Fragment {
 
-		public static final String ARG_OBJECT = "object";
+//		Text title = (Text) findViewById(R.id.inputTitleName);
+//		TextView name = (TextView) findViewById(R.id.activityName);
+
+		public final static String ARG_OBJECT = "object";
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
 					R.layout.fragment_collection_object, container, false);
+
 			Bundle args = getArguments();
 
-//			EditText title = (EditText) rootView
-//					.findViewById(R.id.inputTitleName);
-//			SharedPreferences settings = this.getActivity()
-//					.getSharedPreferences("PREFS", 0);
-//			title.setText(settings.getString("value", ""));
-//			if (title == null) {
+			// Dialog nameCreation = new Dialog(getActivity());
+			// nameCreation.setContentView(R.layout.fragment_collection_object);
+			//
+			// EditText title = (EditText) rootView
+			// .findViewById(R.id.inputTitleName);
+			// InputMethodManager imm = (InputMethodManager)
+			// getSystemService(Context.INPUT_METHOD_SERVICE);
+			// imm.showSoftInput(getView(), InputMethodManager.SHOW_IMPLICIT);
+
+			// nameCreation.setCancelable(true);
+			// nameCreation.setTitle("   Name Your Activity   ");
+			// nameCreation.setCanceledOnTouchOutside(true);
+			// nameCreation.show();
+			// nameCreation.getWindow().setGravity(Gravity.CENTER);
+			// nameCreation.getWindow().setLayout(LayoutParams.MATCH_PARENT,
+			// LayoutParams.WRAP_CONTENT);
+			// setTitle(edit);
+			//
+			//
+//			final EditText input = new EditText(getActivity());
+			//
+			//
+			// TextView titleName = (TextView)
+			// rootView.findViewById(android.R.id.text1);
+			//
+			// EditText title = (EditText) rootView
+			// .findViewById(R.id.inputTitleName);
+			//
+			// titleName = input.getText().toString();
+			//
+			// SharedPreferences settings = this.getActivity()
+			// .getSharedPreferences("PREFS", 0);
+			//
+			// titleName.setText(settings.getString("value", ""));
+			//
+
+//			displayEditText(rootView);
+
+			//
+			// final String edit = title.toString();
+			//
+			// rootView.findViewById(R.id.nameButton).setOnClickListener(
+			// new View.OnClickListener() {
+			// @Override
+			// public void onClick(View view) {
+			// ((TextView) findViewById(R.id.activityName))
+			// .setText(edit);
+			//
+			// }
+			// });
 			((TextView) rootView.findViewById(android.R.id.text1))
 					.setText(Integer.toString(args.getInt(ARG_OBJECT)));
-//			} else if (title != null){
-//				((TextView) rootView.findViewById(android.R.id.text1))
-//						.setText((CharSequence) title);
-//			}
+			//
+			// ((TextView) rootView.findViewById(android.R.id.text1))
+			// .setText((CharSequence) title);
+
 			return rootView;
 		}
+
+//		public void displayEditText(View view) {
+//			if (name.getText().toString().equals("")) {
+//				String editTextValue = title.getWholeText().toString();
+//				name.setText(editTextValue);
+//			} else {
+//				title.setTextContent("");
+//				name.setText("");
+//			}
+//		}
+
 	}
 }
