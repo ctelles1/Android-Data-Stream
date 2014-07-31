@@ -239,7 +239,7 @@ public class MainActivity extends FragmentActivity implements
 
 					toggleAccel.setChecked(false);
 
-				}
+				}   
 			}
 		});
 
