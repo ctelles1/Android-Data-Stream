@@ -1,3 +1,4 @@
+package app.gyro.accelerometer;
 ///*
 // * Copyright 2013 The Android Open Source Project
 // *

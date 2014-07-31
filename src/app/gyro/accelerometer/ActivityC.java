@@ -1,3 +1,4 @@
+package app.gyro.accelerometer;
 //package app.gyro.accel;
 //
 //import android.app.Activity;

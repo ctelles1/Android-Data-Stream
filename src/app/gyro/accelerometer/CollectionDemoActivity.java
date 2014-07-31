@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.gyro.accel;
+package app.gyro.accelerometer;
 
 import android.app.ActionBar;
 import android.content.Intent;
