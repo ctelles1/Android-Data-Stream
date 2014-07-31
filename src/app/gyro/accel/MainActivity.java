@@ -211,26 +211,26 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-		Button supervised = (Button) findViewById(R.id.toSupervised);
-		supervised.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(), ActivityB.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				getIntent().putExtra("START_TIME", timeElapsed);
-				startActivity(intent);
-			}
-		});
-		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
-		unsupervised.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(), ActivityC.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				getIntent().putExtra("START_TIME", timeElapsed);
-				startActivity(intent);
-			}
-		});
+//		Button supervised = (Button) findViewById(R.id.toSupervised);
+//		supervised.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent intent = new Intent(getBaseContext(), ActivityB.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				getIntent().putExtra("START_TIME", timeElapsed);
+//				startActivity(intent);
+//			}
+//		});
+//		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
+//		unsupervised.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent intent = new Intent(getBaseContext(), ActivityC.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				getIntent().putExtra("START_TIME", timeElapsed);
+//				startActivity(intent);
+//			}
+//		});
 
 	}
 
