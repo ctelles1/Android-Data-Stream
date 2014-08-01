@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- 
-    <string name="app_name">rithmio.2 works</string>
+
+    <string name="app_name">Rithmio 1.2 Vert</string>
     <string name="hello">Data Stream App</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
@@ -42,9 +42,5 @@
     <string name="uiStatus">-</string>
     <string name="gameStatus">-</string>
     <string name="fastStatus">-</string>
-    <string name="selection">Current Delay Selection: </string>
-    <string name="TextGyro">Gyroscope </string>
-    <string name="TextAccel">Accelerometer </string>
-    <string name="space"></string>
 
-</resources>  
+</resources>

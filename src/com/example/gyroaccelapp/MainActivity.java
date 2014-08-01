@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,7 +88,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_vertical);
+
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		// Validate whether an accelerometer or gyroscope is present or not
