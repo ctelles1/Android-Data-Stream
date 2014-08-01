@@ -1,5 +1,9 @@
 package app.gyro.accel;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,6 +63,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Intent intent;
 
 	Button next;
+
+	private File mRoot, mDir;
+	private File mFileAccelerometer;
+	private File mFileGyroscope;
 
 	/******************************************************************************/
 
@@ -211,28 +220,65 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-//		Button supervised = (Button) findViewById(R.id.toSupervised);
-//		supervised.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//				Intent intent = new Intent(getBaseContext(), ActivityB.class);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				getIntent().putExtra("START_TIME", timeElapsed);
-//				startActivity(intent);
-//			}
-//		});
-//		Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
-//		unsupervised.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//				Intent intent = new Intent(getBaseContext(), ActivityC.class);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-//						| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				getIntent().putExtra("START_TIME", timeElapsed);
-//				startActivity(intent);
-//			}
-//		});
+		// Button supervised = (Button) findViewById(R.id.toSupervised);
+		// supervised.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// Intent intent = new Intent(getBaseContext(), ActivityB.class);
+		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+		// | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// getIntent().putExtra("START_TIME", timeElapsed);
+		// startActivity(intent);
+		// }
+		// });
+		// Button unsupervised = (Button) findViewById(R.id.toUnsupervised);
+		// unsupervised.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// Intent intent = new Intent(getBaseContext(), ActivityC.class);
+		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+		// | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// getIntent().putExtra("START_TIME", timeElapsed);
+		// startActivity(intent);
+		// }
+		// });
+
+//		mRoot = Environment.getExternalStorageDirectory();
+//		mDir = new File(mRoot + "/Rithmio");
+//		prepareStorage();
+//		mFileAccelerometer = new File(mDir, "FILENAME_ACCELEROMETER");
+//		setmFileGyroscope(new File(mDir, "FILENAME_GYROSCOPE"));
 
 	}
+
+	// public void writeToFile(String data) {
+	// try {
+	// FileWriter f = new FileWriter(mFileAccelerometer, true);
+	// f.write(data);
+	// f.write("\n");
+	// f.flush();
+	// f.close();
+	// Log.d(tag, "Write successful ");
+	// } catch (IOException e) {
+	// Log.e(tag, "Write failure " + e.toString());
+	//
+	// }
+	//
+	// }
+	//
+	// public String prepareStorage() {
+	// try {
+	// Log.d(tag, "Creating: " + mDir.getAbsolutePath());
+	// mDir.mkdirs(); // ignore return value, they may already exist
+	// mFileAccelerometer.delete(); // may or may not already exist
+	// // StatFs stat = new StatFs(mRoot.getPath());
+	// // if (stat.getAvailableBlocks() == 0) {
+	// // return "SD Card Storage is full";
+	// // }
+	// return "";
+	// } catch (Exception e) {
+	// Log.e(tag, "Storage Error: ", e);
+	// return "Storage Error:" + e.getMessage();
+	// }
+	// }
 
 	public void setCheckedFalse() {
 
@@ -651,5 +697,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
 	}
+
+//	public File getmFileGyroscope() {
+//		return mFileGyroscope;
+//	}
+//
+//	public void setmFileGyroscope(File mFileGyroscope) {
+//		this.mFileGyroscope = mFileGyroscope;
+//	}
 
 }
