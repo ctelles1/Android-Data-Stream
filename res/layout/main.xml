@@ -309,30 +309,4 @@
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
 
-    <TextView
-        android:id="@+id/textButtons"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/toSupervised"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="19dp"
-        android:text="@string/textButtons" />
-
-    <Button
-        android:id="@+id/toSupervised"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="11dp"
-        android:layout_toLeftOf="@+id/chronoGame"
-        android:text="@string/toSupervised" />
-
-    <Button
-        android:id="@+id/toUnsupervised"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_below="@+id/textButtons"
-        android:layout_toRightOf="@+id/powerAccel"
-        android:text="@string/toUnsupervised" />
-
 </RelativeLayout>
