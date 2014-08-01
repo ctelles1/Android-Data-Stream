@@ -1,4 +1,4 @@
-package com.example.gyroaccelapp;
+package com.exampl.gyroaccelapp;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main_vertical);
+		setContentView(R.layout.activity_main_horizontal);
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
