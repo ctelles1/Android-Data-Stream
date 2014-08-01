@@ -1,26 +1,8 @@
-/*
- * Copyright 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package app.gyroscope.accelerometer;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,52 +12,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class MainFragmentActivity extends FragmentActivity implements
 		ActionBar.TabListener {
 
-	// Defines variables and sensors
-
-	final String tag = "GAP";
-
-	SensorManager mSensorManager = null;
-	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
-	TextView mXaxisAccel = null;
-	TextView mYaxisAccel = null;
-	TextView mZaxisAccel = null;
-	TextView mXaxisGyro = null;
-	TextView mYaxisGyro = null;
-	TextView mZaxisGyro = null;
-	TextView mNormLastClick, mUiLastClick, mGameLastClick, mFastLastClick;
-	TextView mNormTotalTime, mUiTotalTime, mGameTotalTime, mFastTotalTime;
-	TextView mNormClickCount, mUiClickCount, mGameClickCount, mFastClickCount;
-	TextView mchronoNormText, mchronoGameText, mchronoUiText, mchronoFastText;
-	TextView mTotal;
-	String mDelaySelectionTextView;
-	long timeElapsed;
-	long durationSinceLastClick;
-	long mStartTime;
-	long mEndTime;
-	long mTotalTime;
-	long mTotalTimeNorm, mTotalTimeGame, mTotalTimeUI, mTotalTimeFast;
-	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
-	int mSensorDelaySwitch;
-	int mPreviousSelectedDelay = -1;
-	int toggleButtonCounter = 0;
-	int toggleButtonCounterAccel = 0;
-	int toggleButtonCounterGyro = 0;
-	int mClickCountNorm, mClickCountUI, mClickCountGame, mClickCountFast;
-	int mClickCounter;
-	Chronometer chronometerClock;
-	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
-	ToggleButton toggleGyro, toggleAccel;
-	Intent intent;
-	Button next;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the three primary sections of the app. We use a
@@ -143,72 +84,6 @@ public class MainFragmentActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 
-		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-		// Validate whether an accelerometer or gyroscope is present or not
-		mSensorTypeAccel = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorTypeGyro = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
-		if (mSensorTypeAccel != null) {
-			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
-					.show();
-		} else if (mSensorTypeAccel == null) {
-			Toast.makeText(this, "No Accelerometer Found.", Toast.LENGTH_SHORT)
-					.show();
-		}
-		if (mSensorTypeGyro != null) {
-			Toast.makeText(this, "Gyroscope Found.", Toast.LENGTH_SHORT).show();
-		} else if (mSensorTypeGyro == null) {
-			Toast.makeText(this, "No Gyroscope Found.", Toast.LENGTH_SHORT)
-					.show();
-		}
-
-		mSensorDelayNorm = SensorManager.SENSOR_DELAY_NORMAL;
-		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
-		mSensorDelayUI = SensorManager.SENSOR_DELAY_UI;
-		mSensorDelayFast = SensorManager.SENSOR_DELAY_FASTEST;
-
-		mSensorDelaySwitch = mSensorDelayNorm;
-
-		mXaxisAccel = (TextView) findViewById(R.id.xbox);
-		mYaxisAccel = (TextView) findViewById(R.id.ybox);
-		mZaxisAccel = (TextView) findViewById(R.id.zbox);
-		mXaxisGyro = (TextView) findViewById(R.id.xboxo);
-		mYaxisGyro = (TextView) findViewById(R.id.yboxo);
-		mZaxisGyro = (TextView) findViewById(R.id.zboxo);
-
-		mNormLastClick = (TextView) findViewById(R.id.normLast);
-		mGameLastClick = (TextView) findViewById(R.id.gameLast);
-		mUiLastClick = (TextView) findViewById(R.id.uiLast);
-		mFastLastClick = (TextView) findViewById(R.id.fastLast);
-
-		mNormTotalTime = (TextView) findViewById(R.id.normTotal);
-		mGameTotalTime = (TextView) findViewById(R.id.gameTotal);
-		mUiTotalTime = (TextView) findViewById(R.id.uiTotal);
-		mFastTotalTime = (TextView) findViewById(R.id.fastTotal);
-
-		mNormClickCount = (TextView) findViewById(R.id.normCount);
-		mGameClickCount = (TextView) findViewById(R.id.gameCount);
-		mUiClickCount = (TextView) findViewById(R.id.uiCount);
-		mFastClickCount = (TextView) findViewById(R.id.fastCount);
-
-		mchronoNormText = (TextView) findViewById(R.id.chronoNormal);
-		mchronoUiText = (TextView) findViewById(R.id.chronoUI);
-		mchronoGameText = (TextView) findViewById(R.id.chronoGame);
-		mchronoFastText = (TextView) findViewById(R.id.chronoFast);
-
-		// normDelayButton = (Button) findViewById(R.id.ND);
-		// gameDelayButton = (Button) findViewById(R.id.GD);
-		// uiDelayButton = (Button) findViewById(R.id.UD);
-		// fastDelayButton = (Button) findViewById(R.id.FD);
-		//
-		// normDelayButton.setBackgroundColor(Color.LTGRAY);
-		// uiDelayButton.setBackgroundColor(Color.LTGRAY);
-		// gameDelayButton.setBackgroundColor(Color.LTGRAY);
-		// fastDelayButton.setBackgroundColor(Color.LTGRAY);
-
 	}
 
 	@Override
@@ -274,6 +149,25 @@ public class MainFragmentActivity extends FragmentActivity implements
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.main, container, false);
 
+			rootView.findViewById(R.id.powerAccel).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							Intent intent = new Intent(getActivity(),
+									MainActivity.class);
+							startActivity(intent);
+						}
+					});
+
+			rootView.findViewById(R.id.powerGyro).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							Intent intent = new Intent(getActivity(),
+									MainActivity.class);
+							startActivity(intent);
+						}
+					});
 			// Intent datastream = new Intent(getActivity(),
 			// DataStreamActivity.class);
 			// getActivity().startActivity(datastream);
@@ -294,8 +188,6 @@ public class MainFragmentActivity extends FragmentActivity implements
 			View rootView = inflater.inflate(
 					R.layout.fragment_section_launchpad, container, false);
 
-
-
 			// Demonstration of a collection-browsing activity.
 			rootView.findViewById(R.id.demo_collection_button)
 					.setOnClickListener(new View.OnClickListener() {
@@ -307,8 +199,28 @@ public class MainFragmentActivity extends FragmentActivity implements
 						}
 					});
 
+			// Demonstration of navigating to external activities.
+			rootView.findViewById(R.id.demo_external_activity)
+					.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							// Create an intent that asks the user to pick a
+							// photo, but using
+							// FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, ensures that
+							// relaunching
+							// the application from the device home screen does
+							// not return
+							// to the external activity.
+							Intent externalActivityIntent = new Intent(
+									Intent.ACTION_PICK);
+							externalActivityIntent.setType("image*/");
+							externalActivityIntent
+									.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							startActivity(externalActivityIntent);
+						}
+					});
 			return rootView;
-		} 
+		}
 	}
 
 	/**

@@ -308,9 +308,6 @@
         android:layout_alignBottom="@id/normCount"
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
-
-    <Button android:id="@+id/toSupervised" />
-    <Button android:id="@+id/toUnsupervised" />
     <!-- <set android:interpolator="@android:anim/accelerate_interpolator" > -->
 
 
@@ -319,5 +316,27 @@
     <!-- android:fromXDelta="-100%p" -->
     <!-- android:toXDelta="0" /> -->
     <!-- </set> -->
+
+    <Button
+        android:id="@+id/toUnsupervised"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/UD"
+        android:gravity="center"
+        android:text="@string/fastDelay" />
+
+    <Button
+        android:id="@+id/toSupervised"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/yboxo"
+        android:gravity="center"
+        android:text="@string/fastDelay" />
 
 </RelativeLayout>

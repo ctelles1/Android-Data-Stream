@@ -88,7 +88,7 @@ public class CollectionDemoActivity extends FragmentActivity {
 			// activity and
 			// use NavUtils in the Support Package to ensure proper handling of
 			// Up.
-			Intent upIntent = new Intent(this, MainSlideActivity.class);
+			Intent upIntent = new Intent(this, MainFragmentActivity.class);
 			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 				// This activity is not part of the application's task, so
 				// create a new task

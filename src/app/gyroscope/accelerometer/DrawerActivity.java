@@ -1,4 +1,4 @@
-package app.gyroscope.accelerometer;
+//package app.gyroscope.accelerometer;
 ///*
 // * Copyright 2013 The Android Open Source Project
 // *

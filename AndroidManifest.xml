@@ -25,12 +25,15 @@
         <!-- </activity> -->
         <!-- <activity android:name=".ActivityC" > -->
         <!-- </activity> -->
-        <activity
-            android:name="app.gyroscope.accelerometer.CollectionDemoActivity"
-            android:label="@string/demo_collection" />
+<!--         <activity -->
+<!--             android:name="app.gyroscope.accelerometer.CollectionDemoActivity" -->
+<!--             android:label="@string/demo_collection" /> -->
         <activity
             android:name="app.gyroscope.accelerometer.LearnedActivityCollection"
             android:label="@string/demo_collection" />
+        <activity
+            android:name="app.gyroscope.accelerometer.MainActivity"
+            android:label="@string/hello" />
         <!-- <activity -->
         <!-- android:name="app.gyroscope.accelerometer.DataStreamActivity" -->
         <!-- android:label="@string/hello" /> -->

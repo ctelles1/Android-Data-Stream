@@ -131,7 +131,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 		@Override
 		public int getCount() {
 			// For this contrived example, we have a 100-object collection.
-			return 10;
+			return 5;
 		}
 
 		@Override
@@ -147,8 +147,8 @@ public class LearnedActivityCollection extends FragmentActivity {
 	 */
 	public class DemoObjectFragment extends Fragment {
 
-//		Text title = (Text) findViewById(R.id.inputTitleName);
-//		TextView name = (TextView) findViewById(R.id.activityName);
+		// Text title = (Text) findViewById(R.id.inputTitleName);
+		// TextView name = (TextView) findViewById(R.id.activityName);
 
 		public final static String ARG_OBJECT = "object";
 
@@ -179,7 +179,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 			// setTitle(edit);
 			//
 			//
-//			final EditText input = new EditText(getActivity());
+			// final EditText input = new EditText(getActivity());
 			//
 			//
 			// TextView titleName = (TextView)
@@ -196,7 +196,7 @@ public class LearnedActivityCollection extends FragmentActivity {
 			// titleName.setText(settings.getString("value", ""));
 			//
 
-//			displayEditText(rootView);
+			// displayEditText(rootView);
 
 			//
 			// final String edit = title.toString();
@@ -219,15 +219,15 @@ public class LearnedActivityCollection extends FragmentActivity {
 			return rootView;
 		}
 
-//		public void displayEditText(View view) {
-//			if (name.getText().toString().equals("")) {
-//				String editTextValue = title.getWholeText().toString();
-//				name.setText(editTextValue);
-//			} else {
-//				title.setTextContent("");
-//				name.setText("");
-//			}
-//		}
+		// public void displayEditText(View view) {
+		// if (name.getText().toString().equals("")) {
+		// String editTextValue = title.getWholeText().toString();
+		// name.setText(editTextValue);
+		// } else {
+		// title.setTextContent("");
+		// name.setText("");
+		// }
+		// }
 
 	}
 }
