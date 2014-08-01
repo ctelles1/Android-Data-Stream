@@ -1,4 +1,4 @@
-package app.gyro.accelerometer;
+package gyro.accel.slide;
 ///*
 // * Copyright (C) 2012 The Android Open Source Project
 // *

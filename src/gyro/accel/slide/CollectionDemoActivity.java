@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package app.gyro.accelerometer;
+package gyro.accel.slide;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -132,7 +132,7 @@ public class CollectionDemoActivity extends FragmentActivity {
 		@Override
 		public int getCount() {
 			// For this contrived example, we have a 100-object collection.
-			return 2;
+			return 3;
 		}
 
 		@Override

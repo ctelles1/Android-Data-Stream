@@ -1,4 +1,4 @@
-package app.gyro.accelerometer;
+package gyro.accel.slide;
 
 import android.content.Intent;
 import android.graphics.Color;

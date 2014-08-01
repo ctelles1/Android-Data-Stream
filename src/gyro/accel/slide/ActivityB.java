@@ -1,4 +1,4 @@
-package app.gyro.accelerometer;
+package gyro.accel.slide;
 //package app.gyro.accel;
 //
 //import java.util.Timer;
