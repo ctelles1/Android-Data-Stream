@@ -6,7 +6,7 @@
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
     <string name="Y_Value1">Y Value</string>
-    <string name="Z_Value1">Z Value</string>
+    <string name="Z_Value1">Z Value</string> 
     <string name="Gyroscope">Gyroscope</string>
     <string name="X_Value2">X Value</string>
     <string name="Y_Value2">Y Value</string>

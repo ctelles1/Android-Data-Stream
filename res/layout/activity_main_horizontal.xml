@@ -83,7 +83,7 @@
         android:layout_alignLeft="@id/FD"
         android:layout_below="@id/powerGyro"
         android:layout_marginTop="25dp"
-        android:gravity="right"
+        android:gravity="right" 
         android:text="@string/Gyroscope" />
 
     <TextView

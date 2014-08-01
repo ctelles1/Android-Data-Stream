@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorTypeGyro = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
+ 
 		if (mSensorTypeAccel != null) {
 			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
 					.show();
