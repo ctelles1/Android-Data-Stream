@@ -10,12 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -64,6 +68,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	final Handler handler = new Handler();
 	final long delay = 100;
 
+	// Information for logo spin animation
+	private static final float ROTATE_FROM = 0.0f;
+	private static final float ROTATE_TO = -1.0f * 360.0f;// 3.141592654f *
+															// 32.0f;
+
 	/******************************************************************************/
 
 	@Override
@@ -87,19 +96,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
 		// Creates toast to indicate to user whether their phone has the
-		// required sensors
-		if (mSensorTypeAccel != null) {
-			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
+		// required sensors ////// Check if works. if not, revert to yes/no for
+		// each
+		if (mSensorTypeAccel != null && mSensorTypeGyro != null) {
+			Toast.makeText(this, "Required Sensors Found", Toast.LENGTH_SHORT)
 					.show();
-		} else if (mSensorTypeAccel == null) {
-			Toast.makeText(this, "No Accelerometer Found.", Toast.LENGTH_SHORT)
+		} else if (mSensorTypeAccel == null && mSensorTypeGyro != null) {
+			Toast.makeText(this, "No Accelerometer Found", Toast.LENGTH_SHORT)
 					.show();
-		}
-		if (mSensorTypeGyro != null) {
-			Toast.makeText(this, "Gyroscope Found.", Toast.LENGTH_SHORT).show();
-		} else if (mSensorTypeGyro == null) {
-			Toast.makeText(this, "No Gyroscope Found.", Toast.LENGTH_SHORT)
+		} else if (mSensorTypeGyro == null && mSensorTypeAccel != null) {
+			Toast.makeText(this, "No Gyroscope Found", Toast.LENGTH_SHORT)
 					.show();
+		} else if (mSensorTypeGyro == null && mSensorTypeAccel == null) {
+			Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT).show();
 		}
 
 		// Variables for Sensor Delays
@@ -292,6 +301,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 				return false;
 			}
 		});
+
+		// Logo spin animation
+		ImageView favicon = (ImageView) findViewById(R.id.logo);
+		RotateAnimation r;
+		r = new RotateAnimation(ROTATE_FROM, ROTATE_TO,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		r.setDuration((long) 1000);
+		r.setRepeatCount(-1);
+		favicon.startAnimation(r);
 
 	}
 

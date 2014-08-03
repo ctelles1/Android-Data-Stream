@@ -347,4 +347,13 @@
         android:layout_alignParentRight="true"
         android:text="@string/toUnsupervised" />
 
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/logo" />
+
 </RelativeLayout>
