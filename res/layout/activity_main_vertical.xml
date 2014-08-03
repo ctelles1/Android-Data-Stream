@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
-   
+
     <Button
         android:id="@+id/ND"
         android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
         android:layout_toRightOf="@id/UD"
         android:gravity="center"
         android:text="@string/fastDelay" />
- 
+
     <Button
         android:id="@+id/GD"
         android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/powerAccel"
         android:layout_below="@id/powerAccel"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:text="@string/Accelerometer" />
 
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/FD"
         android:layout_below="@id/powerGyro"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:gravity="right"
         android:text="@string/Gyroscope" />
 
@@ -138,9 +138,10 @@
         android:id="@+id/chronoNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/zbox"
-        android:layout_marginLeft="75dp"
-        android:layout_marginTop="25dp"
+        android:layout_alignRight="@+id/accel"
+        android:layout_below="@+id/zbox"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="36dp"
         android:text="@string/cN" />
 
     <Chronometer
@@ -158,7 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/chronoNormal"
-        android:layout_marginLeft="35dp"
+        android:layout_marginLeft="25dp"
         android:layout_toRightOf="@+id/chronoNormal"
         android:text="@string/cU" />
 
@@ -167,7 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/chronoNormal"
-        android:layout_marginLeft="35dp"
+        android:layout_marginLeft="45dp"
         android:layout_toRightOf="@+id/chronoUI"
         android:text="@string/cG" />
 
@@ -308,5 +309,42 @@
         android:layout_alignBottom="@id/normCount"
         android:layout_alignParentLeft="true"
         android:text="@string/clickCount" />
+
+    <!-- <set android:interpolator="@android:anim/accelerate_interpolator" > -->
+
+
+    <!-- <translate -->
+    <!-- android:duration="1500" -->
+    <!-- android:fromXDelta="-100%p" -->
+    <!-- android:toXDelta="0" /> -->
+    <!-- </set> -->
+
+    <Button
+        android:id="@+id/toSupervised"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/chronoUI"
+        android:text="@string/toSupervised" > <!-- pressed -->
+
+
+        <!-- <item -->
+        <!-- android:state_pressed="true" -->
+        <!-- android:color="@color/RithmioYellow"/> -->
+
+
+        <!-- <item -->
+        <!-- android:state_pressed="false" -->
+        <!-- android:tint="@color/RithmioYellow"/> -->
+    </Button>
+
+    <Button
+        android:id="@+id/toUnsupervised"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/toUnsupervised" />
 
 </RelativeLayout>

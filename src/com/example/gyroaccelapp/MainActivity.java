@@ -7,97 +7,87 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.os.SystemClock;
-import android.widget.Button;
-import android.widget.Chronometer;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
 	// Defines variables and sensors
 
 	final String tag = "GAP";
-
 	SensorManager mSensorManager = null;
-
 	TextView mXaxisAccel = null;
 	TextView mYaxisAccel = null;
 	TextView mZaxisAccel = null;
 	TextView mXaxisGyro = null;
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
-
 	TextView mNormLastClick, mUiLastClick, mGameLastClick, mFastLastClick;
 	TextView mNormTotalTime, mUiTotalTime, mGameTotalTime, mFastTotalTime;
 	TextView mNormClickCount, mUiClickCount, mGameClickCount, mFastClickCount;
 	TextView mchronoNormText, mchronoGameText, mchronoUiText, mchronoFastText;
-
 	TextView mTotal;
-
 	String mDelaySelectionTextView;
-
 	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
-
 	long durationSinceLastClick;
-
 	long mStartTime;
-
 	long mEndTime;
-
 	long mTotalTime;
 	long mTotalTimeNorm, mTotalTimeGame, mTotalTimeUI, mTotalTimeFast;
-
 	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
 	int mSensorDelaySwitch;
-
-	// int mPreviousSelectedDelayNormal = 5;
-	// int mPreviousSelectedDelayUI = 6;
-	// int mPreviousSelectedDelayGame = 7;
-	// int mPreviousSelectedDelayFastest = 8;
 	int mPreviousSelectedDelay = -1;
-
 	int toggleButtonCounter = 0;
 	int toggleButtonCounterAccel = 0;
 	int toggleButtonCounterGyro = 0;
-
 	int mClickCountNorm, mClickCountUI, mClickCountGame, mClickCountFast;
 	int mClickCounter;
-
 	Chronometer chronometerClock;
-
 	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
 	Button DelayButton;
+	Button toSuper;
+	Button toUnsuper;
 	ToggleButton toggleGyro, toggleAccel;
+
+	// Creates handler for Supervised and Unsupervised button clicks for color
+	// to change for only 100 milliseconds
+	final Handler handler = new Handler();
+	final long delay = 100;
 
 	/******************************************************************************/
 
-	/** Called when the activity is first created. */
-	/*
-	 * Public: Sets up variables to specified sensors, time readings, TextViews
-	 * Buttons, chronometer, and starts onClickListener for Sensor Delay
-	 * Buttons.
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 
+		// This version of the app, the layout is locked on the
+		// vertical/portrait position
 		setContentView(R.layout.activity_main_vertical);
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		// Validate whether an accelerometer or gyroscope is present or not
+		// Validate whether an accelerometer or gyroscope is present or not.
+		// Android Manifest file specifies that app cannot be used/downloaded if
+		// phone does not have the sensors onboard. This functionality can be
+		// taken out if the sensor check is kept on the Manifest
 		mSensorTypeAccel = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorTypeGyro = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
+		// Creates toast to indicate to user whether their phone has the
+		// required sensors
 		if (mSensorTypeAccel != null) {
 			Toast.makeText(this, "Accelerometer Found.", Toast.LENGTH_SHORT)
 					.show();
@@ -105,7 +95,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 			Toast.makeText(this, "No Accelerometer Found.", Toast.LENGTH_SHORT)
 					.show();
 		}
-
 		if (mSensorTypeGyro != null) {
 			Toast.makeText(this, "Gyroscope Found.", Toast.LENGTH_SHORT).show();
 		} else if (mSensorTypeGyro == null) {
@@ -113,13 +102,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 					.show();
 		}
 
+		// Variables for Sensor Delays
 		mSensorDelayNorm = SensorManager.SENSOR_DELAY_NORMAL;
 		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
 		mSensorDelayUI = SensorManager.SENSOR_DELAY_UI;
 		mSensorDelayFast = SensorManager.SENSOR_DELAY_FASTEST;
 
+		// Sets initial Sensor Delay when the first power button is clicked to
+		// Normal Delay (longest delay). Otherwise, the default delay would be
+		// Fastest
 		mSensorDelaySwitch = mSensorDelayNorm;
 
+		// Variables for each axis of the Accelerometer and Gyroscope
 		mXaxisAccel = (TextView) findViewById(R.id.xbox);
 		mYaxisAccel = (TextView) findViewById(R.id.ybox);
 		mZaxisAccel = (TextView) findViewById(R.id.zbox);
@@ -127,168 +121,261 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mYaxisGyro = (TextView) findViewById(R.id.yboxo);
 		mZaxisGyro = (TextView) findViewById(R.id.zboxo);
 
+		// Variables for the TextView which displays how long it has been since
+		// the Sensor Delays have been changed
 		mNormLastClick = (TextView) findViewById(R.id.normLast);
 		mGameLastClick = (TextView) findViewById(R.id.gameLast);
 		mUiLastClick = (TextView) findViewById(R.id.uiLast);
 		mFastLastClick = (TextView) findViewById(R.id.fastLast);
 
+		// Variables for the TextView which displays total time spent in the
+		// specified Sensor Delay
 		mNormTotalTime = (TextView) findViewById(R.id.normTotal);
 		mGameTotalTime = (TextView) findViewById(R.id.gameTotal);
 		mUiTotalTime = (TextView) findViewById(R.id.uiTotal);
 		mFastTotalTime = (TextView) findViewById(R.id.fastTotal);
 
+		// Variables for the TextView which displays how many times the
+		// specified Sensor Delay button has been clicked (no actual
+		// functionality, simply a tested feature. Can be eliminated)
 		mNormClickCount = (TextView) findViewById(R.id.normCount);
 		mGameClickCount = (TextView) findViewById(R.id.gameCount);
 		mUiClickCount = (TextView) findViewById(R.id.uiCount);
 		mFastClickCount = (TextView) findViewById(R.id.fastCount);
 
+		// Variables for the TextView which displays name of the sensor delays.
+		// Text itself does not change, but variables are in place to change the
+		// color of the Sensor Delay text box whenever it is activated
 		mchronoNormText = (TextView) findViewById(R.id.chronoNormal);
 		mchronoUiText = (TextView) findViewById(R.id.chronoUI);
 		mchronoGameText = (TextView) findViewById(R.id.chronoGame);
 		mchronoFastText = (TextView) findViewById(R.id.chronoFast);
 
+		// Buttons to choose between Normal, Game, UI, and Fastest Sensor Delays
 		normDelayButton = (Button) findViewById(R.id.ND);
 		gameDelayButton = (Button) findViewById(R.id.GD);
 		uiDelayButton = (Button) findViewById(R.id.UD);
 		fastDelayButton = (Button) findViewById(R.id.FD);
 
+		// Sets the background colors of the Sensor Delay buttons to gray, which
+		// increases the viewed button size. This keeps it the same color, but
+		// ensures that it doesn't look weird when it changes color to green as
+		// it is activated
 		normDelayButton.setBackgroundColor(Color.LTGRAY);
 		uiDelayButton.setBackgroundColor(Color.LTGRAY);
 		gameDelayButton.setBackgroundColor(Color.LTGRAY);
 		fastDelayButton.setBackgroundColor(Color.LTGRAY);
 
+		// Buttons for Supervised and Unsupervised function/activity/fragment
+		// calls. Their colors are set to Rithmio-specified yellow and green.
+		// Can be changed at another point - file with color names is located at
+		// res/values/color.xml
+		toSuper = (Button) findViewById(R.id.toSupervised);
+		toSuper.setBackgroundColor(getResources().getColor(
+				R.color.RithmioYellow));
+		toUnsuper = (Button) findViewById(R.id.toUnsupervised);
+		toUnsuper.setBackgroundColor(getResources().getColor(
+				R.color.RithmioGreen));
+
+		// Starts the chronometer when the app/activity is opened
 		chronometerClock = (Chronometer) findViewById(R.id.chronometer1);
 		chronometerClock.setBase(SystemClock.elapsedRealtime());
 		chronometerClock.start();
 
+		// Toggle Buttons to power on and off the Accelerometer and Gyroscope
+		// sensor data readings
 		toggleGyro = (ToggleButton) findViewById(R.id.powerGyro);
 		toggleAccel = (ToggleButton) findViewById(R.id.powerAccel);
 
+		// Sets state of Accelerometer and Gyroscope power toggle buttons to off
+		// as app/activity is initialized
 		toggleGyro.setChecked(false);
 		toggleAccel.setChecked(false);
 
-		/**
-		 * Button Click listeners for On/Off Switch and Sensor Delay choice.
-		 * Starts keeping time and registers listeners for Accelerometer and
-		 * Gyroscope sensors after button click. Leads to function which starts
-		 * the Click Statistics calculation and display loop.
-		 */
-		/*
-		 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-		 * 
-		 * onClickListener for On/Off Toggle Button - toggleButton
-		 * 
-		 * onClickListener for Sensor Delay Buttons (4) - *DelayButton
-		 * 
-		 * registerListener for Sensor Delay Types (mSensorType[Accel/Gyro],
-		 * mSensorDelaySwitch)
-		 * 
-		 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-		 * 
-		 * currentTime
-		 * 
-		 * setStartAndEndTime
-		 * 
-		 * listenerOffSwitch
-		 * 
-		 * @@@@@ VARIABLES @@@@@
-		 * 
-		 * toggleButtonCounter - On/Off Toggle Button redundancy check
-		 * 
-		 * currentDelaySelection - variable to make sure the methods currentTime
-		 * and clickStatisticsText are updating the values for the right Delay
-		 * Setting
-		 * 
-		 * 
-		 * previousSelectedDelay - variable to make sure the method previousMode
-		 * is updating the values for the right Delay Setting
-		 */
+		// onClickListener for Gyroscope toggle button
 		toggleGyro.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (toggleGyro.isChecked()) {
 
+					// Sets current sensor type to Gyroscope
 					mSensorType = mSensorTypeGyro;
 
+					// Turns on Gyroscope functionality redundancy check (See
+					// onClickListeners for the sensor delay buttons)
 					toggleButtonCounterGyro = 1;
 
-					mButtonOnClickListener();
+					// Starts sensor data collection loops
+					buttonOnClickListener();
 
 				} else {
 
+					// Unregisters Gyroscope sensor listener
 					mSensorManager.unregisterListener(MainActivity.this,
 							mSensorTypeGyro);
 
+					// Turns off Gyroscope functionality redundancy check
 					toggleButtonCounterGyro = 0;
 
+					// Sets Gyroscope power button status to off
 					toggleGyro.setChecked(false);
 
 				}
 			}
 		});
+
+		// onClickListener for Accelerometer toggle button
 		toggleAccel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (toggleAccel.isChecked()) {
 
+					// Sets current sensor type to Accelerometer
 					mSensorType = mSensorTypeAccel;
 
+					// Turns on Accelerometer functionality redundancy check
 					toggleButtonCounterAccel = 1;
 
-					mButtonOnClickListener();
+					// Starts sensor data collection loops
+					buttonOnClickListener();
 
 				} else {
 
+					// Unregisters Accelerometer sensor listener
 					mSensorManager.unregisterListener(MainActivity.this,
 							mSensorTypeAccel);
 
+					// Turns off Accelerometer functionality redundancy check
 					toggleButtonCounterAccel = 0;
 
+					// Sets Accelerometer power button status to off
 					toggleAccel.setChecked(false);
 
 				}
 			}
 		});
 
+		toSuper.setOnClickListener(new OnClickListener() { /*
+															 * Check if onClick
+															 * makes difference
+															 * from onTouch
+															 */// //////////////
+			@Override
+			public void onClick(View v) {
+
+				// Sets color for Supervised Learning button to gray when
+				// clicked
+				toSuper.setBackgroundColor(getResources().getColor(
+						R.color.RithmioGray));
+
+				// Starts button color change function
+				backgroundColorChange();
+
+				// Insert here call for Supervised Learning
+				// function/activity/fragment
+
+			}
+		});
+		toUnsuper.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent arg1) {
+
+				// Sets color for Unsupervised Learning button to black when
+				// clicked
+				toUnsuper.setBackgroundColor(getResources().getColor(
+						R.color.Black));
+
+				// Starts button color change function
+				backgroundColorChange();
+
+				return false;
+			}
+		});
+
 	}
 
+	/**
+	 * Changes button color back to original after specified amount of time in
+	 * milliseconds (final long delay = 100).
+	 */
+	void backgroundColorChange() {
+		handler.postDelayed(new Runnable() {
+			public void run() {
+
+				// Sets Supervised Learning button back to Rithmio Yellow
+				toSuper.setBackgroundColor(getResources().getColor(
+						R.color.RithmioYellow));
+
+				// Sets Unsupervised Learning button back to Rithmio Green
+				toUnsuper.setBackgroundColor(getResources().getColor(
+						R.color.RithmioGreen));
+
+			}
+
+			// Current delay is 100 milliseconds. Amount set in variable
+			// initializer
+		}, delay);
+	}
+
+	/**
+	 * Called when both Accelerometer and Gyroscope power buttons are toggled
+	 * off. Sets their state to off, sets redundant state check to off, and
+	 * unregisters both listeners.
+	 */
 	public void setCheckedFalse() {
 
 		toggleAccel.setChecked(false);
-
 		toggleGyro.setChecked(false);
 
 		toggleButtonCounter = 0;
 
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeAccel);
-
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeGyro);
 	}
 
-	public void mButtonOnClickListener() {
+	/**
+	 * Starts time count, registers Accelerometer and/or Gyroscope sensors, and
+	 * onClickListeners for each Sensor Delay button. Each button then sets the
+	 * current Sensor Delay being used to the specified button clicked, starts
+	 * the Sensor Delay statistics loop, then sets the current Sensor Delay as
+	 * the "previous" sensor delay.
+	 */
+	public void buttonOnClickListener() {
 
-		setStartAndEndTime(); // Gets values for start and end time calculations
+		// Gets values for start and end time calculations
+		setStartAndEndTime();
 
+		// Registers Accelerometer and/or Gyroscope sensors, depending on toggle
+		// button state
 		register();
 
 		normDelayButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+
+				// Checks if either Accelerometer or Gyroscope sensors are off
 				if (toggleButtonCounterAccel == 1
 						|| toggleButtonCounterGyro == 1) {
 
+					// Sets current Sensor Delay to Normal Delay
 					mSensorDelaySwitch = mSensorDelayNorm;
 
+					// Starts Sensor Delay statistics
 					currentTime();
 
+					// To be used in total time calculations to specify which
+					// sensor delay was being used last and where to display the
+					// information for how long it has been used
 					mPreviousSelectedDelay = mSensorDelayNorm;
 
+					// Checks if both toggle buttons are off, starts function
+					// which unregisters both sensors
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
 
 					setCheckedFalse();
-
 				}
 			}
 		});
@@ -299,6 +386,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				if (toggleButtonCounterAccel == 1
 						|| toggleButtonCounterGyro == 1) {
 
+					// Sets current Sensor Delay to UI Delay
 					mSensorDelaySwitch = mSensorDelayUI;
 
 					currentTime();
@@ -309,7 +397,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 						&& toggleButtonCounterGyro == 0) {
 
 					setCheckedFalse();
-
 				}
 			}
 		});
@@ -320,6 +407,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				if (toggleButtonCounterAccel == 1
 						|| toggleButtonCounterGyro == 1) {
 
+					// Sets current Sensor Delay to Game Delay
 					mSensorDelaySwitch = mSensorDelayGame;
 
 					currentTime();
@@ -340,6 +428,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				if (toggleButtonCounterAccel == 1
 						|| toggleButtonCounterGyro == 1) {
 
+					// Sets current sensor delay to Fastest Delay
 					mSensorDelaySwitch = mSensorDelayFast;
 
 					currentTime();
@@ -356,142 +445,98 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called on button click from onCreate method. Button Click listeners for
-	 * On/Off Switch and Sensor Delay choice. Starts keeping time and registers
-	 * listeners for Accelerometer and Gyroscope sensors after button click.
-	 * Leads to function which starts the Click Statistics calculation and
-	 * display loop.
-	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-	 * 
-	 * toggleButtonCounter - On/Off button redundancy check
-	 * 
-	 * currentDelaySelection - chooses Sensor Delay data instruction loop based
-	 * on Sensor Delay choice in onCreate onClickListener.
-	 * 
-	 * System.nanoTime - gets current system time up to nanoseconds
-	 * 
-	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-	 * 
-	 * timeSincLastClick
-	 * 
-	 * clickStatisticsText
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * m(Norm/Game/UI/Fast)EndTime - sets variable to current system time
-	 * 
-	 * mEndTime - sets "End Time" for calculation of time difference between
-	 * clicks
-	 * 
-	 * mStartTime - sets "Start Time" for calculation of time difference between
-	 * clicks
-	 * 
-	 * mClickCounter(Norm/Game/UI/Fast) - Increases counter by one every time
-	 * button is clicked
-	 * 
-	 * mClickCounter - sets number to be displayed on screen to the currently
-	 * handled click counter
-	 * 
-	 * mSensorDelaySwitch - sets current Sensor Delay to chosen setting
-	 * 
-	 * mDelaySelectionTextView - sets Current Delay text for display
+	 * Gets system time, calculates time since the last button click, and adds
+	 * that to the current Sensor Delays' total time. Adds one to button click
+	 * counter.
 	 */
 	public void currentTime() {
+
+		// ///////////// Check if this is even necessary
 		if (toggleButtonCounterAccel == 1 || toggleButtonCounterGyro == 1) {
+
+			// Gets current system to calculate time since last click
+			mEndTime = System.nanoTime();
 
 			if (mSensorDelaySwitch == mSensorDelayNorm) {
 
-				mEndTime = System.nanoTime(); // put this as EndTime earlier
-
+				// Calculates time since last button click, sets to milliseconds
+				// //////////////// Check if this and next function call need to
+				// be within if function
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				timeSinceLastClick();// Calculates time since last button click
 
+				// Calculates total time spent in current Sensor Delay
+				totalSensorTime();
+
+				// Increases current sensors' click count by 1
 				mClickCountNorm++;
+
+				// Sets current click counter displayed to Normal
+				// ///////////////////
+				// Check if this is even necessary
 				mClickCounter = mClickCountNorm;
 
 			} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
-				mEndTime = System.nanoTime();
-
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				timeSinceLastClick();
+				totalSensorTime();
 
 				mClickCountUI++;
 				mClickCounter = mClickCountUI;
 
 			} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
-				mEndTime = System.nanoTime();
-
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				timeSinceLastClick();
+				totalSensorTime();
 
 				mClickCountGame++;
 				mClickCounter = mClickCountGame;
 
 			} else if (mSensorDelaySwitch == mSensorDelayFast) {
 
-				mEndTime = System.nanoTime();
-
 				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				timeSinceLastClick();
+				totalSensorTime();
 
 				mClickCountFast++;
 				mClickCounter = mClickCountFast;
 
 			}
 
-			clickStatisticsText(); // Sets text on display
+			// Sets current button click calculations as text on display and
+			// changes the selected Sensor Delay button color as well as
+			// highlights the name of the Sensor Delay being used on the
+			// statistics table
+			clickStatisticsText();
 
-			setStartAndEndTime(); // Unregisters current Delay setting
-									// listeners and Registers them in new Delay
-									// settings
+			// Gets current system time and sets it to both Start Time and End
+			// Time ///////// Check if End Time is necessary
+			setStartAndEndTime();
 
+			// Registers sensors /////// Check if necessary
 			register();
 
+			// ///Check if necessary
 		} else if (toggleButtonCounterAccel == 0
 				&& toggleButtonCounterGyro == 0) {
 
+			// Unregisters sensors
 			setCheckedFalse();
 
+			// Stops function
 			return;
 
 		}
 	}
 
 	/**
-	 * Called in currentTime(), after Sensor Delay choice and "End Time" is
-	 * gathered. Calculates time since last button click in milliseconds, adds
-	 * current time since last click to total Sensor Delay usage time, and
-	 * converts current time of usage to seconds.
+	 * Checks which Sensor Delay was previously used, and adds the current time
+	 * since the last button click to the total time that the specified Sensor
+	 * Delay has been on. Converts time to seconds.
 	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-	 * 
-	 * delayMode - Sensor Delay Switch set in currentTime()
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * durationSinceLastClick - time between last mStartTime and last mEndTime
-	 * register
-	 * 
-	 * mEndTime - time gathered at button click
-	 * 
-	 * mStartTime - time gathered at end of Sensor Delay listener registration
-	 * function
-	 * 
-	 * mEndTime(Norm/UI/Game/Fast) - sets "End Time" to currently chosen Delay
-	 * total time elapsed plus time since last button click
-	 * 
-	 * mEndT - converts current "End Time" from milliseconds to seconds for
-	 * display
-	 */
-	public void timeSinceLastClick() {
+	public void totalSensorTime() {
 
 		if (mPreviousSelectedDelay == mSensorDelayNorm) {
 
+			// Adds time since last click to Sensor Delay total time
 			mTotalTimeNorm = mTotalTimeNorm + durationSinceLastClick;
 
 			mTotalTime = mTotalTimeNorm / 1000;
@@ -519,58 +564,38 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * /** Called in currentTime() after all calculations are made and TextViews
-	 * are changed. After checking for the current Delay selection, converts
-	 * long durationSinceLastClick to string and displays it, calls
-	 * previousMode(), displays click counter, calls delayColorChange(), and
-	 * sets delayMode to specified delay for use in timeSinceLastClick().
-	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-	 * 
-	 * currentDelaySelection - checks for current button selected as set in
-	 * onClick
-	 * 
-	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-	 * 
-	 * previousMode()
-	 * 
-	 * delayColorChange()
-	 * 
-	 * .setText - sets the text inside the parentheses to the displayed id
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * m(Norm/UI/Game/Fast)LastClick - TextView displaying current time since
-	 * last click
-	 * 
-	 * durationSinceLastClick - time since last click
-	 * 
-	 * m(Norm/UI/Game/Fast)ClickCount - TextView displaying click counter
-	 * 
-	 * mClickCounter - total number of clicks for specified sensor delay
-	 * 
-	 * delayMode - sets post-calculation and text display sensor delay mode for
-	 * use in timeSinceLastClick()
-	 * 
-	 * delayMode(Norm/UI/Game/Fast) - sets delayMode to specified sensor delay
+	 * Checks the current Delay selection, displays the time since the last
+	 * Sensor Delay change, checks for and displays Sensor Delay total time to
+	 * update, updates click count, and changes button and text box colors.
 	 */
 	public void clickStatisticsText() {
 
 		if (mSensorDelaySwitch == mSensorDelayNorm) {
 
+			// Sets time since last Sensor Delay change
 			mNormLastClick.setText(String.valueOf(durationSinceLastClick));
 
+			// ///////// Check if necessary
 			mNormLastClick.setText("" + durationSinceLastClick);
 
+			// Sets current total time to be displayed to the current Sensor
+			// Delay chosen
 			mTotal = mNormTotalTime;
 
+			// Overrides the previous equation if the previous Sensor Delay
+			// chosen is not the same as the current one
+			// ///////////////////Check if this can be in total()
 			previousMode();
 
+			// Updates the total running-time value for the previously-activated
+			// delay /////////// Check if this can be put after if - else if
 			total();
 
+			// Sets new amount (+1) to current Sensor Delay click count
 			mNormClickCount.setText("" + mClickCounter);
 
+			// Changes background color of current Sensor Delay Button and
+			// TextView box //////// Check if can be put after if - else if
 			delayColorChange();
 
 		} else if (mSensorDelaySwitch == mSensorDelayUI) {
@@ -626,42 +651,36 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called in onCreate and listenerOffOnSwitch. Sets "End Time" and
-	 * "Start Time" for each sensor delay so as to be used for next button
-	 * click's "duration" (endTime - startTime) calculation.
-	 */
-	/*
-	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-	 * 
-	 * System.nanoTime() - gets current system time and sets it to the variable
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * m(Norm/UI/Game/Fast)EndTime - sets current system time for EndTime
-	 * variables
-	 * 
-	 * m(Norm/UI/Game/Fast)StartTime - sets current system time for StartTime
-	 * variables
+	 * Gets system time and sets it to variables End Time and Start Time
 	 */
 	public void setStartAndEndTime() {
 
+		// ///// Check if necessary
 		mEndTime = System.nanoTime();
 
 		mStartTime = System.nanoTime();
 
 	}
 
+	/**
+	 * Unregisters both listeners, then registers whichever sensor is powered
+	 * on.
+	 */
 	public void register() {
+
+		// //// Check if necessary
 		mSensorManager.unregisterListener(this);
 
 		if (toggleGyro.isChecked()) {
 
+			// Registers the Gyroscope sensor
 			mSensorManager.registerListener(this, mSensorTypeGyro,
 					mSensorDelaySwitch);
 
 		}
 		if (toggleAccel.isChecked()) {
 
+			// Registers the Accelerometer sensor
 			mSensorManager.registerListener(this, mSensorTypeAccel,
 					mSensorDelaySwitch);
 
@@ -669,43 +688,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called in clickStatisticsText. Checks for the previously selected delay
-	 * setting so as to then set the current time elapsed since the last click
-	 * to the total amount of time elapsed under the specific previous setting.
-	 * It does this by converting the long mEndT to string and using .setText to
-	 * display it on variable m(Norm/UI/Game/Fast)TotalTime, and then sets the
-	 * TextView for the current selected Delay setting.
-	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-	 * 
-	 * previousSelectedDelay - checks for delay setting used previous to current
-	 * one
-	 * 
-	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-	 * 
-	 * .setText
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * previousSelectedDelay - variable to make sure the method previousMode is
-	 * updating the values for the right Delay Setting
-	 * 
-	 * previously(Normal/UI/Game/Fast)Selected - variable set in onClick after
-	 * all changes to display due to button click have been made
-	 * 
-	 * m(Norm/UI/Game/Fast)TotalTime - TextView displaying total time elapsed in
-	 * specified delay setting
-	 * 
-	 * mEndTime - current delay settings' total time elapsed
-	 * 
-	 * mSelection - TextView displaying name of current delay setting being used
-	 * 
-	 * mDelaySelectionTextView - current sensor delay setting text set in
-	 * currentTime()
+	 * Checks for the previously selected delay and sets the displayed total
+	 * time TextView to its calculated total time. /////Check if necessary
 	 */
 	public void previousMode() {
 
+		// ////// Check if necessary
 		if (mPreviousSelectedDelay == mSensorDelaySwitch) {
 
 			return;
@@ -727,11 +715,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mTotal = mFastTotalTime;
 
 		}
-
 	}
 
+	/**
+	 * Updates the total running-time value for the previously-activated delay.
+	 */
 	public void total() {
 
+		// Read documentation to check if both are necessary
 		mTotal.setText(String.valueOf(mTotalTime));
 
 		mTotal.setText("" + mTotalTime);
@@ -739,28 +730,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called in clickStatisticsText. Sets background of TextView box for sensor
-	 * delay setting name in display to dark gray, so as to signalize its
-	 * current use. It does this by chekcing for the current delay selection and
-	 * setting its TextView box to grey and the others to white, which clears
-	 * them.
-	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
-	 * 
-	 * currentDelaySelection - checks for current sensor delay setting
-	 * 
-	 * @@@@ METHODS & FUNCTIONS CALLED @@@@
-	 * 
-	 * .setBackgroundColor - sets specified TextView box's color to (0xColor)
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * currentDelaySelection/currently(Normal/UI/Game/Fast)Selected - checking
-	 * for current sensor delay setting
-	 * 
-	 * mchrono(Normal/UI/Game/Fast)Text - calls specified TextView box to change
-	 * its background color and indicate its use
+	 * Changes background color of current Sensor Delay Button and TextView box.
 	 */
 	public void delayColorChange() {
 		if (mSensorDelaySwitch == mSensorDelayNorm) {
@@ -816,18 +786,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called when the sensors pick up new readings. Changes values of X, Y, and
-	 * Z variables on Sensor Events on either Gyroscope or Accelerometer.
-	 */
-	/*
-	 * @@@@ IF STATEMENTS | LISTENERS | SWITCHES @@@@
+	 * Displays Accelerometer and Gyroscope sensor readings for the X, Y, and Z
+	 * axis.
 	 * 
-	 * event.sensor.getType for Gyroscope and Accelerometer
-	 * 
-	 * @@@@@ VARIABLES @@@@@
-	 * 
-	 * mAxisX/Y/Z - event.values determined by Event Sensor readings, and set on
-	 * UI by If Statements of event.sensor
+	 * @param event
+	 *            Gathers sensor values for each axis.
 	 */
 	public void onSensorChanged(SensorEvent event) {
 		Log.d(tag, "onSensorChanged: " + event.sensor + ", x: "
@@ -858,6 +821,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onPause() {
 		super.onPause();
+
+		// Unregisters both sensors when app is paused (home screen or screen
+		// lock), modify or delete this to maintain sensors running despite app
+		// pause. Currently only app activity functioning outside is chronometer
 		mSensorManager.unregisterListener(this);
 	}
 
