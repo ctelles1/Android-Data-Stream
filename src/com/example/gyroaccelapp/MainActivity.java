@@ -25,7 +25,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements SensorEventListener {
-
+ 
 	// Defines variables and sensors
 
 	final String tag = "GAP";
@@ -759,7 +759,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mchronoGameText.setBackgroundColor(0x55FFFFFF);
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
-			normDelayButton.setBackgroundColor(Color.GREEN);
+			normDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
 			uiDelayButton.setBackgroundColor(Color.LTGRAY);
 			gameDelayButton.setBackgroundColor(Color.LTGRAY);
 			fastDelayButton.setBackgroundColor(Color.LTGRAY);
@@ -772,7 +773,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
-			uiDelayButton.setBackgroundColor(Color.GREEN);
+			uiDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
 			gameDelayButton.setBackgroundColor(Color.LTGRAY);
 			fastDelayButton.setBackgroundColor(Color.LTGRAY);
 
@@ -785,7 +787,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
 			uiDelayButton.setBackgroundColor(Color.LTGRAY);
-			gameDelayButton.setBackgroundColor(Color.GREEN);
+			gameDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
 			fastDelayButton.setBackgroundColor(Color.LTGRAY);
 
 		} else if (mSensorDelaySwitch == mSensorDelayFast) {
@@ -798,7 +801,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
 			uiDelayButton.setBackgroundColor(Color.LTGRAY);
 			gameDelayButton.setBackgroundColor(Color.LTGRAY);
-			fastDelayButton.setBackgroundColor(Color.GREEN);
+			fastDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
 
 		}
 
