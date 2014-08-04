@@ -1,31 +1,39 @@
-package com.example.gyroaccelapp;
+package com.example.gyroaccelapp.clean;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
+import android.os.HandlerThread;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements SensorEventListener {
- 
+
 	// Defines variables and sensors
 
 	final String tag = "GAP";
@@ -33,30 +41,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mXaxisAccel = null;
 	TextView mYaxisAccel = null;
 	TextView mZaxisAccel = null;
-	TextView mXaxisGyro = null;
+	TextView mXaxisGyro = null; 
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
-	TextView mNormLastClick, mUiLastClick, mGameLastClick, mFastLastClick;
-	TextView mNormTotalTime, mUiTotalTime, mGameTotalTime, mFastTotalTime;
-	TextView mNormClickCount, mUiClickCount, mGameClickCount, mFastClickCount;
-	TextView mchronoNormText, mchronoGameText, mchronoUiText, mchronoFastText;
-	TextView mTotal;
-	String mDelaySelectionTextView;
+
 	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
-	long durationSinceLastClick;
-	long mStartTime;
-	long mEndTime;
-	long mTotalTime;
-	long mTotalTimeNorm, mTotalTimeGame, mTotalTimeUI, mTotalTimeFast;
+
 	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
 	int mSensorDelaySwitch;
-	int mPreviousSelectedDelay = -1;
-	int toggleButtonCounter = 0;
 	int toggleButtonCounterAccel = 0;
 	int toggleButtonCounterGyro = 0;
-	int mClickCountNorm, mClickCountUI, mClickCountGame, mClickCountFast;
-	int mClickCounter;
-	Chronometer chronometerClock;
+
 	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
 	Button DelayButton;
 	Button toSuper;
@@ -72,7 +67,39 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private static final float ROTATE_FROM = 0.0f;
 	private static final float ROTATE_TO = -1.0f * 360.0f;// 3.141592654f *
 															// 32.0f;
- 
+
+	TextView label;
+	Button reading;
+	int count = 1;
+	boolean record = false;
+	Sensor myAcc;
+	MySensorListener listener;
+
+	String state = Environment.getExternalStorageState();
+
+	String comma = new String(",");
+	PrintWriter mCurrentFile;
+	PrintWriter mCurrentFile2;
+
+	// private FileWriter writer;
+
+	TextView title, tvx, tvy, tvz;
+	EditText etshowval;
+	RelativeLayout layout;
+	private String acc;
+	private String read_str = "";
+	private final String filepath = "/sdcard/Rithmio/acc.csv";
+	private BufferedWriter mBufferedWriter;
+	private BufferedReader mBufferedReader;
+
+	public static final int MSG_DONE = 1;
+	public static final int MSG_ERROR = 2;
+	public static final int MSG_STOP = 3;
+
+	private boolean mrunning;
+	private Handler mHandler;
+	private HandlerThread mHandlerThread;
+
 	/******************************************************************************/
 
 	@Override
@@ -123,48 +150,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mSensorDelaySwitch = mSensorDelayNorm;
 
 		// Variables for each axis of the Accelerometer and Gyroscope
-		mXaxisAccel = (TextView) findViewById(R.id.xbox);
-		mYaxisAccel = (TextView) findViewById(R.id.ybox);
-		mZaxisAccel = (TextView) findViewById(R.id.zbox);
-		mXaxisGyro = (TextView) findViewById(R.id.xboxo);
-		mYaxisGyro = (TextView) findViewById(R.id.yboxo);
-		mZaxisGyro = (TextView) findViewById(R.id.zboxo);
-
-		// Variables for the TextView which displays how long it has been since
-		// the Sensor Delays have been changed
-		mNormLastClick = (TextView) findViewById(R.id.normLast);
-		mGameLastClick = (TextView) findViewById(R.id.gameLast);
-		mUiLastClick = (TextView) findViewById(R.id.uiLast);
-		mFastLastClick = (TextView) findViewById(R.id.fastLast);
-
-		// Variables for the TextView which displays total time spent in the
-		// specified Sensor Delay
-		mNormTotalTime = (TextView) findViewById(R.id.normTotal);
-		mGameTotalTime = (TextView) findViewById(R.id.gameTotal);
-		mUiTotalTime = (TextView) findViewById(R.id.uiTotal);
-		mFastTotalTime = (TextView) findViewById(R.id.fastTotal);
-
-		// Variables for the TextView which displays how many times the
-		// specified Sensor Delay button has been clicked (no actual
-		// functionality, simply a tested feature. Can be eliminated)
-		mNormClickCount = (TextView) findViewById(R.id.normCount);
-		mGameClickCount = (TextView) findViewById(R.id.gameCount);
-		mUiClickCount = (TextView) findViewById(R.id.uiCount);
-		mFastClickCount = (TextView) findViewById(R.id.fastCount);
-
-		// Variables for the TextView which displays name of the sensor delays.
-		// Text itself does not change, but variables are in place to change the
-		// color of the Sensor Delay text box whenever it is activated
-		mchronoNormText = (TextView) findViewById(R.id.chronoNormal);
-		mchronoUiText = (TextView) findViewById(R.id.chronoUI);
-		mchronoGameText = (TextView) findViewById(R.id.chronoGame);
-		mchronoFastText = (TextView) findViewById(R.id.chronoFast);
+		mXaxisAccel = (TextView) findViewById(R.id.textView_xAxisAccel);
+		mYaxisAccel = (TextView) findViewById(R.id.textView_yAxisAccel);
+		mZaxisAccel = (TextView) findViewById(R.id.textView_zAxisAccel);
+		mXaxisGyro = (TextView) findViewById(R.id.textView_xAxisGyro);
+		mYaxisGyro = (TextView) findViewById(R.id.textView_yAxisGyro);
+		mZaxisGyro = (TextView) findViewById(R.id.textView_zAxisGyro);
 
 		// Buttons to choose between Normal, Game, UI, and Fastest Sensor Delays
-		normDelayButton = (Button) findViewById(R.id.ND);
-		gameDelayButton = (Button) findViewById(R.id.GD);
-		uiDelayButton = (Button) findViewById(R.id.UD);
-		fastDelayButton = (Button) findViewById(R.id.FD);
+		normDelayButton = (Button) findViewById(R.id.button_NormalDelay);
+		gameDelayButton = (Button) findViewById(R.id.button_GameDelay);
+		uiDelayButton = (Button) findViewById(R.id.button_UiDelay);
+		fastDelayButton = (Button) findViewById(R.id.button_FastestDelay);
 
 		// Sets the background colors of the Sensor Delay buttons to gray, which
 		// increases the viewed button size. This keeps it the same color, but
@@ -179,22 +176,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// calls. Their colors are set to Rithmio-specified yellow and green.
 		// Can be changed at another point - file with color names is located at
 		// res/values/color.xml
-		toSuper = (Button) findViewById(R.id.toSupervised);
+		toSuper = (Button) findViewById(R.id.button_ToSupervised);
 		toSuper.setBackgroundColor(getResources().getColor(
 				R.color.RithmioYellow));
-		toUnsuper = (Button) findViewById(R.id.toUnsupervised);
+		toUnsuper = (Button) findViewById(R.id.button_ToUnsupervised);
 		toUnsuper.setBackgroundColor(getResources().getColor(
 				R.color.RithmioGreen));
 
-		// Starts the chronometer when the app/activity is opened
-		chronometerClock = (Chronometer) findViewById(R.id.chronometer1);
-		chronometerClock.setBase(SystemClock.elapsedRealtime());
-		chronometerClock.start();
-
 		// Toggle Buttons to power on and off the Accelerometer and Gyroscope
 		// sensor data readings
-		toggleGyro = (ToggleButton) findViewById(R.id.powerGyro);
-		toggleAccel = (ToggleButton) findViewById(R.id.powerAccel);
+		toggleGyro = (ToggleButton) findViewById(R.id.toggleButton_GyroscopePower);
+		toggleAccel = (ToggleButton) findViewById(R.id.toggleButton_AccelerometerPower);
 
 		// Sets state of Accelerometer and Gyroscope power toggle buttons to off
 		// as app/activity is initialized
@@ -214,7 +206,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// onClickListeners for the sensor delay buttons)
 					toggleButtonCounterGyro = 1;
 
-					// Starts sensor data collection loops
+					// Starts sensor register and button color change functions
 					buttonOnClickListener();
 
 				} else {
@@ -245,7 +237,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Turns on Accelerometer functionality redundancy check
 					toggleButtonCounterAccel = 1;
 
-					// Starts sensor data collection loops
+					// Starts sensor register and button color change functions
 					buttonOnClickListener();
 
 				} else {
@@ -264,11 +256,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-		toSuper.setOnClickListener(new OnClickListener() { /*
-															 * Check if onClick
-															 * makes difference
-															 * from onTouch
-															 */// //////////////
+		toSuper.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 
@@ -280,30 +269,35 @@ public class MainActivity extends Activity implements SensorEventListener {
 				// Starts button color change function
 				backgroundColorChange();
 
+				start();
+
 				// Insert here call for Supervised Learning
 				// function/activity/fragment
 
 			}
 		});
-		toUnsuper.setOnTouchListener(new OnTouchListener() {
+		toUnsuper.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public boolean onTouch(View v, MotionEvent arg1) {
+			public void onClick(View v) {
 
-				// Sets color for Unsupervised Learning button to black when
+				// Sets color for Supervised Learning button to gray when
 				// clicked
 				toUnsuper.setBackgroundColor(getResources().getColor(
-						R.color.Black));
+						R.color.RithmioGray));
 
 				// Starts button color change function
 				backgroundColorChange();
 
-				return false;
+				stop();
+
+				// Insert here call for Unsupervised Learning
+				// function/activity/fragment
 			}
 		});
 
 		// Logo spin animation
-		ImageView favicon = (ImageView) findViewById(R.id.logo);
+		ImageView favicon = (ImageView) findViewById(R.id.imageView_RithmioLogo);
 		RotateAnimation r;
 		r = new RotateAnimation(ROTATE_FROM, ROTATE_TO,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -312,6 +306,143 @@ public class MainActivity extends Activity implements SensorEventListener {
 		r.setRepeatCount(-1);
 		favicon.startAnimation(r);
 
+		favicon.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent myWebLink = new Intent(
+						android.content.Intent.ACTION_VIEW);
+				myWebLink.setData(Uri.parse("http://rithmio.com"));
+				startActivity(myWebLink);
+			}
+		});
+
+		// String csv = android.os.Environment.getExternalStorageDirectory()
+		// .getAbsolutePath();
+		// CSVWriter writer = new CSVWriter(new FileWriter(csv));
+		// List<String[]> data = new ArrayList<String[]>();
+		// data.add(new String[] { "India", "New Delhi" });
+		// data.add(new String[] { "United States", "Washington D.C" });
+		// data.add(new String[] { "Germany", "Berlin" });
+		// writer.writeAll(data);
+		// writer.close();
+
+		isExternalStorageWritable();
+		// MySensorListener(count);
+
+		// get textviews
+
+		etshowval = (EditText) findViewById(R.id.showval);
+		title.setText("Accelerator");
+
+		mHandlerThread = new HandlerThread("Working Thread");
+		mHandlerThread.start();
+
+		mHandler = new Handler(mHandlerThread.getLooper());
+		mHandler.post(p);
+
+	}
+
+	private Runnable p = new Runnable() {
+		@Override
+		public void run() {
+			while (true) {
+				if (mrunning) {
+					try {
+						WriteFile(filepath, acc);
+					} catch (Exception e) {
+						e.printStackTrace();
+
+					}
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		} 
+	};
+
+	public void onReadClick(View view) {
+		etshowval.setText(ReadFile(filepath));
+	}
+
+	public void CreateFile(String path) {
+		File f = new File(path);
+		try {
+			Log.d("ACTIVITY", "Create a File.");
+			f.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String ReadFile(String filepath) {
+		mBufferedReader = null;
+		String tmp = null;
+
+		if (!FileIsExist(filepath))
+			CreateFile(filepath);
+
+		try {
+			mBufferedReader = new BufferedReader(new FileReader(filepath));
+			// Read string
+			while ((tmp = mBufferedReader.readLine()) != null) {
+				tmp += "\n";
+				read_str += tmp;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return read_str;
+	}
+
+	public void WriteFile(String filepath, String str) {
+		mBufferedWriter = null;
+
+		if (!FileIsExist(filepath))
+			CreateFile(filepath);
+
+		try {
+			mBufferedWriter = new BufferedWriter(new FileWriter(filepath, true));
+			mBufferedWriter.write(str);
+			mBufferedWriter.newLine();
+			mBufferedWriter.flush();
+			mBufferedWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private synchronized void start() {
+		mrunning = true;
+	}
+
+	private synchronized void stop() {
+		mrunning = false;
+	}
+
+	public boolean FileIsExist(String filepath) {
+		File f = new File(filepath);
+
+		if (!f.exists()) {
+			Log.e("ACTIVITY", "File does not exist.");
+			return false;
+		} else
+			return true;
+	}
+
+	/* Checks if external storage is available for read and write */
+	public boolean isExternalStorageWritable() {
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			Toast.makeText(this, "Found Media Device", Toast.LENGTH_SHORT)
+					.show();
+			return true;
+		}
+		Toast.makeText(this, "Did Not Find Media Device", Toast.LENGTH_SHORT)
+				.show();
+		return false;
 	}
 
 	/**
@@ -347,7 +478,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		toggleAccel.setChecked(false);
 		toggleGyro.setChecked(false);
 
-		toggleButtonCounter = 0;
+		toggleButtonCounterAccel = 0;
+		toggleButtonCounterGyro = 0;
 
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeAccel);
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeGyro);
@@ -361,9 +493,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * the "previous" sensor delay.
 	 */
 	public void buttonOnClickListener() {
-
-		// Gets values for start and end time calculations
-		setStartAndEndTime();
 
 		// Registers Accelerometer and/or Gyroscope sensors, depending on toggle
 		// button state
@@ -381,13 +510,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current Sensor Delay to Normal Delay
 					mSensorDelaySwitch = mSensorDelayNorm;
 
-					// Starts Sensor Delay statistics
-					currentTime();
+					register();
 
-					// To be used in total time calculations to specify which
-					// sensor delay was being used last and where to display the
-					// information for how long it has been used
-					mPreviousSelectedDelay = mSensorDelayNorm;
+					delayColorChange();
 
 					// Checks if both toggle buttons are off, starts function
 					// which unregisters both sensors
@@ -408,9 +533,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current Sensor Delay to UI Delay
 					mSensorDelaySwitch = mSensorDelayUI;
 
-					currentTime();
+					register();
 
-					mPreviousSelectedDelay = mSensorDelayUI;
+					delayColorChange();
 
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
@@ -429,9 +554,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current Sensor Delay to Game Delay
 					mSensorDelaySwitch = mSensorDelayGame;
 
-					currentTime();
+					register();
 
-					mPreviousSelectedDelay = mSensorDelayGame;
+					delayColorChange();
 
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
@@ -450,9 +575,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current sensor delay to Fastest Delay
 					mSensorDelaySwitch = mSensorDelayFast;
 
-					currentTime();
+					register();
 
-					mPreviousSelectedDelay = mSensorDelayFast;
+					delayColorChange();
 
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
@@ -461,224 +586,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 			}
 		});
-	}
-
-	/**
-	 * Gets system time, calculates time since the last button click, and adds
-	 * that to the current Sensor Delays' total time. Adds one to button click
-	 * counter.
-	 */
-	public void currentTime() {
-
-		// ///////////// Check if this is even necessary
-		if (toggleButtonCounterAccel == 1 || toggleButtonCounterGyro == 1) {
-
-			// Gets current system to calculate time since last click
-			mEndTime = System.nanoTime();
-
-			if (mSensorDelaySwitch == mSensorDelayNorm) {
-
-				// Calculates time since last button click, sets to milliseconds
-				// //////////////// Check if this and next function call need to
-				// be within if function
-				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-
-				// Calculates total time spent in current Sensor Delay
-				totalSensorTime();
-
-				// Increases current sensors' click count by 1
-				mClickCountNorm++;
-
-				// Sets current click counter displayed to Normal
-				// ///////////////////
-				// Check if this is even necessary
-				mClickCounter = mClickCountNorm;
-
-			} else if (mSensorDelaySwitch == mSensorDelayUI) {
-
-				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				totalSensorTime();
-
-				mClickCountUI++;
-				mClickCounter = mClickCountUI;
-
-			} else if (mSensorDelaySwitch == mSensorDelayGame) {
-
-				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				totalSensorTime();
-
-				mClickCountGame++;
-				mClickCounter = mClickCountGame;
-
-			} else if (mSensorDelaySwitch == mSensorDelayFast) {
-
-				durationSinceLastClick = (mEndTime - mStartTime) / 1000000;
-				totalSensorTime();
-
-				mClickCountFast++;
-				mClickCounter = mClickCountFast;
-
-			}
-
-			// Sets current button click calculations as text on display and
-			// changes the selected Sensor Delay button color as well as
-			// highlights the name of the Sensor Delay being used on the
-			// statistics table
-			clickStatisticsText();
-
-			// Gets current system time and sets it to both Start Time and End
-			// Time ///////// Check if End Time is necessary
-			setStartAndEndTime();
-
-			// Registers sensors /////// Check if necessary
-			register();
-
-			// ///Check if necessary
-		} else if (toggleButtonCounterAccel == 0
-				&& toggleButtonCounterGyro == 0) {
-
-			// Unregisters sensors
-			setCheckedFalse();
-
-			// Stops function
-			return;
-
-		}
-	}
-
-	/**
-	 * Checks which Sensor Delay was previously used, and adds the current time
-	 * since the last button click to the total time that the specified Sensor
-	 * Delay has been on. Converts time to seconds.
-	 */
-	public void totalSensorTime() {
-
-		if (mPreviousSelectedDelay == mSensorDelayNorm) {
-
-			// Adds time since last click to Sensor Delay total time
-			mTotalTimeNorm = mTotalTimeNorm + durationSinceLastClick;
-
-			mTotalTime = mTotalTimeNorm / 1000;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayUI) {
-
-			mTotalTimeUI = mTotalTimeUI + durationSinceLastClick;
-
-			mTotalTime = mTotalTimeUI / 1000;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayGame) {
-
-			mTotalTimeGame = mTotalTimeGame + durationSinceLastClick;
-
-			mTotalTime = mTotalTimeGame / 1000;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayFast) {
-
-			mTotalTimeFast = mTotalTimeFast + durationSinceLastClick;
-
-			mTotalTime = mTotalTimeFast / 1000;
-
-		}
-
-	}
-
-	/**
-	 * Checks the current Delay selection, displays the time since the last
-	 * Sensor Delay change, checks for and displays Sensor Delay total time to
-	 * update, updates click count, and changes button and text box colors.
-	 */
-	public void clickStatisticsText() {
-
-		if (mSensorDelaySwitch == mSensorDelayNorm) {
-
-			// Sets time since last Sensor Delay change
-			mNormLastClick.setText(String.valueOf(durationSinceLastClick));
-
-			// ///////// Check if necessary
-			mNormLastClick.setText("" + durationSinceLastClick);
-
-			// Sets current total time to be displayed to the current Sensor
-			// Delay chosen
-			mTotal = mNormTotalTime;
-
-			// Overrides the previous equation if the previous Sensor Delay
-			// chosen is not the same as the current one
-			// ///////////////////Check if this can be in total()
-			previousMode();
-
-			// Updates the total running-time value for the previously-activated
-			// delay /////////// Check if this can be put after if - else if
-			total();
-
-			// Sets new amount (+1) to current Sensor Delay click count
-			mNormClickCount.setText("" + mClickCounter);
-
-			// Changes background color of current Sensor Delay Button and
-			// TextView box //////// Check if can be put after if - else if
-			delayColorChange();
-
-		} else if (mSensorDelaySwitch == mSensorDelayUI) {
-
-			mUiLastClick.setText(String.valueOf(durationSinceLastClick));
-
-			mUiLastClick.setText("" + durationSinceLastClick);
-
-			mTotal = mUiTotalTime;
-
-			previousMode();
-
-			total();
-
-			mUiClickCount.setText("" + mClickCounter);
-
-			delayColorChange();
-
-		} else if (mSensorDelaySwitch == mSensorDelayGame) {
-
-			mGameLastClick.setText(String.valueOf(durationSinceLastClick));
-
-			mGameLastClick.setText("" + durationSinceLastClick);
-
-			mTotal = mGameTotalTime;
-
-			previousMode();
-
-			total();
-
-			mGameClickCount.setText("" + mClickCounter);
-
-			delayColorChange();
-
-		} else if (mSensorDelaySwitch == mSensorDelayFast) {
-
-			mFastLastClick.setText(String.valueOf(durationSinceLastClick));
-
-			mFastLastClick.setText("" + durationSinceLastClick);
-
-			mTotal = mFastTotalTime;
-
-			previousMode();
-
-			total();
-
-			mFastClickCount.setText("" + mClickCounter);
-
-			delayColorChange();
-
-		}
-
-	}
-
-	/**
-	 * Gets system time and sets it to variables End Time and Start Time
-	 */
-	public void setStartAndEndTime() {
-
-		// ///// Check if necessary
-		mEndTime = System.nanoTime();
-
-		mStartTime = System.nanoTime();
-
 	}
 
 	/**
@@ -707,57 +614,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Checks for the previously selected delay and sets the displayed total
-	 * time TextView to its calculated total time. /////Check if necessary
-	 */
-	public void previousMode() {
-
-		// ////// Check if necessary
-		if (mPreviousSelectedDelay == mSensorDelaySwitch) {
-
-			return;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayNorm) {
-
-			mTotal = mNormTotalTime;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayUI) {
-
-			mTotal = mUiTotalTime;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayGame) {
-
-			mTotal = mGameTotalTime;
-
-		} else if (mPreviousSelectedDelay == mSensorDelayFast) {
-
-			mTotal = mFastTotalTime;
-
-		}
-	}
-
-	/**
-	 * Updates the total running-time value for the previously-activated delay.
-	 */
-	public void total() {
-
-		// Read documentation to check if both are necessary
-		mTotal.setText(String.valueOf(mTotalTime));
-
-		mTotal.setText("" + mTotalTime);
-
-	}
-
-	/**
 	 * Changes background color of current Sensor Delay Button and TextView box.
 	 */
 	public void delayColorChange() {
 		if (mSensorDelaySwitch == mSensorDelayNorm) {
-
-			mchronoNormText.setBackgroundColor(0x55000000);
-			mchronoUiText.setBackgroundColor(0x55FFFFFF);
-			mchronoGameText.setBackgroundColor(0x55FFFFFF);
-			mchronoFastText.setBackgroundColor(0x55FFFFFF);
 
 			normDelayButton.setBackgroundColor(getResources().getColor(
 					R.color.RithmioGreen));
@@ -767,11 +627,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		} else if (mSensorDelaySwitch == mSensorDelayUI) {
 
-			mchronoNormText.setBackgroundColor(0x55FFFFFF);
-			mchronoUiText.setBackgroundColor(0x55000000);
-			mchronoGameText.setBackgroundColor(0x55FFFFFF);
-			mchronoFastText.setBackgroundColor(0x55FFFFFF);
-
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
 			uiDelayButton.setBackgroundColor(getResources().getColor(
 					R.color.RithmioGreen));
@@ -780,11 +635,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		} else if (mSensorDelaySwitch == mSensorDelayGame) {
 
-			mchronoNormText.setBackgroundColor(0x55FFFFFF);
-			mchronoUiText.setBackgroundColor(0x55FFFFFF);
-			mchronoGameText.setBackgroundColor(0x55000000);
-			mchronoFastText.setBackgroundColor(0x55FFFFFF);
-
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
 			uiDelayButton.setBackgroundColor(Color.LTGRAY);
 			gameDelayButton.setBackgroundColor(getResources().getColor(
@@ -792,11 +642,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 			fastDelayButton.setBackgroundColor(Color.LTGRAY);
 
 		} else if (mSensorDelaySwitch == mSensorDelayFast) {
-
-			mchronoNormText.setBackgroundColor(0x55FFFFFF);
-			mchronoUiText.setBackgroundColor(0x55FFFFFF);
-			mchronoGameText.setBackgroundColor(0x55FFFFFF);
-			mchronoFastText.setBackgroundColor(0x55000000);
 
 			normDelayButton.setBackgroundColor(Color.LTGRAY);
 			uiDelayButton.setBackgroundColor(Color.LTGRAY);
@@ -807,6 +652,39 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 
 	}
+
+	//
+	// public void MySensorListener(int count) {
+	// // Creating a file to print the data into
+	//
+	// String csv = new String(state + count + ".csv");
+	// File outputFile = new File(csv);
+	// mCurrentFile = null;
+	// try {
+	// mCurrentFile = new PrintWriter(new FileOutputStream(outputFile));
+	// } catch (FileNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// String csv2 = new String(state + count + "2.csv");
+	// File outputFile2 = new File(csv2);
+	// mCurrentFile2 = null;
+	// try {
+	// mCurrentFile2 = new PrintWriter(new FileOutputStream(outputFile2));
+	// } catch (FileNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	//
+	// public File getDocumentStorageDir(String DocName) {
+	// // Get the directory for the user's public pictures directory.
+	// File file = new File(Environment.getExternalStorageDirectory(), DocName);
+	// if (!file.mkdirs()) {
+	// Log.e(tag, "Directory not created");
+	// }
+	// return file;
+	// }
 
 	/**
 	 * Displays Accelerometer and Gyroscope sensor readings for the X, Y, and Z
@@ -828,17 +706,56 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mXaxisGyro.setText("Gyro X: " + AxisX);
 			mYaxisGyro.setText("Gyro Y: " + AxisY);
 			mZaxisGyro.setText("Gyro Z: " + AxisZ);
+
+			// try {
+			// writer.write("Gyroscope: " + AxisX + "," + AxisY + "," + AxisZ
+			// + event.timestamp + "\n");
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
+
+			// StringBuffer buff = new StringBuffer();
+			// buff.append(String.valueOf(event.timestamp));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisX));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisY));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisZ));
+			// mCurrentFile.println(buff.toString());
+
 		}
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			mXaxisAccel.setText("Accel X: " + AxisX);
 			mYaxisAccel.setText("Accel Y: " + AxisY);
 			mZaxisAccel.setText("Accel Z: " + AxisZ);
-		}
 
+			// acc = "Accel: " + String.valueOf(AxisX) + ", "
+			// + String.valueOf(AxisY) + ", " + String.valueOf(AxisZ)
+			// + ", " + event.timestamp;
+
+			// try {
+			// writer.write("Accelerometer: " + AxisX + "," + AxisY + ","
+			// + AxisZ + event.timestamp + "\n");
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
+
+			// StringBuffer buff = new StringBuffer();
+			// buff.append(String.valueOf(event.timestamp));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisX));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisY));
+			// buff.append(comma);
+			// buff.append(String.valueOf(AxisZ));
+			// mCurrentFile2.println(buff.toString());
+		}
 	}
 
 	public void onResume() {
 		super.onResume();
+		buttonOnClickListener();
 	}
 
 	@Override

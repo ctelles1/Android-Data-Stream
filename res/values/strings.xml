@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">v1.2 Vertical</string>
+    <string name="app_name">v1.6 VertiClean</string>
     <string name="hello">Data Stream App</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
@@ -15,62 +15,7 @@
     <string name="gameDelay">Game Delay</string>
     <string name="uiDelay">UI Delay</string>
     <string name="fastDelay">Fastest Delay</string>
-    <string name="Chronometer">Chronometer</string>
-    <string name="cN">Normal</string>
-    <string name="cG">Game</string>
-    <string name="cU">UI</string>
-    <string name="cF">Fast</string>
-    <string name="onGyro">On/Off</string>
-    <string name="onAccel">On/Off</string>
-    <string name="lastClick">Last (ms)</string>
-    <string name="totalTime">Total (s)</string>
-    <string name="clickCount">Clicks</string>
-    <string name="onStatus">Status</string>
-    <string name="normLast">-</string>
-    <string name="uiLast">-</string>
-    <string name="gameLast">-</string>
-    <string name="fastLast">-</string>
-    <string name="normTotal">-</string>
-    <string name="uiTotal">-</string>
-    <string name="gameTotal">-</string>
-    <string name="fastTotal">-</string>
-    <string name="normCount">-</string>
-    <string name="uiCount">-</string>
-    <string name="gameCount">-</string>
-    <string name="fastCount">-</string>
-    <string name="normStatus">-</string>
-    <string name="uiStatus">-</string>
-    <string name="gameStatus">-</string>
-    <string name="fastStatus">-</string>
-    <string name="selection">Current Delay Selection: </string>
-    <string name="TextGyro">Gyroscope </string>
-    <string name="TextAccel">Accelerometer </string>
-    <string name="space"></string>
     <string name="toSupervised">Supervised</string>
     <string name="toUnsupervised">Unsupervised</string>
-    <string name="backToMain">Back To Main</string>
-    <string name="supervised">Supervised Activity</string>
-    <string name="unsupervised">Unsupervised Activity</string>
 
-    <string-array name="planets_array">
-        <item>Menu</item>
-        <item>Data</item>
-        <item>Supervised</item>
-        <item>Unsupervised</item>
-    </string-array>
-
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
-    <string name="button">Click</string>
-    <string name="textButtons">Clicking below will take you to Learning Activities. Clicking the back key will take you back to the home screen of your android device.</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="dummy_section_text">Section %1d is just another activity section.</string>
-    <string name="demo_external_activity">External Activity Example</string>
-    <string name="demo_collection">Learned Activity Collection</string>
-    <string name="unsuperActivity">Learn Unsupervised Activities</string>
-
-
-</resources>
+</resources> 
