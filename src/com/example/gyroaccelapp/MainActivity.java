@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private static final float ROTATE_FROM = 0.0f;
 	private static final float ROTATE_TO = -1.0f * 360.0f;// 3.141592654f *
 															// 32.0f;
-
+ 
 	/******************************************************************************/
 
 	@Override
