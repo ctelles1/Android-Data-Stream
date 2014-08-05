@@ -12,6 +12,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="50dp"
         android:gravity="center"
+        android:onClick="sensorRegister"
         android:text="@string/normDelay" />
 
     <Button
@@ -23,6 +24,7 @@
         android:layout_below="@id/button_NormalDelay"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:onClick="sensorRegister"
         android:text="@string/uiDelay" />
 
     <Button
@@ -34,6 +36,7 @@
         android:layout_below="@id/button_UiDelay"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:onClick="sensorRegister"
         android:text="@string/gameDelay" />
 
     <Button
@@ -45,6 +48,7 @@
         android:layout_below="@id/button_GameDelay"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:onClick="sensorRegister"
         android:text="@string/fastDelay" />
 
     <ToggleButton
@@ -53,7 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
-        android:layout_toRightOf="@id/button_NormalDelay" />
+        android:layout_toRightOf="@id/button_NormalDelay"
+        android:onClick="accelerometerPower" />
 
     <TextView
         android:id="@+id/textView_Accelerometer"
@@ -130,6 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/toggleButton_GyroscopePower"
         android:layout_below="@id/textView_yAxisGyro"
+        android:onClick="afd"
         android:text="@string/Z_Value2" />
 
     <Button
@@ -138,7 +144,7 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:onClick="onReadClick"
+        android:onClick="startSupervisedLearning"
         android:text="@string/toSupervised" />
 
     <Button
@@ -147,6 +153,7 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:onClick="startUnsupervisedLearning"
         android:text="@string/toUnsupervised" />
 
     <ImageView
@@ -156,6 +163,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
+        android:onClick="logoClick"
         android:src="@drawable/logo_colorfixed" />
 
 </RelativeLayout>

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
@@ -25,25 +24,31 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	// Defines variables and sensors
 
+	// Functionality
+
 	final String tag = "GAP";
 	SensorManager mSensorManager = null;
+	Sensor mAccelerometerSensor, mGyroscopeSensor;
+
+	int mSensorDelayNormal, mSensorDelayGame, mSensorDelayUI,
+			mSensorDelayFastest;
+	int mCurrentSensorDelay;
+
+	public boolean accelerometerIsOn = false;
+	public boolean gyroscopeIsOn = false;
+
+	// GUI
+
 	TextView mXaxisAccel = null;
 	TextView mYaxisAccel = null;
 	TextView mZaxisAccel = null;
 	TextView mXaxisGyro = null;
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
-
-	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
-
-	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
-	int mSensorDelaySwitch;
-
-	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
-	Button DelayButton;
-	Button toSuper;
-	Button toUnsuper;
-	ToggleButton toggleGyro, toggleAccel;
+	Button normalDelayButton, gameDelayButton, uiDelayButton,
+			fastestDelayButton;
+	Button toSuper, toUnsuper;
+	ToggleButton toggleButtonGyroscope, toggleButtonAccelerometer;
 
 	// Creates handler for Supervised and Unsupervised button clicks for color
 	// to change for only 100 milliseconds
@@ -52,8 +57,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	// Information for logo spin animation
 	private static final float ROTATE_FROM = 0.0f;
-	private static final float ROTATE_TO = -1.0f * 360.0f;// 3.141592654f *
-															// 32.0f;
+	private static final float ROTATE_TO = -1.0f * 360.0f;
 
 	/******************************************************************************/
 
@@ -72,36 +76,50 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Android Manifest file specifies that app cannot be used/downloaded if
 		// phone does not have the sensors onboard. This functionality can be
 		// taken out if the sensor check is kept on the Manifest.
-		mSensorTypeAccel = mSensorManager
+		mAccelerometerSensor = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorTypeGyro = mSensorManager
+		mGyroscopeSensor = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
 		// Creates toast to indicate to user whether their phone has the
 		// required sensors
-		if (mSensorTypeAccel != null && mSensorTypeGyro != null) {
+		if (mAccelerometerSensor != null && mGyroscopeSensor != null) {
 			Toast.makeText(this, "Required Sensors Found", Toast.LENGTH_SHORT)
 					.show();
-		} else if (mSensorTypeAccel == null && mSensorTypeGyro != null) {
+
+			// accelerometerIsOn = true;
+			//
+			// gyroscopeIsOn = true;
+
+		} else if (mAccelerometerSensor == null && mGyroscopeSensor != null) {
 			Toast.makeText(this, "No Accelerometer Found", Toast.LENGTH_SHORT)
 					.show();
-		} else if (mSensorTypeGyro == null && mSensorTypeAccel != null) {
+
+			// accelerometerIsOn = false;
+			//
+			// gyroscopeIsOn = true;
+
+		} else if (mGyroscopeSensor == null && mAccelerometerSensor != null) {
 			Toast.makeText(this, "No Gyroscope Found", Toast.LENGTH_SHORT)
 					.show();
-		} else if (mSensorTypeGyro == null && mSensorTypeAccel == null) {
-			Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT).show();
-		}
 
-		// Variables for Sensor Delays
-		mSensorDelayNorm = SensorManager.SENSOR_DELAY_NORMAL;
-		mSensorDelayGame = SensorManager.SENSOR_DELAY_GAME;
-		mSensorDelayUI = SensorManager.SENSOR_DELAY_UI;
-		mSensorDelayFast = SensorManager.SENSOR_DELAY_FASTEST;
+			// accelerometerIsOn = true;
+			//
+			// gyroscopeIsOn = false;
+
+		} else if (mGyroscopeSensor == null && mAccelerometerSensor == null) {
+			Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT).show();
+
+			// accelerometerIsOn = false;
+			//
+			// gyroscopeIsOn = false;
+
+		}
 
 		// Sets initial Sensor Delay when the first power button is clicked to
 		// Normal Delay (longest delay). Otherwise, the default delay would be
 		// Fastest
-		mSensorDelaySwitch = mSensorDelayNorm;
+		mCurrentSensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
 
 		// Variables for each axis of the Accelerometer and Gyroscope
 		mXaxisAccel = (TextView) findViewById(R.id.textView_xAxisAccel);
@@ -112,19 +130,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mZaxisGyro = (TextView) findViewById(R.id.textView_zAxisGyro);
 
 		// Buttons to choose between Normal, Game, UI, and Fastest Sensor Delays
-		normDelayButton = (Button) findViewById(R.id.button_NormalDelay);
+		normalDelayButton = (Button) findViewById(R.id.button_NormalDelay);
 		gameDelayButton = (Button) findViewById(R.id.button_GameDelay);
 		uiDelayButton = (Button) findViewById(R.id.button_UiDelay);
-		fastDelayButton = (Button) findViewById(R.id.button_FastestDelay);
+		fastestDelayButton = (Button) findViewById(R.id.button_FastestDelay);
 
 		// Sets the background colors of the Sensor Delay buttons to gray, which
 		// increases the viewed button size. This keeps it the same color, but
 		// ensures that it doesn't look weird when it changes color to green as
 		// it is activated
-		normDelayButton.setBackgroundColor(Color.LTGRAY);
+		normalDelayButton.setBackgroundColor(Color.LTGRAY);
 		uiDelayButton.setBackgroundColor(Color.LTGRAY);
 		gameDelayButton.setBackgroundColor(Color.LTGRAY);
-		fastDelayButton.setBackgroundColor(Color.LTGRAY);
+		fastestDelayButton.setBackgroundColor(Color.LTGRAY);
 
 		// Buttons for Supervised and Unsupervised function/activity/fragment
 		// calls. Their colors are set to Rithmio-specified yellow and green.
@@ -139,128 +157,84 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		// Toggle Buttons to power on and off the Accelerometer and Gyroscope
 		// sensor data readings
-		toggleGyro = (ToggleButton) findViewById(R.id.toggleButton_GyroscopePower);
-		toggleAccel = (ToggleButton) findViewById(R.id.toggleButton_AccelerometerPower);
-
-		// Sets state of Accelerometer and Gyroscope power toggle buttons to off
-		// as app/activity is initialized
-		toggleGyro.setChecked(false);
-		toggleAccel.setChecked(false);
-
-		// onClickListener for Gyroscope toggle button
-		toggleGyro.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (toggleGyro.isChecked()) {
-
-					// Sets current sensor type to Gyroscope
-					mSensorType = mSensorTypeGyro;
-
-					// Starts sensor register and button color change functions
-					buttonOnClickListener();
-
-				} else {
-
-					// Unregisters Gyroscope sensor listener
-					mSensorManager.unregisterListener(MainActivity.this,
-							mSensorTypeGyro);
-
-					// Sets Gyroscope power button status to off
-					toggleGyro.setChecked(false);
-
-				}
-			}
-		});
-
-		// onClickListener for Accelerometer toggle button
-		toggleAccel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (toggleAccel.isChecked()) {
-
-					// Sets current sensor type to Accelerometer
-					mSensorType = mSensorTypeAccel;
-
-					// Starts sensor register and button color change functions
-					buttonOnClickListener();
-
-				} else {
-
-					// Unregisters Accelerometer sensor listener
-					mSensorManager.unregisterListener(MainActivity.this,
-							mSensorTypeAccel);
-
-					// Sets Accelerometer power button status to off
-					toggleAccel.setChecked(false);
-
-				}
-			}
-		});
-
-		toSuper.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				// Sets color for Supervised Learning button to gray when
-				// clicked
-				toSuper.setBackgroundColor(getResources().getColor(
-						R.color.RithmioGray));
-
-				// Starts button color change function
-				backgroundColorChange();
-
-				// Insert here call for Supervised Learning
-				// function/activity/fragment call
-
-			}
-		});
-		toUnsuper.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				// Sets color for Supervised Learning button to gray when
-				// clicked
-				toUnsuper.setBackgroundColor(getResources().getColor(
-						R.color.RithmioGray));
-
-				// Starts button color change function
-				backgroundColorChange();
-
-				// Insert here call for Unsupervised Learning
-				// function/activity/fragment call
-			}
-		});
+		toggleButtonGyroscope = (ToggleButton) findViewById(R.id.toggleButton_GyroscopePower);
+		toggleButtonAccelerometer = (ToggleButton) findViewById(R.id.toggleButton_AccelerometerPower);
 
 		// Logo spin animation, one per second
-		ImageView favicon = (ImageView) findViewById(R.id.imageView_RithmioLogo);
-		RotateAnimation r;
-		r = new RotateAnimation(ROTATE_FROM, ROTATE_TO,
+		ImageView rithmioLogo = (ImageView) findViewById(R.id.imageView_RithmioLogo);
+		RotateAnimation rotatingLogo;
+		rotatingLogo = new RotateAnimation(ROTATE_FROM, ROTATE_TO,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
-		r.setDuration((long) 1000);
-		r.setRepeatCount(-1);
-		favicon.startAnimation(r);
+		rotatingLogo.setDuration((long) 1000);
+		rotatingLogo.setRepeatCount(-1); // -1 means it's infinite
+		rithmioLogo.startAnimation(rotatingLogo);
 
-		// Clicking on logo takes to rithmio website
-		favicon.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myWebLink = new Intent(
-						android.content.Intent.ACTION_VIEW);
-				myWebLink.setData(Uri.parse("http://rithmio.com"));
-				startActivity(myWebLink);
-			}
-		});
+	}
 
+	// Clicking on logo takes to rithmio website
+	public void logoClick(View v) {
+		Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
+		myWebLink.setData(Uri.parse("http://rithmio.com"));
+		startActivity(myWebLink);
+	}
+
+	// onClickListener for Gyroscope toggle button
+	public void gyroscopePower(View v) {
+		gyroscopeIsOn = true;
+
+		checkForSensors();
+
+	}
+
+	public void checkForSensors() {
+		if (accelerometerIsOn || gyroscopeIsOn) {
+			registerSensors();
+
+			// Starts sensor register and button color change functions
+			// buttonOnClickListener();
+
+		} else {
+
+			// Unregisters Gyroscope sensor listener
+			unregisterTheSensor(mGyroscopeSensor);
+
+			// Sets Gyroscope power button status to off
+			gyroscopeIsOn = false;
+			// Unregisters Accelerometer sensor listener
+			unregisterTheSensor(mAccelerometerSensor);
+
+			// Sets Accelerometer power button status to off
+			accelerometerIsOn = false;
+
+		}
+	}
+
+	// onClickListener for Accelerometer toggle button
+	public void accelerometerPower(View v) {
+		accelerometerIsOn = true;
+		checkForSensors();
+	}
+
+	public void startUnsupervisedLearning(View v) {
+
+		// Sets color for Supervised Learning button to gray when
+		// clicked
+		toUnsuper.setBackgroundColor(getResources().getColor(
+				R.color.RithmioGray));
+
+		// Starts button color change function
+		backgroundColorChange();
+
+		// Insert here call for Unsupervised Learning
+		// function/activity/fragment call
 	}
 
 	/**
 	 * Changes button color back to original after specified amount of time
 	 * (delay = 100 milliseconds).
 	 */
-	void backgroundColorChange() {
+	public void backgroundColorChange() {
 		handler.postDelayed(new Runnable() {
 			public void run() {
 
@@ -279,136 +253,129 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}, delay);
 	}
 
+	public void startSupervisedLearning(View v) {
+
+		// Sets color for Supervised Learning button to gray when
+		// clicked
+		toSuper.setBackgroundColor(getResources().getColor(R.color.RithmioGray));
+
+		// Starts button color change function
+		backgroundColorChange();
+
+		// Insert here call for Supervised Learning
+		// function/activity/fragment call
+
+	}
+
+	public void unregisterTheSensor(Sensor sensor) {
+		mSensorManager.unregisterListener(MainActivity.this, sensor);
+	}
+
+	public void sensorRegister(View v) {
+		switch (v.getId()) {
+		case R.id.button_NormalDelay:
+			// function(sensor, rate);
+			mCurrentSensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+			registerSensors();
+			// Changes button background color
+			delayButtonColorChange();
+		case R.id.button_UiDelay:
+			mCurrentSensorDelay = SensorManager.SENSOR_DELAY_UI;
+			registerSensors();
+			delayButtonColorChange();
+		case R.id.button_GameDelay:
+			mCurrentSensorDelay = SensorManager.SENSOR_DELAY_GAME;
+			registerSensors();
+			delayButtonColorChange();
+		case R.id.button_FastestDelay:
+			mCurrentSensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
+			registerSensors();
+			delayButtonColorChange();
+
+		}
+	}
+
 	/**
 	 * Registers Accelerometer and/or Gyroscope sensors, and onClickListeners
 	 * for each Sensor Delay button. Each button then sets the current Sensor
 	 * Delay being used to the specified button clicked.
 	 */
-	public void buttonOnClickListener() {
+	// public void buttonOnClickListener() {
 
-		// Registers Accelerometer and/or Gyroscope sensors,
-		// depending on toggle button state. This register is necessary to start
-		// the sensor readings when sensor power buttons are pressed.
-		register();
+	// Registers Accelerometer and/or Gyroscope sensors,
+	// depending on toggle button state. This register is necessary to start
+	// the sensor readings when sensor power buttons are pressed.
+	// normalDelayButton.setOnClickListener(new View.OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	//
+	// // Sets current Sensor Delay to Normal Delay
+	// mCurrentSensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+	//
+	// // This register is necessary to start the readings when the
+	// // specific Sensor Delay button is pressed
+	// register();
+	//
+	// }
+	// });
 
-		normDelayButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				// Sets current Sensor Delay to Normal Delay
-				mSensorDelaySwitch = mSensorDelayNorm;
-
-				// This register is necessary to start the readings when the
-				// specific Sensor Delay button is pressed
-				register();
-
-			}
-		});
-
-		uiDelayButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// Sets current Sensor Delay to UI Delay
-				mSensorDelaySwitch = mSensorDelayUI;
-
-				register();
-
-			}
-		});
-
-		gameDelayButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// Sets current Sensor Delay to Game Delay
-				mSensorDelaySwitch = mSensorDelayGame;
-
-				register();
-
-			}
-		});
-
-		fastDelayButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// Sets current sensor delay to Fastest Delay
-				mSensorDelaySwitch = mSensorDelayFast;
-
-				register();
-
-			}
-		});
-	}
+	// uiDelayButton.setOnClickListener(new View.OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	//
+	// // Sets current Sensor Delay to UI Delay
+	//
+	//
+	// }
+	// });
+	//
+	// gameDelayButton.setOnClickListener(new View.OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	//
+	// // Sets current Sensor Delay to Game Delay
+	//
+	// register();
+	//
+	// }
+	// });
+	//
+	// fastestDelayButton.setOnClickListener(new View.OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	//
+	// // Sets current sensor delay to Fastest Delay
+	//
+	// register();
+	//
+	// }
+	// });
+	// }
 
 	/**
 	 * Unregisters both listeners, then registers whichever sensor is powered
 	 * on.
 	 */
-	public void register() {
+	public void registerSensors() {
 
 		// This is necessary so that the current listener is unregistered.
 		// Otherwise, the Sensor Delay does not change.
-		mSensorManager.unregisterListener(this);
+		unregisterTheSensor(mGyroscopeSensor);
+		unregisterTheSensor(mAccelerometerSensor);
 
-		if (toggleGyro.isChecked()) {
+		if (accelerometerIsOn) {
 
 			// Registers the Gyroscope sensor
-			mSensorManager.registerListener(this, mSensorTypeGyro,
-					mSensorDelaySwitch);
+			mSensorManager.registerListener(this, mGyroscopeSensor,
+					mCurrentSensorDelay);
 
 		}
-		if (toggleAccel.isChecked()) {
+		if (gyroscopeIsOn) {
 
 			// Registers the Accelerometer sensor
-			mSensorManager.registerListener(this, mSensorTypeAccel,
-					mSensorDelaySwitch);
-
-		}
-
-		// Changes button background color
-		delayColorChange();
-
-	}
-
-	/**
-	 * Changes background color of current Sensor Delay Button. Uses
-	 * Rithmio-specified green.
-	 */
-	public void delayColorChange() {
-		if (mSensorDelaySwitch == mSensorDelayNorm) {
-
-			normDelayButton.setBackgroundColor(getResources().getColor(
-					R.color.RithmioGreen));
-			uiDelayButton.setBackgroundColor(Color.LTGRAY);
-			gameDelayButton.setBackgroundColor(Color.LTGRAY);
-			fastDelayButton.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mSensorDelaySwitch == mSensorDelayUI) {
-
-			normDelayButton.setBackgroundColor(Color.LTGRAY);
-			uiDelayButton.setBackgroundColor(getResources().getColor(
-					R.color.RithmioGreen));
-			gameDelayButton.setBackgroundColor(Color.LTGRAY);
-			fastDelayButton.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mSensorDelaySwitch == mSensorDelayGame) {
-
-			normDelayButton.setBackgroundColor(Color.LTGRAY);
-			uiDelayButton.setBackgroundColor(Color.LTGRAY);
-			gameDelayButton.setBackgroundColor(getResources().getColor(
-					R.color.RithmioGreen));
-			fastDelayButton.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mSensorDelaySwitch == mSensorDelayFast) {
-
-			normDelayButton.setBackgroundColor(Color.LTGRAY);
-			uiDelayButton.setBackgroundColor(Color.LTGRAY);
-			gameDelayButton.setBackgroundColor(Color.LTGRAY);
-			fastDelayButton.setBackgroundColor(getResources().getColor(
-					R.color.RithmioGreen));
+			mSensorManager.registerListener(this, mAccelerometerSensor,
+					mCurrentSensorDelay);
 
 		}
 
@@ -444,9 +411,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	public void onResume() {
 		super.onResume();
-
+		// registerSensors();
 		// Resumes sensor readings on restart
-		buttonOnClickListener();
+		// buttonOnClickListener();
 	}
 
 	@Override
@@ -462,6 +429,47 @@ public class MainActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		Log.d(tag, "onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
+	}
+
+	/**
+	 * Changes background color of current Sensor Delay Button. Uses
+	 * Rithmio-specified green.
+	 */
+	public void delayButtonColorChange() {
+		if (mCurrentSensorDelay == SensorManager.SENSOR_DELAY_NORMAL) {
+
+			normalDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
+			uiDelayButton.setBackgroundColor(Color.LTGRAY);
+			gameDelayButton.setBackgroundColor(Color.LTGRAY);
+			fastestDelayButton.setBackgroundColor(Color.LTGRAY);
+
+		} else if (mCurrentSensorDelay == SensorManager.SENSOR_DELAY_UI) {
+
+			normalDelayButton.setBackgroundColor(Color.LTGRAY);
+			uiDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
+			gameDelayButton.setBackgroundColor(Color.LTGRAY);
+			fastestDelayButton.setBackgroundColor(Color.LTGRAY);
+
+		} else if (mCurrentSensorDelay == SensorManager.SENSOR_DELAY_GAME) {
+
+			normalDelayButton.setBackgroundColor(Color.LTGRAY);
+			uiDelayButton.setBackgroundColor(Color.LTGRAY);
+			gameDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
+			fastestDelayButton.setBackgroundColor(Color.LTGRAY);
+
+		} else if (mCurrentSensorDelay == SensorManager.SENSOR_DELAY_FASTEST) {
+
+			normalDelayButton.setBackgroundColor(Color.LTGRAY);
+			uiDelayButton.setBackgroundColor(Color.LTGRAY);
+			gameDelayButton.setBackgroundColor(Color.LTGRAY);
+			fastestDelayButton.setBackgroundColor(getResources().getColor(
+					R.color.RithmioGreen));
+
+		}
+
 	}
 
 }
