@@ -10,7 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 public class MySensorListener implements SensorEventListener {
-
+ 
 	String comma = new String(",");
 	private PrintWriter mCurrentFile;
 

@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	// Defines variables and sensors
 
 	final String tag = "GAP";
-	SensorManager mSensorManager = null;
+	SensorManager mSensorManager = null; 
 	TextView mXaxisAccel = null;
 	TextView mYaxisAccel = null;
 	TextView mZaxisAccel = null;
