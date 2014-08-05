@@ -272,8 +272,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Changes button color back to original after specified amount of time in
-	 * milliseconds (final long delay = 100).
+	 * Changes button color back to original after specified amount of time
+	 * (delay = 100 milliseconds).
 	 */
 	void backgroundColorChange() {
 		handler.postDelayed(new Runnable() {
@@ -312,11 +312,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Starts time count, registers Accelerometer and/or Gyroscope sensors, and
-	 * onClickListeners for each Sensor Delay button. Each button then sets the
-	 * current Sensor Delay being used to the specified button clicked, starts
-	 * the Sensor Delay statistics loop, then sets the current Sensor Delay as
-	 * the "previous" sensor delay.
+	 * Registers Accelerometer and/or Gyroscope sensors, and onClickListeners
+	 * for each Sensor Delay button. Each button then sets the current Sensor
+	 * Delay being used to the specified button clicked.
 	 */
 	public void buttonOnClickListener() {
 
