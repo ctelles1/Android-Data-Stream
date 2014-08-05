@@ -1,4 +1,4 @@
-package com.example.gyroaccelapp.clean;
+package rithmio.clean.csv;
 
 import java.io.File;
 import java.io.FileNotFoundException;
