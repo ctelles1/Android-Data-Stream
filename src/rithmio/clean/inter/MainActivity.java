@@ -38,8 +38,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
 	int mSensorDelaySwitch;
-	int toggleButtonCounterAccel = 0;
-	int toggleButtonCounterGyro = 0;
 
 	Button normDelayButton, gameDelayButton, uiDelayButton, fastDelayButton;
 	Button DelayButton;
@@ -158,10 +156,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current sensor type to Gyroscope
 					mSensorType = mSensorTypeGyro;
 
-					// Turns on Gyroscope functionality redundancy check (See
-					// onClickListeners for the sensor delay buttons)
-					toggleButtonCounterGyro = 1;
-
 					// Starts sensor register and button color change functions
 					buttonOnClickListener();
 
@@ -170,9 +164,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Unregisters Gyroscope sensor listener
 					mSensorManager.unregisterListener(MainActivity.this,
 							mSensorTypeGyro);
-
-					// Turns off Gyroscope functionality redundancy check
-					toggleButtonCounterGyro = 0;
 
 					// Sets Gyroscope power button status to off
 					toggleGyro.setChecked(false);
@@ -190,9 +181,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current sensor type to Accelerometer
 					mSensorType = mSensorTypeAccel;
 
-					// Turns on Accelerometer functionality redundancy check
-					toggleButtonCounterAccel = 1;
-
 					// Starts sensor register and button color change functions
 					buttonOnClickListener();
 
@@ -201,9 +189,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Unregisters Accelerometer sensor listener
 					mSensorManager.unregisterListener(MainActivity.this,
 							mSensorTypeAccel);
-
-					// Turns off Accelerometer functionality redundancy check
-					toggleButtonCounterAccel = 0;
 
 					// Sets Accelerometer power button status to off
 					toggleAccel.setChecked(false);
@@ -304,9 +289,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		toggleAccel.setChecked(false);
 		toggleGyro.setChecked(false);
 
-		toggleButtonCounterAccel = 0;
-		toggleButtonCounterGyro = 0;
-
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeAccel);
 		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeGyro);
 	}
@@ -328,81 +310,49 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View v) {
 
-				// Checks if either Accelerometer or Gyroscope sensors are off
-				if (toggleButtonCounterAccel == 1
-						|| toggleButtonCounterGyro == 1) {
+				// Sets current Sensor Delay to Normal Delay
+				mSensorDelaySwitch = mSensorDelayNorm;
 
-					// Sets current Sensor Delay to Normal Delay
-					mSensorDelaySwitch = mSensorDelayNorm;
+				// This register is necessary to start the readings when the
+				// specific Sensor Delay button is pressed
+				register();
 
-					// This register is necessary to start the readings when the
-					// specific Sensor Delay button is pressed
-					register();
-
-					// Checks if both toggle buttons are off, starts function
-					// which unregisters both sensors
-				} else if (toggleButtonCounterAccel == 0
-						&& toggleButtonCounterGyro == 0) {
-
-					setCheckedFalse();
-				}
 			}
 		});
 
 		uiDelayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (toggleButtonCounterAccel == 1
-						|| toggleButtonCounterGyro == 1) {
 
-					// Sets current Sensor Delay to UI Delay
-					mSensorDelaySwitch = mSensorDelayUI;
+				// Sets current Sensor Delay to UI Delay
+				mSensorDelaySwitch = mSensorDelayUI;
 
-					register();
+				register();
 
-				} else if (toggleButtonCounterAccel == 0
-						&& toggleButtonCounterGyro == 0) {
-
-					setCheckedFalse();
-				}
 			}
 		});
 
 		gameDelayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (toggleButtonCounterAccel == 1
-						|| toggleButtonCounterGyro == 1) {
 
-					// Sets current Sensor Delay to Game Delay
-					mSensorDelaySwitch = mSensorDelayGame;
+				// Sets current Sensor Delay to Game Delay
+				mSensorDelaySwitch = mSensorDelayGame;
 
-					register();
+				register();
 
-				} else if (toggleButtonCounterAccel == 0
-						&& toggleButtonCounterGyro == 0) {
-
-					setCheckedFalse();
-				}
 			}
 		});
 
 		fastDelayButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (toggleButtonCounterAccel == 1
-						|| toggleButtonCounterGyro == 1) {
 
-					// Sets current sensor delay to Fastest Delay
-					mSensorDelaySwitch = mSensorDelayFast;
+				// Sets current sensor delay to Fastest Delay
+				mSensorDelaySwitch = mSensorDelayFast;
 
-					register();
+				register();
 
-				} else if (toggleButtonCounterAccel == 0
-						&& toggleButtonCounterGyro == 0) {
-
-					setCheckedFalse();
-				}
 			}
 		});
 	}
