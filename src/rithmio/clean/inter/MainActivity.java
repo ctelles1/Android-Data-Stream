@@ -280,20 +280,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Called when both Accelerometer and Gyroscope power buttons are toggled
-	 * off. Sets their state to off, sets redundant state check to off, and
-	 * unregisters both listeners.
-	 */
-	public void setCheckedFalse() {
-
-		toggleAccel.setChecked(false);
-		toggleGyro.setChecked(false);
-
-		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeAccel);
-		mSensorManager.unregisterListener(MainActivity.this, mSensorTypeGyro);
-	}
-
-	/**
 	 * Registers Accelerometer and/or Gyroscope sensors, and onClickListeners
 	 * for each Sensor Delay button. Each button then sets the current Sensor
 	 * Delay being used to the specified button clicked.
