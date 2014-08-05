@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mXaxisGyro = null; 
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
-
+ 
 	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
 
 	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;

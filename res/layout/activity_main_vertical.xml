@@ -25,7 +25,7 @@
         android:gravity="center"
         android:text="@string/uiDelay" />
 
-    <Button
+    <Button 
         android:id="@+id/button_GameDelay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
