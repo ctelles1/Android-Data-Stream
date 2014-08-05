@@ -1,12 +1,5 @@
-package com.example.gyroaccelapp.clean;
+package rithmio.clean.inter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,18 +9,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -41,10 +30,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TextView mXaxisAccel = null;
 	TextView mYaxisAccel = null;
 	TextView mZaxisAccel = null;
-	TextView mXaxisGyro = null; 
+	TextView mXaxisGyro = null;
 	TextView mYaxisGyro = null;
 	TextView mZaxisGyro = null;
- 
+
 	Sensor mSensorTypeAccel, mSensorTypeGyro, mSensorType;
 
 	int mSensorDelayNorm, mSensorDelayGame, mSensorDelayUI, mSensorDelayFast;
@@ -68,38 +57,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private static final float ROTATE_TO = -1.0f * 360.0f;// 3.141592654f *
 															// 32.0f;
 
-	TextView label;
-	Button reading;
-	int count = 1;
-	boolean record = false;
-	Sensor myAcc;
-	MySensorListener listener;
-
-	String state = Environment.getExternalStorageState();
-
-	String comma = new String(",");
-	PrintWriter mCurrentFile;
-	PrintWriter mCurrentFile2;
-
-	// private FileWriter writer;
-
-	TextView title, tvx, tvy, tvz;
-	EditText etshowval;
-	RelativeLayout layout;
-	private String acc;
-	private String read_str = "";
-	private final String filepath = "/sdcard/Rithmio/acc.csv";
-	private BufferedWriter mBufferedWriter;
-	private BufferedReader mBufferedReader;
-
-	public static final int MSG_DONE = 1;
-	public static final int MSG_ERROR = 2;
-	public static final int MSG_STOP = 3;
-
-	private boolean mrunning;
-	private Handler mHandler;
-	private HandlerThread mHandlerThread;
-
 	/******************************************************************************/
 
 	@Override
@@ -116,15 +73,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Validate whether an accelerometer or gyroscope is present or not.
 		// Android Manifest file specifies that app cannot be used/downloaded if
 		// phone does not have the sensors onboard. This functionality can be
-		// taken out if the sensor check is kept on the Manifest
+		// taken out if the sensor check is kept on the Manifest.
 		mSensorTypeAccel = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorTypeGyro = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
 		// Creates toast to indicate to user whether their phone has the
-		// required sensors ////// Check if works. if not, revert to yes/no for
-		// each
+		// required sensors
 		if (mSensorTypeAccel != null && mSensorTypeGyro != null) {
 			Toast.makeText(this, "Required Sensors Found", Toast.LENGTH_SHORT)
 					.show();
@@ -269,10 +225,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 				// Starts button color change function
 				backgroundColorChange();
 
-				start();
-
 				// Insert here call for Supervised Learning
-				// function/activity/fragment
+				// function/activity/fragment call
 
 			}
 		});
@@ -289,14 +243,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 				// Starts button color change function
 				backgroundColorChange();
 
-				stop();
-
 				// Insert here call for Unsupervised Learning
-				// function/activity/fragment
+				// function/activity/fragment call
 			}
 		});
 
-		// Logo spin animation
+		// Logo spin animation, one per second
 		ImageView favicon = (ImageView) findViewById(R.id.imageView_RithmioLogo);
 		RotateAnimation r;
 		r = new RotateAnimation(ROTATE_FROM, ROTATE_TO,
@@ -306,8 +258,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		r.setRepeatCount(-1);
 		favicon.startAnimation(r);
 
+		// Clicking on logo takes to rithmio website
 		favicon.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				Intent myWebLink = new Intent(
@@ -317,132 +269,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-		// String csv = android.os.Environment.getExternalStorageDirectory()
-		// .getAbsolutePath();
-		// CSVWriter writer = new CSVWriter(new FileWriter(csv));
-		// List<String[]> data = new ArrayList<String[]>();
-		// data.add(new String[] { "India", "New Delhi" });
-		// data.add(new String[] { "United States", "Washington D.C" });
-		// data.add(new String[] { "Germany", "Berlin" });
-		// writer.writeAll(data);
-		// writer.close();
-
-		isExternalStorageWritable();
-		// MySensorListener(count);
-
-		// get textviews
-
-		etshowval = (EditText) findViewById(R.id.showval);
-		title.setText("Accelerator");
-
-		mHandlerThread = new HandlerThread("Working Thread");
-		mHandlerThread.start();
-
-		mHandler = new Handler(mHandlerThread.getLooper());
-		mHandler.post(p);
-
-	}
-
-	private Runnable p = new Runnable() {
-		@Override
-		public void run() {
-			while (true) {
-				if (mrunning) {
-					try {
-						WriteFile(filepath, acc);
-					} catch (Exception e) {
-						e.printStackTrace();
-
-					}
-				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		} 
-	};
-
-	public void onReadClick(View view) {
-		etshowval.setText(ReadFile(filepath));
-	}
-
-	public void CreateFile(String path) {
-		File f = new File(path);
-		try {
-			Log.d("ACTIVITY", "Create a File.");
-			f.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public String ReadFile(String filepath) {
-		mBufferedReader = null;
-		String tmp = null;
-
-		if (!FileIsExist(filepath))
-			CreateFile(filepath);
-
-		try {
-			mBufferedReader = new BufferedReader(new FileReader(filepath));
-			// Read string
-			while ((tmp = mBufferedReader.readLine()) != null) {
-				tmp += "\n";
-				read_str += tmp;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return read_str;
-	}
-
-	public void WriteFile(String filepath, String str) {
-		mBufferedWriter = null;
-
-		if (!FileIsExist(filepath))
-			CreateFile(filepath);
-
-		try {
-			mBufferedWriter = new BufferedWriter(new FileWriter(filepath, true));
-			mBufferedWriter.write(str);
-			mBufferedWriter.newLine();
-			mBufferedWriter.flush();
-			mBufferedWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private synchronized void start() {
-		mrunning = true;
-	}
-
-	private synchronized void stop() {
-		mrunning = false;
-	}
-
-	public boolean FileIsExist(String filepath) {
-		File f = new File(filepath);
-
-		if (!f.exists()) {
-			Log.e("ACTIVITY", "File does not exist.");
-			return false;
-		} else
-			return true;
-	}
-
-	/* Checks if external storage is available for read and write */
-	public boolean isExternalStorageWritable() {
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			Toast.makeText(this, "Found Media Device", Toast.LENGTH_SHORT)
-					.show();
-			return true;
-		}
-		Toast.makeText(this, "Did Not Find Media Device", Toast.LENGTH_SHORT)
-				.show();
-		return false;
 	}
 
 	/**
@@ -494,8 +320,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void buttonOnClickListener() {
 
-		// Registers Accelerometer and/or Gyroscope sensors, depending on toggle
-		// button state
+		// Registers Accelerometer and/or Gyroscope sensors,
+		// depending on toggle button state. This register is necessary to start
+		// the sensor readings when sensor power buttons are pressed.
 		register();
 
 		normDelayButton.setOnClickListener(new View.OnClickListener() {
@@ -510,9 +337,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// Sets current Sensor Delay to Normal Delay
 					mSensorDelaySwitch = mSensorDelayNorm;
 
+					// This register is necessary to start the readings when the
+					// specific Sensor Delay button is pressed
 					register();
-
-					delayColorChange();
 
 					// Checks if both toggle buttons are off, starts function
 					// which unregisters both sensors
@@ -535,8 +362,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 					register();
 
-					delayColorChange();
-
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
 
@@ -555,8 +380,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 					mSensorDelaySwitch = mSensorDelayGame;
 
 					register();
-
-					delayColorChange();
 
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
@@ -577,8 +400,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 					register();
 
-					delayColorChange();
-
 				} else if (toggleButtonCounterAccel == 0
 						&& toggleButtonCounterGyro == 0) {
 
@@ -594,7 +415,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 */
 	public void register() {
 
-		// //// Check if necessary
+		// This is necessary so that the current listener is unregistered.
+		// Otherwise, the Sensor Delay does not change.
 		mSensorManager.unregisterListener(this);
 
 		if (toggleGyro.isChecked()) {
@@ -611,10 +433,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 					mSensorDelaySwitch);
 
 		}
+
+		// Changes button background color
+		delayColorChange();
+
 	}
 
 	/**
-	 * Changes background color of current Sensor Delay Button and TextView box.
+	 * Changes background color of current Sensor Delay Button. Uses
+	 * Rithmio-specified green.
 	 */
 	public void delayColorChange() {
 		if (mSensorDelaySwitch == mSensorDelayNorm) {
@@ -653,39 +480,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
-	//
-	// public void MySensorListener(int count) {
-	// // Creating a file to print the data into
-	//
-	// String csv = new String(state + count + ".csv");
-	// File outputFile = new File(csv);
-	// mCurrentFile = null;
-	// try {
-	// mCurrentFile = new PrintWriter(new FileOutputStream(outputFile));
-	// } catch (FileNotFoundException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// String csv2 = new String(state + count + "2.csv");
-	// File outputFile2 = new File(csv2);
-	// mCurrentFile2 = null;
-	// try {
-	// mCurrentFile2 = new PrintWriter(new FileOutputStream(outputFile2));
-	// } catch (FileNotFoundException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	//
-	// public File getDocumentStorageDir(String DocName) {
-	// // Get the directory for the user's public pictures directory.
-	// File file = new File(Environment.getExternalStorageDirectory(), DocName);
-	// if (!file.mkdirs()) {
-	// Log.e(tag, "Directory not created");
-	// }
-	// return file;
-	// }
-
 	/**
 	 * Displays Accelerometer and Gyroscope sensor readings for the X, Y, and Z
 	 * axis.
@@ -706,55 +500,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mXaxisGyro.setText("Gyro X: " + AxisX);
 			mYaxisGyro.setText("Gyro Y: " + AxisY);
 			mZaxisGyro.setText("Gyro Z: " + AxisZ);
-
-			// try {
-			// writer.write("Gyroscope: " + AxisX + "," + AxisY + "," + AxisZ
-			// + event.timestamp + "\n");
-			// } catch (IOException e) {
-			// e.printStackTrace();
-			// }
-
-			// StringBuffer buff = new StringBuffer();
-			// buff.append(String.valueOf(event.timestamp));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisX));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisY));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisZ));
-			// mCurrentFile.println(buff.toString());
-
 		}
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			mXaxisAccel.setText("Accel X: " + AxisX);
 			mYaxisAccel.setText("Accel Y: " + AxisY);
 			mZaxisAccel.setText("Accel Z: " + AxisZ);
-
-			// acc = "Accel: " + String.valueOf(AxisX) + ", "
-			// + String.valueOf(AxisY) + ", " + String.valueOf(AxisZ)
-			// + ", " + event.timestamp;
-
-			// try {
-			// writer.write("Accelerometer: " + AxisX + "," + AxisY + ","
-			// + AxisZ + event.timestamp + "\n");
-			// } catch (IOException e) {
-			// e.printStackTrace();
-			// }
-
-			// StringBuffer buff = new StringBuffer();
-			// buff.append(String.valueOf(event.timestamp));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisX));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisY));
-			// buff.append(comma);
-			// buff.append(String.valueOf(AxisZ));
-			// mCurrentFile2.println(buff.toString());
 		}
 	}
 
 	public void onResume() {
 		super.onResume();
+
+		// Resumes sensor readings on restart
 		buttonOnClickListener();
 	}
 
@@ -764,7 +521,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		// Unregisters both sensors when app is paused (home screen or screen
 		// lock), modify or delete this to maintain sensors running despite app
-		// pause. Currently only app activity functioning outside is chronometer
+		// pause.
 		mSensorManager.unregisterListener(this);
 	}
 
