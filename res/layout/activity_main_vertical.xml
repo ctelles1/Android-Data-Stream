@@ -1,169 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_weight="10"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/button_NormalDelay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:onClick="sensorRegister"
-        android:text="@string/normDelay" />
+    <RelativeLayout
+        android:id="@+id/sensorInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" >
 
-    <Button
-        android:id="@+id/button_UiDelay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/button_NormalDelay"
-        android:layout_alignRight="@id/button_NormalDelay"
-        android:layout_below="@id/button_NormalDelay"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:onClick="sensorRegister"
-        android:text="@string/uiDelay" />
+        <ToggleButton
+            android:id="@+id/toggleButton_AccelerometerPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:onClick="accelerometerPower" />
 
-    <Button
-        android:id="@+id/button_GameDelay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/button_UiDelay"
-        android:layout_alignRight="@id/button_UiDelay"
-        android:layout_below="@id/button_UiDelay"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:onClick="sensorRegister"
-        android:text="@string/gameDelay" />
+        <TextView
+            android:id="@+id/textView_Accelerometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_AccelerometerPower"
+            android:layout_below="@+id/toggleButton_AccelerometerPower"
+            android:gravity="center"
+            android:text="@string/Accelerometer" />
 
-    <Button
-        android:id="@+id/button_FastestDelay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/button_GameDelay"
-        android:layout_alignRight="@id/button_GameDelay"
-        android:layout_below="@id/button_GameDelay"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:onClick="sensorRegister"
-        android:text="@string/fastDelay" />
+        <TextView
+            android:id="@+id/textView_xAxisAccel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@+id/textView_Accelerometer"
+            android:text="@string/X_Value1" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton_AccelerometerPower"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_toRightOf="@id/button_NormalDelay"
-        android:onClick="accelerometerPower" />
+        <TextView
+            android:id="@+id/textView_yAxisAccel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@+id/textView_xAxisAccel"
+            android:text="@string/Y_Value1" />
 
-    <TextView
-        android:id="@+id/textView_Accelerometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/toggleButton_AccelerometerPower"
-        android:layout_below="@id/toggleButton_AccelerometerPower"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="@string/Accelerometer" />
+        <TextView
+            android:id="@+id/textView_zAxisAccel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@+id/textView_yAxisAccel"
+            android:text="@string/Z_Value1" />
 
-    <TextView
-        android:id="@+id/textView_xAxisAccel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/textView_Accelerometer"
-        android:layout_below="@+id/textView_Accelerometer"
-        android:text="@string/X_Value1" />
+        <CheckBox
+            android:id="@+id/checkBoxXaxisAccelerometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@id/textView_zAxisAccel"
+            android:text="X" />
 
-    <TextView
-        android:id="@+id/textView_yAxisAccel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/textView_Accelerometer"
-        android:layout_below="@+id/textView_xAxisAccel"
-        android:text="@string/Y_Value1" />
+        <CheckBox
+            android:id="@+id/checkBoxYaxisAccelerometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@+id/checkBoxXaxisAccelerometer"
+            android:text="Y" />
 
-    <TextView
-        android:id="@+id/textView_zAxisAccel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/textView_Accelerometer"
-        android:layout_below="@+id/textView_yAxisAccel"
-        android:text="@string/Z_Value1" />
+        <CheckBox
+            android:id="@+id/checkBoxZaxisAccelerometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_Accelerometer"
+            android:layout_below="@+id/checkBoxYaxisAccelerometer"
+            android:text="Z" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton_GyroscopePower"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_zAxisAccel"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/button_GameDelay" />
+        <ToggleButton
+            android:id="@+id/toggleButton_GyroscopePower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:onClick="gyroscopePower" />
 
-    <TextView
-        android:id="@+id/textView_Gyroscope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/toggleButton_GyroscopePower"
-        android:layout_below="@id/toggleButton_GyroscopePower"
-        android:layout_marginTop="10dp"
-        android:gravity="right"
-        android:text="@string/Gyroscope" />
+        <TextView
+            android:id="@+id/textView_Gyroscope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/toggleButton_GyroscopePower"
+            android:gravity="right"
+            android:text="@string/Gyroscope" />
 
-    <TextView
-        android:id="@+id/textView_xAxisGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/toggleButton_GyroscopePower"
-        android:layout_below="@id/textView_Gyroscope"
-        android:text="@string/X_Value2" />
+        <TextView
+            android:id="@+id/textView_xAxisGyro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/textView_Gyroscope"
+            android:text="@string/X_Value2" />
 
-    <TextView
-        android:id="@+id/textView_yAxisGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/toggleButton_GyroscopePower"
-        android:layout_below="@id/textView_xAxisGyro"
-        android:text="@string/Y_Value2" />
+        <TextView
+            android:id="@+id/textView_yAxisGyro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/textView_xAxisGyro"
+            android:text="@string/Y_Value2" />
 
-    <TextView
-        android:id="@+id/textView_zAxisGyro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/toggleButton_GyroscopePower"
-        android:layout_below="@id/textView_yAxisGyro"
-        android:onClick="afd"
-        android:text="@string/Z_Value2" />
+        <TextView
+            android:id="@+id/textView_zAxisGyro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/textView_yAxisGyro"
+            android:text="@string/Z_Value2" />
 
-    <Button
-        android:id="@+id/button_ToSupervised"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="startSupervisedLearning"
-        android:text="@string/toSupervised" />
+        <CheckBox
+            android:id="@+id/checkBoxXaxisGyroscope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@id/textView_zAxisGyro"
+            android:text="X" />
 
-    <Button
-        android:id="@+id/button_ToUnsupervised"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="startUnsupervisedLearning"
-        android:text="@string/toUnsupervised" />
+        <CheckBox
+            android:id="@+id/checkBoxYaxisGyroscope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/checkBoxXaxisGyroscope"
+            android:text="Y" />
 
-    <ImageView
-        android:id="@+id/imageView_RithmioLogo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:onClick="logoClick"
-        android:src="@drawable/logo_colorfixed" />
+        <CheckBox
+            android:id="@+id/checkBoxZaxisGyroscope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
+            android:layout_below="@+id/checkBoxYaxisGyroscope"
+            android:text="Z" />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/sensorButtons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" >
+
+        <Button
+            android:id="@+id/button_NormalDelayAccelerometer"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:onClick="sensorRegisterNormalDelayAccelerometer"
+            android:text="@string/normDelay" />
+
+        <Button
+            android:id="@+id/button_UiDelayAccelerometer"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/button_NormalDelayAccelerometer"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterUiDelayAccelerometer"
+            android:text="@string/uiDelay" />
+
+        <Button
+            android:id="@+id/button_GameDelayAccelerometer"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/button_UiDelayAccelerometer"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterGameDelayAccelerometer"
+            android:text="@string/gameDelay" />
+
+        <Button
+            android:id="@+id/button_FastestDelayAccelerometer"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/button_GameDelayAccelerometer"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterFastestDelayAccelerometer"
+            android:text="@string/fastDelay" />
+
+        <Button
+            android:id="@+id/button_NormalDelayGyroscope"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterNormalDelayGyroscope"
+            android:text="@string/normDelay" />
+
+        <Button
+            android:id="@+id/button_UiDelayGyroscope"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/button_NormalDelayGyroscope"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterUIDelayGyroscope"
+            android:text="@string/uiDelay" />
+
+        <Button
+            android:id="@+id/button_GameDelayGyroscope"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/button_UiDelayGyroscope"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterGameDelayGyroscope"
+            android:text="@string/gameDelay" />
+
+        <Button
+            android:id="@+id/button_FastestDelayGyroscope"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/button_GameDelayGyroscope"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:onClick="sensorRegisterFastestDelayGyroscope"
+            android:text="@string/fastDelay" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/superButtons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4" >
+
+        <Button
+            android:id="@+id/button_ToSupervised"
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:onClick="startSupervisedLearning"
+            android:text="@string/toSupervised" />
+
+        <Button
+            android:id="@+id/button_ToUnsupervised"
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:onClick="startUnsupervisedLearning"
+            android:text="@string/toUnsupervised" />
+
+        <ImageView
+            android:id="@+id/imageView_RithmioLogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:onClick="logoClick"
+            android:src="@drawable/logo_colorfixed" />
+    </RelativeLayout>
+
+</LinearLayout>
