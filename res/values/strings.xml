@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">v1.7 VertiClean</string>
+    <string name="app_name">v1.8 DualClean</string>
     <string name="hello">Data Stream App</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>

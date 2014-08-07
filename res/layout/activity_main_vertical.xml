@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
             android:onClick="accelerometerPower" />
 
         <TextView
@@ -59,22 +60,29 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView_Accelerometer"
             android:layout_below="@id/textView_zAxisAccel"
+            android:layout_marginTop="10dp"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="X" />
 
         <CheckBox
             android:id="@+id/checkBoxYaxisAccelerometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView_Accelerometer"
-            android:layout_below="@+id/checkBoxXaxisAccelerometer"
+            android:layout_alignBottom="@+id/checkBoxXaxisAccelerometer"
+            android:layout_toRightOf="@+id/checkBoxXaxisAccelerometer"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="Y" />
 
         <CheckBox
             android:id="@+id/checkBoxZaxisAccelerometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView_Accelerometer"
-            android:layout_below="@+id/checkBoxYaxisAccelerometer"
+            android:layout_alignBottom="@+id/checkBoxYaxisAccelerometer"
+            android:layout_toRightOf="@+id/checkBoxYaxisAccelerometer"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="Z" />
 
         <ToggleButton
@@ -82,6 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="200dp"
+            android:layout_marginTop="25dp"
             android:onClick="gyroscopePower" />
 
         <TextView
@@ -123,23 +132,50 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
             android:layout_below="@id/textView_zAxisGyro"
+            android:layout_marginTop="10dp"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="X" />
 
         <CheckBox
             android:id="@+id/checkBoxYaxisGyroscope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
-            android:layout_below="@+id/checkBoxXaxisGyroscope"
+            android:layout_alignBottom="@+id/checkBoxXaxisGyroscope"
+            android:layout_toRightOf="@+id/checkBoxXaxisGyroscope"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="Y" />
 
         <CheckBox
             android:id="@+id/checkBoxZaxisGyroscope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/toggleButton_GyroscopePower"
-            android:layout_below="@+id/checkBoxYaxisGyroscope"
+            android:layout_alignBottom="@+id/checkBoxYaxisGyroscope"
+            android:layout_toRightOf="@+id/checkBoxYaxisGyroscope"
+            android:checked="true"
+            android:onClick="checkBoxAxis"
             android:text="Z" />
+
+        <TextView
+            android:id="@+id/currentAccuracyAccel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/toggleButton_AccelerometerPower"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/toggleButton_AccelerometerPower"
+            android:text="Current Accuracy" />
+
+        <TextView
+            android:id="@+id/currentAccuracyGyro"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/toggleButton_GyroscopePower"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/toggleButton_GyroscopePower"
+            android:text="Current Accuracy" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -154,7 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:onClick="sensorRegisterNormalDelayAccelerometer"
+            android:onClick="sensorRegisterTest"
             android:text="@string/normDelay" />
 
         <Button
@@ -165,7 +201,7 @@
             android:layout_below="@+id/button_NormalDelayAccelerometer"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterUiDelayAccelerometer"
+            android:onClick="sensorRegisterTest"
             android:text="@string/uiDelay" />
 
         <Button
@@ -176,7 +212,7 @@
             android:layout_below="@+id/button_UiDelayAccelerometer"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterGameDelayAccelerometer"
+            android:onClick="sensorRegisterTest"
             android:text="@string/gameDelay" />
 
         <Button
@@ -187,7 +223,7 @@
             android:layout_below="@+id/button_GameDelayAccelerometer"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterFastestDelayAccelerometer"
+            android:onClick="sensorRegisterTest"
             android:text="@string/fastDelay" />
 
         <Button
@@ -195,9 +231,8 @@
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterNormalDelayGyroscope"
+            android:onClick="sensorRegisterTest"
             android:text="@string/normDelay" />
 
         <Button
@@ -208,7 +243,7 @@
             android:layout_below="@+id/button_NormalDelayGyroscope"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterUIDelayGyroscope"
+            android:onClick="sensorRegisterTest"
             android:text="@string/uiDelay" />
 
         <Button
@@ -219,7 +254,7 @@
             android:layout_below="@+id/button_UiDelayGyroscope"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterGameDelayGyroscope"
+            android:onClick="sensorRegisterTest"
             android:text="@string/gameDelay" />
 
         <Button
@@ -230,7 +265,7 @@
             android:layout_below="@+id/button_GameDelayGyroscope"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:onClick="sensorRegisterFastestDelayGyroscope"
+            android:onClick="sensorRegisterTest"
             android:text="@string/fastDelay" />
     </RelativeLayout>
 
