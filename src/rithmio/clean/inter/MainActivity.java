@@ -1,5 +1,12 @@
 package rithmio.clean.inter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +16,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +48,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	boolean mXaxisAccelerometer, mYaxisAccelerometer, mZaxisAccelerometer,
 			mXaxisGyroscope, mYaxisGyroscope, mZaxisGyroscope;
+
+	int sampleCounter;
+	int rate;
+	PrintWriter captureFile;
+	boolean samplingStarted = false;
 
 	// GUI
 
@@ -108,11 +121,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Sets and starts the animation for the logo spin
 		logoAnimation();
 
+		startSampling();
+
 	}
 
+	/**
+	 * Creates toast to indicate to user whether their phone has the required
+	 * sensors
+	 */
 	public void sensorCheckToaster() {
-		// Creates toast to indicate to user whether their phone has the
-		// required sensors
+
 		if (mAccelerometerSensor != null && mGyroscopeSensor != null) {
 			Toast.makeText(this, "Required Sensors Found", Toast.LENGTH_SHORT)
 					.show();
@@ -147,6 +165,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
+	/**
+	 * @param v
+	 */
 	public void sensorRegisterTest(View v) {
 		switch (v.getId()) {
 		case R.id.button_NormalDelayAccelerometer:
@@ -195,6 +216,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
+	/**
+	 * @param v
+	 */
 	public void checkBoxAxis(View v) {
 		switch (v.getId()) {
 		case R.id.checkBoxXaxisAccelerometer:
@@ -219,8 +243,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	/**
-	 * Changes background color of current Sensor Delay Button. Uses
-	 * Rithmio-specified green.
+	 * Changes background color of current Sensor Delay Button for Gyroscope.
+	 * Uses Rithmio-specified yellow.
 	 */
 	public void delayButtonColorChangeGyroscope() {
 		if (mCurrentSensorDelayGyroscope == SensorManager.SENSOR_DELAY_NORMAL) {
@@ -258,44 +282,41 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 
+	/**
+	 * Changes background color of current Sensor Delay Button for
+	 * Accelerometer. Uses Rithmio-specified green.
+	 */
 	public void delayButtonColorChangeAccelerometer() {
 		if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_NORMAL) {
-
 			normalDelayButtonAccelerometer.setBackgroundColor(getResources()
 					.getColor(R.color.RithmioGreen));
 			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-
 		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_UI) {
-
 			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			uiDelayButtonAccelerometer.setBackgroundColor(getResources()
 					.getColor(R.color.RithmioGreen));
 			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-
 		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_GAME) {
-
 			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			gameDelayButtonAccelerometer.setBackgroundColor(getResources()
 					.getColor(R.color.RithmioGreen));
 			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-
 		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_FASTEST) {
-
 			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
 			fastestDelayButtonAccelerometer.setBackgroundColor(getResources()
 					.getColor(R.color.RithmioGreen));
-
 		}
 	}
 
 	/**
-	 * /** onClickListener for Accelerometer toggle button
+	 * Receives onClick from toggleButton_AccelerometerPower, turns
+	 * Accelerometer Sensor readings on or off, and registers the sensors.
 	 * 
 	 * @param v
 	 */
@@ -304,7 +325,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 		registerSensors();
 	}
 
-	// onClickListener for Gyroscope toggle button
+	/**
+	 * Receives onClick from toggleButton_GyroscopePower, turns Gyroscope Sensor
+	 * readings on or off, and registers the sensors.
+	 * 
+	 * @param v
+	 */
 	public void gyroscopePower(View v) {
 		gyroscopeIsOn = !gyroscopeIsOn;
 		registerSensors();
@@ -314,28 +340,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * Unregisters both listeners, then registers whichever sensor is powered
 	 * on.
 	 */
-	// public void registerSensors(SensorType, delayRate)
 	public void registerSensors() {
-
 		// This is necessary so that the current listener is unregistered.
 		// Otherwise, the Sensor Delay does not change.
 		mSensorManager.unregisterListener(MainActivity.this);
-
 		if (accelerometerIsOn) {
-
 			// Registers the Accelerometer sensor
 			mSensorManager.registerListener(this, mAccelerometerSensor,
 					mCurrentSensorDelayAccelerometer);
-
 		}
 		if (gyroscopeIsOn) {
-
 			// Registers the Gyroscope sensor
 			mSensorManager.registerListener(this, mGyroscopeSensor,
 					mCurrentSensorDelayGyroscope);
-
 		}
-
 	}
 
 	/**
@@ -351,39 +369,46 @@ public class MainActivity extends Activity implements SensorEventListener {
 				+ event.values[2]);
 		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
 			frontEndAxisGyro(event.values[0], event.values[1], event.values[2]);
-
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
 			frontEndAxisAccel(event.values[0], event.values[1], event.values[2]);
 
+		// test csv
+		processSample(event);
+
 	}
 
+	/**
+	 * @param gx
+	 * @param gy
+	 * @param gz
+	 */
 	public void frontEndAxisGyro(float gx, float gy, float gz) {
 		mXaxisGyro.setText("Gyro X: " + gx);
 		mYaxisGyro.setText("Gyro Y: " + gy);
 		mZaxisGyro.setText("Gyro Z: " + gz);
-
 		if (mXaxisGyroscope == true)
 			mXaxisGyro.setText(null);
 		if (mYaxisGyroscope == true)
 			mYaxisGyro.setText(null);
 		if (mZaxisGyroscope == true)
 			mZaxisGyro.setText(null);
-
 	}
 
+	/**
+	 * @param ax
+	 * @param ay
+	 * @param az
+	 */
 	public void frontEndAxisAccel(float ax, float ay, float az) {
-
 		mXaxisAccel.setText("Accel X: " + ax);
 		mYaxisAccel.setText("Accel Y: " + ay);
 		mZaxisAccel.setText("Accel Z: " + az);
-
 		if (mXaxisAccelerometer == true)
 			mXaxisAccel.setText(null);
 		if (mYaxisAccelerometer == true)
 			mYaxisAccel.setText(null);
 		if (mZaxisAccelerometer == true)
 			mZaxisAccel.setText(null);
-
 	}
 
 	// float implementation csv
@@ -397,6 +422,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onPause() {
 		super.onPause();
+
+		// csv test lines
+		stopSampling(); // just in case the activity-level service management
+		// fails
 
 		// Unregisters both sensors when app is paused (home screen or screen
 		// lock), modify or delete this to maintain sensors running despite app
@@ -577,4 +606,69 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}, delay);
 	}
 
+	/**
+	 * @param sensorEvent
+	 */
+	private void processSample(SensorEvent sensorEvent) {
+		float values[] = sensorEvent.values;
+		if (values.length < 3)
+			return;
+		if (captureFile != null) {
+			captureFile.println(sensorEvent.timestamp + "," + values[0] + ","
+					+ values[1] + "," + values[2]);
+		}
+	}
+
+	private void stopSampling() {
+		if (!samplingStarted)
+			return;
+		if (mSensorManager != null) {
+			Log.d(tag, "unregisterListener/SamplingService");
+			mSensorManager.unregisterListener(this);
+		}
+		if (captureFile != null) {
+			captureFile.close();
+			captureFile = null;
+		}
+		samplingStarted = false;
+	}
+
+	private void startSampling() {
+		if (samplingStarted)
+			return;
+		sampleCounter = 0;
+		List<Sensor> sensors = mSensorManager
+				.getSensorList(Sensor.TYPE_ACCELEROMETER);
+		mAccelerometerSensor = sensors.size() == 0 ? null : sensors.get(0);
+		sensors = mSensorManager.getSensorList(Sensor.TYPE_GYROSCOPE);
+		mGyroscopeSensor = sensors.size() == 0 ? null : sensors.get(0);
+
+		if ((mAccelerometerSensor != null) && (mGyroscopeSensor != null)) {
+			Log.d(tag, "registerListener/SamplingService");
+			mSensorManager.registerListener(this, mAccelerometerSensor, rate);
+			mSensorManager.registerListener(this, mGyroscopeSensor, rate);
+
+		} else {
+			Log.d(tag, "Sensor(s) missing: accelSensor: "
+					+ mAccelerometerSensor + "; gyroSensor: "
+					+ mGyroscopeSensor);
+		}
+		captureFile = null;
+		GregorianCalendar gcal = new GregorianCalendar();
+		String fileName = "RithmioApp_" + gcal.get(Calendar.YEAR) + "_"
+				+ Integer.toString(gcal.get(Calendar.MONTH) + 1) + "_"
+				+ gcal.get(Calendar.DAY_OF_MONTH) + "_"
+				+ gcal.get(Calendar.HOUR_OF_DAY) + "_"
+				+ gcal.get(Calendar.MINUTE) + "_" + gcal.get(Calendar.SECOND)
+				+ ".csv";
+		File captureFileName = new File(
+				Environment.getExternalStorageDirectory(), fileName);
+		try {
+			captureFile = new PrintWriter(
+					new FileWriter(captureFileName, false));
+		} catch (IOException ex) {
+			Log.e(tag, ex.getMessage(), ex);
+		}
+		samplingStarted = true;
+	}
 }
