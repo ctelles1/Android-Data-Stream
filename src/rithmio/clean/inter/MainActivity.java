@@ -49,8 +49,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	boolean mXaxisAccelerometer, mYaxisAccelerometer, mZaxisAccelerometer,
 			mXaxisGyroscope, mYaxisGyroscope, mZaxisGyroscope;
 
-	int sampleCounter;
-	int rate;
 	PrintWriter captureFile;
 	boolean samplingStarted = false;
 
@@ -411,8 +409,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mZaxisAccel.setText(null);
 	}
 
-	// float implementation csv
-
 	public void onResume() {
 		super.onResume();
 		// Resumes sensor readings on restart
@@ -443,6 +439,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 			frontEndAccuracyGyroscope(accuracy);
 	}
 
+	/**
+	 * @param accuracy
+	 */
 	public void frontEndAccuracyAccelerometer(int accuracy) {
 		if (accuracy == 0) {
 			curAccA = "Unreliable";
@@ -456,6 +455,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		currentAccuracyAccelerometer.setText(curAccA);
 	}
 
+	/**
+	 * @param accuracy
+	 */
 	public void frontEndAccuracyGyroscope(int accuracy) {
 		if (accuracy == 0) {
 			curAccG = "Unreliable";
@@ -469,6 +471,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		currentAccuracyGyroscope.setText(curAccG);
 	}
 
+	/**
+	 * 
+	 */
 	public void textViewAndButtonDeclaration() {
 
 		// Variables for each axis of the Accelerometer and Gyroscope
@@ -530,6 +535,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	}
 
+	/**
+	 * 
+	 */
 	public void logoAnimation() {
 		// Logo spin animation, one per second
 		ImageView rithmioLogo = (ImageView) findViewById(R.id.imageView_RithmioLogo);
@@ -614,11 +622,36 @@ public class MainActivity extends Activity implements SensorEventListener {
 		if (values.length < 3)
 			return;
 		if (captureFile != null) {
-			captureFile.println(sensorEvent.timestamp + "," + values[0] + ","
-					+ values[1] + "," + values[2]);
+			captureFile.print(sensorEvent.timestamp + ", ");
+			if (accelerometerIsOn) {
+				if (!mXaxisAccelerometer) {
+					captureFile.print(values[0] + ", ");
+				}
+				if (!mYaxisAccelerometer) {
+					captureFile.print(values[1] + ", ");
+				}
+				if (!mZaxisAccelerometer) {
+					captureFile.print(values[2] + ", ");
+				}
+			}
+			if (gyroscopeIsOn) {
+				if (!mXaxisGyroscope) {
+					captureFile.print(values[0] + ", ");
+				}
+				if (!mYaxisGyroscope) {
+					captureFile.print(values[1] + ", ");
+				}
+				if (!mZaxisGyroscope) {
+					captureFile.print(values[2]);
+				}
+			}
+			captureFile.println();
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void stopSampling() {
 		if (!samplingStarted)
 			return;
@@ -633,10 +666,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 		samplingStarted = false;
 	}
 
+	/**
+	 * 
+	 */
 	private void startSampling() {
 		if (samplingStarted)
 			return;
-		sampleCounter = 0;
 		List<Sensor> sensors = mSensorManager
 				.getSensorList(Sensor.TYPE_ACCELEROMETER);
 		mAccelerometerSensor = sensors.size() == 0 ? null : sensors.get(0);
@@ -645,8 +680,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		if ((mAccelerometerSensor != null) && (mGyroscopeSensor != null)) {
 			Log.d(tag, "registerListener/SamplingService");
-			mSensorManager.registerListener(this, mAccelerometerSensor, rate);
-			mSensorManager.registerListener(this, mGyroscopeSensor, rate);
+			mSensorManager.registerListener(this, mAccelerometerSensor,
+					mCurrentSensorDelayAccelerometer);
+			mSensorManager.registerListener(this, mGyroscopeSensor,
+					mCurrentSensorDelayGyroscope);
 
 		} else {
 			Log.d(tag, "Sensor(s) missing: accelSensor: "
@@ -655,7 +692,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 		captureFile = null;
 		GregorianCalendar gcal = new GregorianCalendar();
-		String fileName = "RithmioApp_" + gcal.get(Calendar.YEAR) + "_"
+		String fileName = "Tithmio_" + gcal.get(Calendar.YEAR) + "_"
 				+ Integer.toString(gcal.get(Calendar.MONTH) + 1) + "_"
 				+ gcal.get(Calendar.DAY_OF_MONTH) + "_"
 				+ gcal.get(Calendar.HOUR_OF_DAY) + "_"
