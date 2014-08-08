@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rithm_editing_xml"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/NewActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:onClick="learnRithms"
+        android:text="@string/NewActivity" />
+
+    <Button
+        android:id="@+id/EditDelete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:onClick="editRithms"
+        android:text="@string/EditDelete" />
+
+    <Button
+        android:id="@+id/Recognition"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:onClick="recognizeRithms"
+        android:text="@string/Recognition" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" >
+
+        <ImageView
+            android:id="@+id/imageView_RithmioLogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:onClick="logoClick"
+            android:src="@drawable/logo_colorfixed" />
+
+        <Button
+            android:id="@+id/backToMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:onClick="backToMenu"
+            android:text="@string/toMenu" />	
+    </RelativeLayout>
+
+</LinearLayout>

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">v2.0 learn</string>
-    <string name="hello">Data Stream App</string>
+    <string name="hello">Rithmio</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
     <string name="Y_Value1">Y Value</string>
@@ -17,5 +17,11 @@
     <string name="fastDelay">Fastest Delay</string>
     <string name="toSupervised">Supervised</string>
     <string name="toUnsupervised">Unsupervised</string>
+    <string name="NewActivity">Learn a New Activity</string>
+    <string name="EditDelete">Edit and Delete Learned Activities</string>
+    <string name="Recognition">Go to Recognition</string>
+    <string name="toSuper">Start Supervised Learning</string>
+    <string name="toUnsuper">Start Unsupervised Learning</string>
+    <string name="toMenu">Menu</string>
 
-</resources>  
+</resources>
