@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -23,11 +22,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -85,12 +87,12 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 	String curAccA;
 	String curAccG;
 
-	boolean selectionIsOn = false, editingIsOn = false,
-			recognitionIsOn = false;
+	Fragment fr;
+	int i = 0;
+	// LinearLayout ll = (LinearLayout) findViewById(R.id.scroll);
 
-	FragmentManager fragmentManager = getFragmentManager();
-	FragmentTransaction fragmentTransaction = fragmentManager
-			.beginTransaction();
+	LinearLayout containerLayout;
+	static int totalEditTexts = 0;
 
 	/******************************************************************************/
 
@@ -102,6 +104,7 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 		// This version of the app, the layout is locked on the
 		// vertical/portrait position
 		setContentView(R.layout.main_menu);
+		// containerLayout = (LinearLayout) findViewById(R.id.scroll);
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -130,150 +133,87 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 		// Sets and starts the animation for the logo spin
 		logoAnimation();
 
-		startSampling();
-
-		fragmentSelection();
-		fragmentTransaction.commit();
-
-		// else if (recognitionIsOn){
-		//
-		// }
 	}
 
-	public void fragmentSelection() {
-		if (selectionIsOn) {
-			// SelectSupervision fragment = new SelectSupervision();
-			// fragmentTransaction.replace(R.id.supervision_selection_xml,
-			// fragment);
-			getFragmentManager().beginTransaction()
-					.add(R.id.supervision_selection, new SelectSupervision())
-					.commit();
-//			Intent i = new Intent(MainMenu.this, SelectSupervision.class);
-//			startActivity(i);
-			// Fragment fragment = SelectSupervision.newInstance(null, null,
-			// null) ;
-			// MainMenu.addFragment(SelectSupervision.this, fragment) ;
-			//
+	// public void addEdit(View v) {
 
-		} else if (editingIsOn) {
-			SelectSupervision fragment = new SelectSupervision();
-			fragmentTransaction.replace(R.id.rithm_editing_xml, fragment);
-		} else if (recognitionIsOn) {
-			SelectSupervision fragment = new SelectSupervision();
-			fragmentTransaction.replace(R.id.recognition_start_xml, fragment);
+	// i++;
+	// TextView tv = new TextView(getApplicationContext());
+	// tv.setText("Rithm" + i);
+	// ll.addView(tv);
+	// EditText et = new EditText(getApplicationContext());
+	// et.setText(i + ")");
+	// ll.addView(et);
+
+	// LinearLayout linearlayout = (LinearLayout) findViewById(R.id.scroll);
+	// EditText[] edt = new EditText[100];
+	// for (int i = 0; i < 100; i++) {
+	// edt[i] = new EditText(getBaseContext());
+	// edt[i].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+	// LayoutParams.WRAP_CONTENT));
+	// edt[i].setHint("Change the name for Rithm " + i);
+	// linearlayout.addView(edt[i]);
+	// }
+	// setContentView(R.layout.activity_dynamic_views);
+
+	// selectFrag(v);
+	//
+	// ScrollView scrollview = (ScrollView)
+	// findViewById(R.id.rithm_editing);
+	// LinearLayout linearlayout = (LinearLayout) findViewById(R.id.scroll);
+	// i++;
+	// EditText et = new EditText(getBaseContext());
+	// et.setText("Rithm " + i);
+	// linearlayout.addView(et);
+	// setContentView(scrollview);
+	// }
+
+	public void onBackPressed() {
+		totalEditTexts++;
+		if (totalEditTexts > 100)
+			return;
+		EditText editText = new EditText(this);
+		containerLayout.addView(editText);
+		editText.setGravity(Gravity.LEFT);
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editText
+				.getLayoutParams();
+		layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+		editText.setLayoutParams(layoutParams);
+		// if you want to identify the created editTexts, set a tag, like below
+		editText.setHint("Please enter new Rithm name");
+	}
+
+	public void selectFrag(View v) {
+		// if (v == findViewById(R.id.learnRithms)) {
+		// fr = new SelectSupervision();
+		// } else
+		if (v == findViewById(R.id.editRithms)) {
+			fr = new EditLearnedRithms();
+		} else if (v == findViewById(R.id.recognizeRithms)) {
+			fr = new RecognizeRithms();
 		}
-
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fm.beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_switch, fr);
+		fragmentTransaction.commit();
 	}
 
 	/**
 	 * Creates toast to indicate to user whether their phone has the required
-	 * sensors
+	 * sensors.
 	 */
 	public void sensorCheckToaster() {
-
 		if (mAccelerometerSensor != null && mGyroscopeSensor != null) {
 			Toast.makeText(this, "Required Sensors Found", Toast.LENGTH_SHORT)
 					.show();
-
-			// accelerometerIsOn = true;
-			//
-			// gyroscopeIsOn = true;
-
 		} else if (mAccelerometerSensor == null && mGyroscopeSensor != null) {
 			Toast.makeText(this, "No Accelerometer Found", Toast.LENGTH_SHORT)
 					.show();
-
-			// accelerometerIsOn = false;
-			//
-			// gyroscopeIsOn = true;
-
 		} else if (mGyroscopeSensor == null && mAccelerometerSensor != null) {
 			Toast.makeText(this, "No Gyroscope Found", Toast.LENGTH_SHORT)
 					.show();
-
-			// accelerometerIsOn = true;
-			//
-			// gyroscopeIsOn = false;
-
 		} else if (mGyroscopeSensor == null && mAccelerometerSensor == null) {
 			Toast.makeText(this, "No Sensors Found", Toast.LENGTH_SHORT).show();
-
-			// accelerometerIsOn = false;
-			//
-			// gyroscopeIsOn = false;
-
-		}
-	}
-
-	/**
-	 * Changes background color of current Sensor Delay Button for Gyroscope.
-	 * Uses Rithmio-specified yellow.
-	 */
-	public void delayButtonColorChangeGyroscope() {
-		if (mCurrentSensorDelayGyroscope == SensorManager.SENSOR_DELAY_NORMAL) {
-
-			normalDelayButtonGyroscope.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioYellow));
-			uiDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mCurrentSensorDelayGyroscope == SensorManager.SENSOR_DELAY_UI) {
-
-			normalDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonGyroscope.setBackgroundColor(getResources().getColor(
-					R.color.RithmioYellow));
-			gameDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mCurrentSensorDelayGyroscope == SensorManager.SENSOR_DELAY_GAME) {
-
-			normalDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonGyroscope.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioYellow));
-			fastestDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-
-		} else if (mCurrentSensorDelayGyroscope == SensorManager.SENSOR_DELAY_FASTEST) {
-
-			normalDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonGyroscope.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioYellow));
-
-		}
-	}
-
-	/**
-	 * Changes background color of current Sensor Delay Button for
-	 * Accelerometer. Uses Rithmio-specified green.
-	 */
-	public void delayButtonColorChangeAccelerometer() {
-		if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_NORMAL) {
-			normalDelayButtonAccelerometer.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioGreen));
-			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_UI) {
-			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonAccelerometer.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioGreen));
-			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_GAME) {
-			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonAccelerometer.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioGreen));
-			fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		} else if (mCurrentSensorDelayAccelerometer == SensorManager.SENSOR_DELAY_FASTEST) {
-			normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-			fastestDelayButtonAccelerometer.setBackgroundColor(getResources()
-					.getColor(R.color.RithmioGreen));
 		}
 	}
 
@@ -335,7 +275,7 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
 			frontEndAxisAccel(event.values[0], event.values[1], event.values[2]);
 
-		// test csv
+		// Values to Csv file
 		processSample(event);
 
 	}
@@ -346,9 +286,6 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 	 * @param gz
 	 */
 	public void frontEndAxisGyro(float gx, float gy, float gz) {
-		mXaxisGyro.setText("Gyro X: " + gx);
-		mYaxisGyro.setText("Gyro Y: " + gy);
-		mZaxisGyro.setText("Gyro Z: " + gz);
 		if (mXaxisGyroscope == true)
 			mXaxisGyro.setText(null);
 		if (mYaxisGyroscope == true)
@@ -363,9 +300,6 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 	 * @param az
 	 */
 	public void frontEndAxisAccel(float ax, float ay, float az) {
-		mXaxisAccel.setText("Accel X: " + ax);
-		mYaxisAccel.setText("Accel Y: " + ay);
-		mZaxisAccel.setText("Accel Z: " + az);
 		if (mXaxisAccelerometer == true)
 			mXaxisAccel.setText(null);
 		if (mYaxisAccelerometer == true)
@@ -443,90 +377,15 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 
 		// // Variables for each axis of the Accelerometer and Gyroscope
 
-		//
-
-		//
-
-		//
-
-		// mXaxisAccel = (TextView) findViewById(R.id.textView_xAxisAccel);
-		// mYaxisAccel = (TextView) findViewById(R.id.textView_yAxisAccel);
-		// mZaxisAccel = (TextView) findViewById(R.id.textView_zAxisAccel);
-		// mXaxisGyro = (TextView) findViewById(R.id.textView_xAxisGyro);
-		// mYaxisGyro = (TextView) findViewById(R.id.textView_yAxisGyro);
-		// mZaxisGyro = (TextView) findViewById(R.id.textView_zAxisGyro);
-		//
-		// // Buttons to choose between Normal, Game, UI, and Fastest Sensor
-		// Delays
-		// normalDelayButtonGyroscope = (Button)
-		// findViewById(R.id.button_NormalDelayGyroscope);
-		// gameDelayButtonGyroscope = (Button)
-		// findViewById(R.id.button_GameDelayGyroscope);
-		// uiDelayButtonGyroscope = (Button)
-		// findViewById(R.id.button_UiDelayGyroscope);
-		// fastestDelayButtonGyroscope = (Button)
-		// findViewById(R.id.button_FastestDelayGyroscope);
-		//
-		// // Sets the background colors of the Sensor Delay buttons to gray,
-		// which
-		// // increases the viewed button size. This keeps it the same color,
-		// but
-		// // ensures that it doesn't look weird when it changes color to green
-		// as
-		// // it is activated
-		// normalDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-		// uiDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-		// gameDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-		// fastestDelayButtonGyroscope.setBackgroundColor(Color.LTGRAY);
-		//
-		// // Buttons to choose between Normal, Game, UI, and Fastest Sensor
-		// Delays
-		// normalDelayButtonAccelerometer = (Button)
-		// findViewById(R.id.button_NormalDelayAccelerometer);
-		// gameDelayButtonAccelerometer = (Button)
-		// findViewById(R.id.button_GameDelayAccelerometer);
-		// uiDelayButtonAccelerometer = (Button)
-		// findViewById(R.id.button_UiDelayAccelerometer);
-		// fastestDelayButtonAccelerometer = (Button)
-		// findViewById(R.id.button_FastestDelayAccelerometer);
-		//
-		// // Sets the background colors of the Sensor Delay buttons to gray,
-		// which
-		// // increases the viewed button size. This keeps it the same color,
-		// but
-		// // ensures that it doesn't look weird when it changes color to green
-		// as
-		// // it is activated
-		// normalDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		// uiDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		// gameDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		// fastestDelayButtonAccelerometer.setBackgroundColor(Color.LTGRAY);
-		//
-		// // Buttons for Supervised and Unsupervised function/activity/fragment
-		// // calls. Their colors are set to Rithmio-specified yellow and green.
-		// // Can be changed at another point - file with color names is located
-		// at
-		// // res/values/color.xml
-		// toSupervisedLearning = (Button)
-		// findViewById(R.id.button_ToSupervised);
-		// toSupervisedLearning.setBackgroundColor(getResources().getColor(
-		// R.color.RithmioYellow));
-		// toUnsupervisedLearning = (Button)
-		// findViewById(R.id.button_ToUnsupervised);
-		// toUnsupervisedLearning.setBackgroundColor(getResources().getColor(
+		// Button newActivity = (Button) findViewById(R.id.learnRithms);
+		// newActivity.setBackgroundColor(getResources().getColor(
 		// R.color.RithmioGreen));
-		//
-		// // Toggle Buttons to power on and off the Accelerometer and Gyroscope
-		// // sensor data readings
-		// toggleButtonGyroscope = (ToggleButton)
-		// findViewById(R.id.toggleButton_GyroscopePower);
-		// toggleButtonAccelerometer = (ToggleButton)
-		// findViewById(R.id.toggleButton_AccelerometerPower);
-		//
-		// currentAccuracyAccelerometer = (TextView)
-		// findViewById(R.id.currentAccuracyAccel);
-		// currentAccuracyGyroscope = (TextView)
-		// findViewById(R.id.currentAccuracyGyro);
+		Button newEdit = (Button) findViewById(R.id.editRithms);
+		newEdit.setBackgroundColor(getResources().getColor(
+				R.color.RithmioYellow));
+		Button newRecog = (Button) findViewById(R.id.recognizeRithms);
+		newRecog.setBackgroundColor(getResources().getColor(
+				R.color.RithmioGreen));
 
 	}
 
@@ -557,56 +416,14 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 		startActivity(myWebLink);
 	}
 
-	public void startSupervisedLearning(View v) {
+	public void learnSupervised(View v) {
 
-		// Sets color for Supervised Learning button to gray when
-		// clicked
-		toSupervisedLearning.setBackgroundColor(getResources().getColor(
-				R.color.RithmioGray));
-
-		// Starts button color change function
-		learningButtonsBackgroundColorChange();
-
-		// Insert here call for Supervised Learning
-		// function/activity/fragment call
-
+		// startSampling();
 	}
 
-	public void startUnsupervisedLearning(View v) {
-
-		// Sets color for Supervised Learning button to gray when
-		// clicked
-		toUnsupervisedLearning.setBackgroundColor(getResources().getColor(
-				R.color.RithmioGray));
-
-		// Starts button color change function
-		learningButtonsBackgroundColorChange();
-
-		// Insert here call for Unsupervised Learning
-		// function/activity/fragment call
-	}
-
-	/**
-	 * Changes button color back to original after specified amount of time
-	 * (delay = 100 milliseconds).
-	 */
-	public void learningButtonsBackgroundColorChange() {
-		handler.postDelayed(new Runnable() {
-			public void run() {
-
-				// Sets Supervised Learning button back to Rithmio Yellow
-				toSupervisedLearning.setBackgroundColor(getResources()
-						.getColor(R.color.RithmioYellow));
-
-				// Sets Unsupervised Learning button back to Rithmio Green
-				toUnsupervisedLearning.setBackgroundColor(getResources()
-						.getColor(R.color.RithmioGreen));
-
-			}
-
-			// Current delay is 100 milliseconds. Amount set in variable
-			// initializer
-		}, delay);
+	public void learnUnsupervised(View v) {
+		
+		// startSampling();
 	}
 
 	/**
@@ -702,53 +519,6 @@ public class MainMenu extends FragmentActivity implements SensorEventListener {
 			Log.e(tag, ex.getMessage(), ex);
 		}
 		samplingStarted = true;
-	}
-
-	public void learnRithms(View v) {
-		// Intent learnIntent = new Intent(MainMenu.this,
-		// SelectSupervision.class);
-		// startActivity(learnIntent);
-		selectionIsOn = true;
-		editingIsOn = false;
-		recognitionIsOn = false;
-		fragmentSelection();
-
-		// SelectSupervision fragment = new SelectSupervision();
-		// fragmentTransaction.replace(R.id.supervision_selection_xml,
-		// fragment);
-		// fragmentTransaction.commit();
-
-		// startActivity(new Intent(this, SelectSupervision.class));
-
-		// Fragment mFragment = new SelectSupervision();
-		// getFragmentManager().beginTransaction()
-		// .replace(R.id.supervision_selection, mFragment).commit();
-
-	}
-
-	public void editRithms(View v) {
-		// EditLearnedRithms fragment = new EditLearnedRithms();
-		// FragmentTransaction.replace(android.R.id.content, fragment);
-		// FragmentTransaction.commit();
-		selectionIsOn = false;
-		editingIsOn = true;
-		recognitionIsOn = false;
-		fragmentSelection();
-
-		// Intent editIntent = new Intent(MainMenu.this,
-		// EditLearnedRithms.class);
-		// startActivity(editIntent);
-	}
-
-	public void recognizeRithms(View v) {
-		// Intent recognizeIntent = new Intent(MainMenu.this,
-		// RecognizeRithms.class);
-		// startActivity(recognizeIntent);
-		selectionIsOn = false;
-		editingIsOn = false;
-		recognitionIsOn = true;
-		fragmentSelection();
-
 	}
 
 }

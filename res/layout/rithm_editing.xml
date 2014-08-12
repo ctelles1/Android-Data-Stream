@@ -1,57 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rithm_editing_xml"
+<!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" -->
+<!-- xmlns:tools="http://schemas.android.com/tools" -->
+<!-- android:layout_width="fill_parent" -->
+<!-- android:layout_height="wrap_content" -->
+<!-- android:layout_weight="1" /> -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rithm_editing"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/NewActivity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="learnRithms"
-        android:text="@string/NewActivity" />
-
-    <Button
-        android:id="@+id/EditDelete"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="editRithms"
-        android:text="@string/EditDelete" />
-
-    <Button
-        android:id="@+id/Recognition"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="recognizeRithms"
-        android:text="@string/Recognition" />
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="5" >
+        android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/imageView_RithmioLogo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="25dp"
-            android:onClick="logoClick"
-            android:src="@drawable/logo_colorfixed" />
-
-        <Button
-            android:id="@+id/backToMenu"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/editT3ext1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:onClick="backToMenu"
-            android:text="@string/toMenu" />	
-    </RelativeLayout>
+            android:ems="10"
+            android:hint="New Rithm" >
 
-</LinearLayout>
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editTe4xt1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editT5ext1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editTex6t1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/edit7Text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editT8ext1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editT9ext1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/edi0tText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editText01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Rithm" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Latest Rithm" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+</ScrollView>

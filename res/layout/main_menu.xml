@@ -1,38 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+    android:id="@+id/main_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/RithmioWhite"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/NewActivity"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="learnRithms"
-        android:text="@string/NewActivity" />
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/EditDelete"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="editRithms"
-        android:text="@string/EditDelete" />
+        <fragment
+            android:id="@+id/fragment_switch"
+            android:name="rithmio.learn.test.BlankSlate"
+            android:layout_width="match_parent"
+            android:layout_height="320dp" >
+        </fragment>
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/Recognition"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:onClick="recognizeRithms"
-        android:text="@string/Recognition" />
+        android:layout_height="110dp"
+        android:layout_marginTop="20dp" >
+
+        <ImageView
+            android:id="@+id/learnUnsupervised"
+            android:layout_width="60dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:onClick="learnUnsupervised"
+            android:src="@drawable/alien" />
+
+        <Button
+            android:id="@+id/editRithms"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_toRightOf="@id/learnUnsupervised"
+            android:onClick="selectFrag"
+            android:text="@string/EditDelete" />
+
+        <Button
+            android:id="@+id/recognizeRithms"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_toRightOf="@id/editRithms"
+            android:onClick="selectFrag"
+            android:text="@string/Recognition" />
+
+        <ImageView
+            android:id="@+id/learnSupervised"
+            android:layout_width="60dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/recognizeRithms"
+            android:onClick="learnSupervised"
+            android:src="@drawable/plus" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="6" >
+        android:layout_marginBottom="10dp" >
 
         <ImageView
             android:id="@+id/imageView_RithmioLogo"
@@ -40,21 +70,8 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
             android:onClick="logoClick"
             android:src="@drawable/logo_colorfixed" />
-
-<!--         <fragment -->
-<!--             android:id="@+id/supervision_selection_xml" -->
-<!--             android:name="rithmio.learn.test" -->
-<!--             android:layout_width="0dp" -->
-<!--             android:layout_height="match_parent" /> -->
-
-<!--         <fragment -->
-<!--             android:id="@+id/rithm_editing_xml" -->
-<!--             android:name="rithmio.learn.test" -->
-<!--             android:layout_width="0dp" -->
-<!--             android:layout_height="match_parent" /> -->
     </RelativeLayout>
 
 </LinearLayout>

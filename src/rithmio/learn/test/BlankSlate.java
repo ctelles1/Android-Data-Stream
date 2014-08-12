@@ -1,17 +1,19 @@
 package rithmio.learn.test;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class RecognizeRithms extends Fragment {
-
+public class BlankSlate extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		return inflater.inflate(R.layout.recognition_start, container, false);
+		// Inflate the layout for this fragment
+
+		return inflater.inflate(R.layout.blank, container, false);
 	}
 }

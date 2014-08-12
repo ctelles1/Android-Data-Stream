@@ -17,9 +17,9 @@
     <string name="fastDelay">Fastest Delay</string>
     <string name="toSupervised">Supervised</string>
     <string name="toUnsupervised">Unsupervised</string>
-    <string name="NewActivity">Learn a New Activity</string>
-    <string name="EditDelete">Edit and Delete Learned Activities</string>
-    <string name="Recognition">Go to Recognition</string>
+    <string name="NewActivity">New Activity</string>
+    <string name="EditDelete">Edit and Delete</string>
+    <string name="Recognition">Recognize</string>
     <string name="toSuper">Start Supervised Learning</string>
     <string name="toUnsuper">Start Unsupervised Learning</string>
     <string name="toMenu">Menu</string>
