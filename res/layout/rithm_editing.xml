@@ -94,7 +94,7 @@
             android:hint="New Rithm" >
 
             <requestFocus />
-        </EditText>
+        </EditText> 
 
         <EditText
             android:id="@+id/editText01"

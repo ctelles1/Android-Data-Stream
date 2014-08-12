@@ -15,4 +15,4 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/RithmioBlue" />
 
-</LinearLayout>
+</LinearLayout> 

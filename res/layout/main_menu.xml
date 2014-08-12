@@ -40,7 +40,7 @@
             android:onClick="selectFrag"
             android:text="@string/EditDelete" />
 
-        <Button
+        <Button 
             android:id="@+id/recognizeRithms"
             android:layout_width="110dp"
             android:layout_height="110dp"

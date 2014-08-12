@@ -16,4 +16,4 @@ public class BlankSlate extends Fragment {
 
 		return inflater.inflate(R.layout.blank, container, false);
 	}
-}
+} 
