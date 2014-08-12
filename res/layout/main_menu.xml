@@ -6,6 +6,16 @@
     android:background="@color/RithmioWhite"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/hello"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/RithmioBlue" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -14,19 +24,19 @@
             android:id="@+id/fragment_switch"
             android:name="rithmio.learn.test.BlankSlate"
             android:layout_width="match_parent"
-            android:layout_height="320dp" >
+            android:layout_height="330dp" >
         </fragment>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:layout_marginTop="20dp" >
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp" >
 
         <ImageView
             android:id="@+id/learnUnsupervised"
             android:layout_width="60dp"
-            android:layout_height="110dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:onClick="learnUnsupervised"
@@ -35,15 +45,15 @@
         <Button
             android:id="@+id/editRithms"
             android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_height="80dp"
             android:layout_toRightOf="@id/learnUnsupervised"
             android:onClick="selectFrag"
             android:text="@string/EditDelete" />
 
-        <Button 
+        <Button
             android:id="@+id/recognizeRithms"
             android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_height="80dp"
             android:layout_toRightOf="@id/editRithms"
             android:onClick="selectFrag"
             android:text="@string/Recognition" />
@@ -51,7 +61,7 @@
         <ImageView
             android:id="@+id/learnSupervised"
             android:layout_width="60dp"
-            android:layout_height="110dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/recognizeRithms"
