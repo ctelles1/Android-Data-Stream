@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class RecognizeRithms extends Fragment {
+public class SupervisedLearningFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		return inflater.inflate(R.layout.recognition, container, false);
+		return inflater.inflate(R.layout.supervised, container, false);
+
 	}
+
 }

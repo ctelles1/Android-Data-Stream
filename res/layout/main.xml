@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_menu"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/RithmioWhite"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/rithmName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -22,7 +22,7 @@
 
         <fragment
             android:id="@+id/fragment_switch"
-            android:name="rithmio.learn.test.BlankSlate"
+            android:name="rithmio.learn.test.BlankFragment"
             android:layout_width="match_parent"
             android:layout_height="330dp" >
         </fragment>
@@ -31,6 +31,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp" >
 
         <ImageView
@@ -39,7 +40,7 @@
             android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:onClick="learnUnsupervised"
+            android:onClick="selectFrag"
             android:src="@drawable/alien" />
 
         <Button
@@ -47,6 +48,7 @@
             android:layout_width="110dp"
             android:layout_height="80dp"
             android:layout_toRightOf="@id/learnUnsupervised"
+            android:background="@color/RithmioYellow"
             android:onClick="selectFrag"
             android:text="@string/EditDelete" />
 
@@ -55,6 +57,7 @@
             android:layout_width="110dp"
             android:layout_height="80dp"
             android:layout_toRightOf="@id/editRithms"
+            android:background="@color/RithmioGreen"
             android:onClick="selectFrag"
             android:text="@string/Recognition" />
 
@@ -65,8 +68,28 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/recognizeRithms"
-            android:onClick="learnSupervised"
+            android:onClick="selectFrag"
             android:src="@drawable/plus" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/learnUnsupervised"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:text="Unsuper"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView2"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignLeft="@+id/learnSupervised"
+            android:text="Super"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
     <RelativeLayout
