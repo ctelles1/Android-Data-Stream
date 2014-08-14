@@ -138,31 +138,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Unregisters both listeners, then registers the listeners for whichever
-	 * sensor is powered on.
-	 * <p>
-	 * This function is necessary if Sensor Delay is being changed during
-	 * application runtime. Otherwise sensor listener registration happens at
-	 * startSampling().
-	 */
-	public void registerSensors() {
-		// This is necessary so that the current listener is unregistered.
-		// Otherwise, the Sensor Delay does not change.
-		mSensorManager.unregisterListener(MainActivity.this);
-		// accelerometerIsOn and gyroscopeIsOn are booleans
-		if (isAccelerometerOn) {
-			// Registers the Accelerometer sensor
-			mSensorManager.registerListener(this, mAccelerometerSensor,
-					mCurrentSensorDelayAccelerometer);
-		}
-		if (isGyroscopeOn) {
-			// Registers the Gyroscope sensor
-			mSensorManager.registerListener(this, mGyroscopeSensor,
-					mCurrentSensorDelayGyroscope);
-		}
-	}
-
-	/**
 	 * Displays Accelerometer and Gyroscope sensor readings for the X, Y, and Z
 	 * axis.
 	 * 
@@ -277,6 +252,31 @@ public class MainActivity extends FragmentActivity implements
 		}
 		isSamplingOn = false;
 
+	}
+
+	/**
+	 * Unregisters both listeners, then registers the listeners for whichever
+	 * sensor is powered on.
+	 * <p>
+	 * This function is necessary if Sensor Delay is being changed during
+	 * application runtime. Otherwise sensor listener registration happens at
+	 * startSampling().
+	 */
+	public void registerSensors() {
+		// This is necessary so that the current listener is unregistered.
+		// Otherwise, the Sensor Delay does not change.
+		mSensorManager.unregisterListener(MainActivity.this);
+		// accelerometerIsOn and gyroscopeIsOn are booleans
+		if (isAccelerometerOn) {
+			// Registers the Accelerometer sensor
+			mSensorManager.registerListener(this, mAccelerometerSensor,
+					mCurrentSensorDelayAccelerometer);
+		}
+		if (isGyroscopeOn) {
+			// Registers the Gyroscope sensor
+			mSensorManager.registerListener(this, mGyroscopeSensor,
+					mCurrentSensorDelayGyroscope);
+		}
 	}
 
 	/**
@@ -439,7 +439,7 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @param v
 	 */
-	public void selectFrag(View v) {
+	public void selectFragment(View v) {
 		if (v == findViewById(R.id.editRithms)) {
 			fr = new EditRithmNameFragment();
 		} else if (v == findViewById(R.id.recognizeRithms)) {
