@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/rithmName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/deleteButton"
+        android:layout_toRightOf="@+id/editButton"
+        android:gravity="center_horizontal"
+        android:text="Rithm Name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/RithmioWhite"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:onClick="showSoftKeyboard"
+        android:text="Edit"
+        android:textColor="@color/Green" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/RithmioWhite"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Delete"
+        android:textColor="@color/Red" />
+
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/rithmName"
+        android:layout_alignBottom="@+id/rithmName"
+        android:layout_toLeftOf="@+id/deleteButton"
+        android:layout_toRightOf="@+id/editButton"
+        android:ems="10"
+        android:visibility="gone" ><!-- this ensures the editText does not appear when app starts -->
+
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>
