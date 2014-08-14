@@ -2,19 +2,19 @@ package rithmio.learn.test;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class RecognitionFragment extends Fragment {
+public class EditRithmNameFragment extends ListFragment {
 
 	ListView rithmList;
-	RithmNameArrayAdapterToRecognition rithmAdapter;
+	RithmNameArrayAdapterToEdit rithmAdapter;
 	ArrayList<RithmNameToStringStorage> rithmArray = new ArrayList<RithmNameToStringStorage>();
-	View recog;
+	View edit;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -39,17 +39,22 @@ public class RecognitionFragment extends Fragment {
 		/**
 		 * set item into adapter
 		 */
-		rithmAdapter = new RithmNameArrayAdapterToRecognition(getActivity(),
-				R.layout.rithm_recognition_row, rithmArray);
-		rithmList = (ListView) recog.findViewById(android.R.id.list);
+		rithmAdapter = new RithmNameArrayAdapterToEdit(getActivity(),
+				R.layout.rithm_edit_row, rithmArray);
+		rithmList = (ListView) edit.findViewById(android.R.id.list);
 		rithmList.setItemsCanFocus(false);
 		rithmList.setAdapter(rithmAdapter);
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return recog = inflater.inflate(R.layout.recognition, container, false);
+		return edit = inflater.inflate(R.layout.rithm_name_editdelete, container, false);
 	}
+
+	// TODO onClick edit and delete - is it here or MainActivity?
+	// TODO edit opens up keyboard and enters typed entry
+	// TODO delete removes the Rithm from the list, shifts other Rithms up
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">v2.0 learn</string>
+    <string name="app_name">Rithmio Android</string>
     <string name="hello">Rithmio</string>
     <string name="Accelerometer">Accelerometer</string>
     <string name="X_Value1">X Value</string>
@@ -23,17 +23,5 @@
     <string name="toSuper">Start Supervised Learning</string>
     <string name="toUnsuper">Start Unsupervised Learning</string>
     <string name="toMenu">Menu</string>
-
-    <string-array name="Planets">
-        <item>Sun</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
 
 </resources>

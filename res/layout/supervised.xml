@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Button to stop learning supervised to be inserted here" />
+        android:text="Button to stop learning supervised as well as layout indicating application is currently learning a rithm to be inserted here" />
 
 </RelativeLayout>

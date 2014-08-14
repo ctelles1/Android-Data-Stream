@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,8 +24,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -437,7 +441,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	public void selectFrag(View v) {
 		if (v == findViewById(R.id.editRithms)) {
-			fr = new EditRithmFragment();
+			fr = new EditRithmNameFragment();
 		} else if (v == findViewById(R.id.recognizeRithms)) {
 			fr = new RecognitionFragment();
 		} else if (v == findViewById(R.id.learnSupervised)) {
@@ -457,6 +461,7 @@ public class MainActivity extends FragmentActivity implements
 		FragmentTransaction fragmentTransaction = fm.beginTransaction();
 		fragmentTransaction.replace(R.id.fragment_switch, fr);
 		fragmentTransaction.commit();
+
 	}
 
 	/**

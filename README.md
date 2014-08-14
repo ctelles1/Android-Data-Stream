@@ -34,7 +34,7 @@ Current use:
 - onCreate
 	- Layout main.xml is set as front page
 		- Contains Fragment R.id.fragment_switch
-			- Calls Fragment BlankSlateFragment()
+			- Calls Fragment BlankFragment()
 			- Inflates R.layout.blank to front (as name suggests, fragment and layout are blank - no dimensions)
 	- SensorManager, Accelerometer, and Gyroscope are initialized and assigned to variables
 	- Current Sensor Delay is set to Normal Delay (slowest)
@@ -48,3 +48,32 @@ Current use:
 	- onPause called when application is paused, destroyed, or sent to background
 		- Stops listening for and writing sensor data, closes CSV file
 		- Unregisters listeners
+	- onAccuracyChanged
+
+
+
+
+
+
+rithmArray is static for the purposes of having it appear on the recognition fragment. can be changed
+
+create checkboxes in recognition fragment to choose which to recognize from
+
+// TODO Keyboard input to change the Rithm Name. Make sure it changes the
+	// name on both EditRithmFragment and RecognitionFragment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
